@@ -4,7 +4,7 @@ using Relm.Core.States;
 namespace Relm.Sandbox.States
 {
 	public class TitleState
-		: State
+		//: State
 	{
 		public static string Alias = "TitleState";
 	}

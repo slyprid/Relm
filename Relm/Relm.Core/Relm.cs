@@ -2,151 +2,179 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Relm.Core.Scenes;
 using Relm.Core.States;
 
 namespace Relm.Core
 {
-	public class Relm 
-		: Game
-	{
-		#region Fields
+    public class Relm
+        : Game
+    {
+        public static Relm Instance { get; private set; }
 
-		protected GraphicsDeviceManager Graphics;
-		protected SpriteBatch SpriteBatch;
+        #region Fields
 
-		#endregion
+        private readonly GraphicsDeviceManager _graphics;
 
-		#region Properties
+        #endregion
 
-		#endregion
+        #region Properties
 
-		#region Managers
+        public SpriteBatch SpriteBatch { get; private set; }
 
-		private StateManager _states;
+        #endregion
 
-		#endregion
+        #region Managers
 
-		#region Initialization
+        private SceneManager _scenes;
 
-		public Relm()
-		{
-			Graphics = new GraphicsDeviceManager(this);
-			Content.RootDirectory = "Content";
-		}
+        #endregion
 
-		protected override void Initialize()
-		{
-			_states = new StateManager();
+        #region Initialization
 
-			InitializeCustomManagers();
+        public Relm()
+        {
+            _graphics = new GraphicsDeviceManager(this);
+            Content.RootDirectory = "Content";
 
-			base.Initialize();
-		}
+            Instance = this;
+        }
 
-		protected virtual void InitializeCustomManagers()
-		{
+        protected override void Initialize()
+        {
+            _scenes = new SceneManager();
 
-		}
+            InitializeCustomManagers();
 
-		#endregion
+            base.Initialize();
+        }
 
-		#region Loading
+        protected virtual void InitializeCustomManagers()
+        {
 
-		protected override void LoadContent()
-		{
-			SpriteBatch = new SpriteBatch(GraphicsDevice);
+        }
 
-			LoadStates();
-			LoadCustomContent();
-		}
+        #endregion
 
-		protected virtual void LoadStates() { }
+        #region Loading
 
-		protected virtual void LoadCustomContent() { }
+        protected override void LoadContent()
+        {
+            SpriteBatch = new SpriteBatch(GraphicsDevice);
 
-		protected override void UnloadContent()
-		{
+            LoadStates();
+            LoadScenes();
+            LoadCustomContent();
+        }
 
-		}
+        protected virtual void LoadStates() { }
 
-		#endregion
+        protected virtual void LoadCustomContent() { }
 
-		#region Updating
+        protected virtual void LoadScenes() { }
 
-		protected override void Update(GameTime gameTime)
-		{
-			if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-				Exit();
+        protected override void UnloadContent()
+        {
 
-			var currentState = CurrentState();
-			if (currentState != null)
-			{
-				if (currentState.IsEnabled && !currentState.IsPaused)
-				{
-					currentState.Update(gameTime);
-				}
-			}
+        }
 
-			base.Update(gameTime);
-		}
+        #endregion
 
-		#endregion
+        #region Updating
 
-		#region Rendering
+        protected override void Update(GameTime gameTime)
+        {
+            var currentScene = CurrentScene();
+            if (currentScene != null)
+            {
+                if (currentScene.IsEnabled
+                    && !currentScene.IsPaused)
+                {
+                    currentScene.Update(gameTime);
+                }
+            }
 
-		protected override void Draw(GameTime gameTime)
-		{
-			GraphicsDevice.Clear(Color.CornflowerBlue);
+            base.Update(gameTime);
+        }
 
-			base.Draw(gameTime);
-		}
+        #endregion
 
-		#endregion
+        #region Rendering
 
-		#region State Management
+        protected override void Draw(GameTime gameTime)
+        {
+            GraphicsDevice.Clear(Color.CornflowerBlue);
 
-		public T LoadState<T>(string alias)
-			where T : State
-		{
-			var state = Activator.CreateInstance<T>();
-			state.SpriteBatch = SpriteBatch;
-			_states.Add(alias, state);
-			return state;
-		}
+            var currentScene = CurrentScene();
+            if (currentScene != null)
+            {
+                if (currentScene.IsEnabled
+                    && !currentScene.IsPaused
+                    && currentScene.IsVisible)
+                {
+                    currentScene.Draw(gameTime);
+                }
+            }
 
-		public T LoadState<T>()
-			where T : State
-		{
-			var state = Activator.CreateInstance<T>();
-			_states.Add(state);
-			return state;
-		}
+            base.Draw(gameTime);
+        }
 
-		public void UnloadState(string alias)
-		{
-			_states.Remove(alias);
-		}
+        #endregion
 
-		public State ChangeState(string alias)
-		{
-			_states.ChangeState(alias);
-			return _states.CurrentState;
-		}
+        #region Scene Management
 
-		public State CurrentState()
-		{
-			return _states.CurrentState;
-		}
+        public T LoadScene<T>(string alias)
+            where T : Scene
+        {
+            var scene = Activator.CreateInstance<T>();
+            scene.SpriteBatch = SpriteBatch;
+            scene.Content = Content;
+            _scenes.Add(alias, scene);
+            return scene;
+        }
 
-		#endregion
+        public T LoadScene<T>()
+            where T : Scene
+        {
+            var scene = Activator.CreateInstance<T>();
+            scene.SpriteBatch = SpriteBatch;
+            scene.Content = Content;
+            //_scenes.Add(scene);
+            return scene;
+        }
 
-		#region Utilities
+        public void UnloadScene(string alias)
+        {
+            _scenes.Remove(alias);
+        }
 
-		public SpriteBatch CreateSpriteBatch()
-		{
-			return new SpriteBatch(GraphicsDevice);
-		}
+        public Scene ChangeScene(string alias)
+        {
+            _scenes.ChangeScene(alias);
+            return _scenes.CurrentScene;
+        }
 
-		#endregion
-	}
+        public Scene CurrentScene()
+        {
+            return _scenes.CurrentScene;
+        }
+
+        #endregion
+
+        #region Utilities
+
+        public SpriteBatch CreateSpriteBatch()
+        {
+            return new SpriteBatch(GraphicsDevice);
+        }
+
+        public void ChangeResolution(int width, int height)
+        {
+            _graphics.PreferredBackBufferWidth = width;
+            _graphics.PreferredBackBufferHeight = height;
+            _graphics.ApplyChanges();
+        }
+
+        #endregion
+    }
 }
