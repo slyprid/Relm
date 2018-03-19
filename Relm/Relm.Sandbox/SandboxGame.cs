@@ -1,14 +1,17 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Relm.Sandbox.States;
+﻿using Relm.Sandbox.States;
 
 namespace Relm.Sandbox
 {
 	public class SandboxGame 
 		: Core.Relm
 	{
-		#region Loading
+	    protected override void Initialize()
+	    {
+            ChangeResolution(1280, 720);
+	        base.Initialize();
+	    }
+
+	    #region Loading
 
 		protected override void LoadStates()
 		{

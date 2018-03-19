@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Relm.Core.Managers;
@@ -18,11 +19,15 @@ namespace Relm.Core.Scenes
 		public bool IsTransitioning { get; set; }
 		public SpriteBatch SpriteBatch { get; set; }
 
+        public List<SceneComponent> Components { get; set; }
+
 		protected Scene()
 		{
 			IsEnabled = true;
 			IsPaused = false;
 			IsVisible = true;
+
+		    Components = new List<SceneComponent>();
 		}
 
 		public static string GenerateAlias()

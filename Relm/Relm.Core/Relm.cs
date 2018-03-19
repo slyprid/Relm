@@ -147,6 +147,13 @@ namespace Relm.Core
 			return new SpriteBatch(GraphicsDevice);
 		}
 
+	    public void ChangeResolution(int width, int height)
+	    {
+	        Graphics.PreferredBackBufferWidth = width;
+	        Graphics.PreferredBackBufferHeight = height;
+            Graphics.ApplyChanges();
+	    }
+
 		#endregion
 	}
 }
