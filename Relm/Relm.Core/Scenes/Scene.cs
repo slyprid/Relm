@@ -1,15 +1,14 @@
 ﻿using System;
-using System.Runtime.Remoting.Messaging;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Relm.Core.Managers;
 
-namespace Relm.Core.States
+namespace Relm.Core.Scenes
 {
-	public abstract class State
-		: IManaged<State>
+	public abstract class Scene
+		: IManaged<Scene>
 	{
-		public IManager<State> Manager { get; set; }
+		public IManager<Scene> Manager { get; set; }
 
 		public string MyAlias { get; set; }
 
@@ -19,7 +18,7 @@ namespace Relm.Core.States
 		public bool IsTransitioning { get; set; }
 		public SpriteBatch SpriteBatch { get; set; }
 
-		protected State()
+		protected Scene()
 		{
 			IsEnabled = true;
 			IsPaused = false;

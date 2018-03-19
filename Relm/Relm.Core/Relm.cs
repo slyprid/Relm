@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Relm.Core.States;
+using Relm.Core.Scenes;
 
 namespace Relm.Core
 {
@@ -22,7 +22,7 @@ namespace Relm.Core
 
 		#region Managers
 
-		private StateManager _states;
+		private SceneManager _scenes;
 
 		#endregion
 
@@ -36,7 +36,7 @@ namespace Relm.Core
 
 		protected override void Initialize()
 		{
-			_states = new StateManager();
+			_scenes = new SceneManager();
 
 			InitializeCustomManagers();
 
@@ -78,7 +78,7 @@ namespace Relm.Core
 			if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
 				Exit();
 
-			var currentState = CurrentState();
+			var currentState = CurrentScene();
 			if (currentState != null)
 			{
 				if (currentState.IsEnabled && !currentState.IsPaused)
@@ -103,39 +103,39 @@ namespace Relm.Core
 
 		#endregion
 
-		#region State Management
+		#region Scene Management
 
-		public T LoadState<T>(string alias)
-			where T : State
+		public T LoadScene<T>(string alias)
+			where T : Scene
 		{
-			var state = Activator.CreateInstance<T>();
-			state.SpriteBatch = SpriteBatch;
-			_states.Add(alias, state);
-			return state;
+			var scene = Activator.CreateInstance<T>();
+		    scene.SpriteBatch = SpriteBatch;
+			_scenes.Add(alias, scene);
+			return scene;
 		}
 
-		public T LoadState<T>()
-			where T : State
+		public T LoadScene<T>()
+			where T : Scene
 		{
-			var state = Activator.CreateInstance<T>();
-			_states.Add(state);
-			return state;
+			var scene = Activator.CreateInstance<T>();
+			_scenes.Add(scene);
+			return scene;
 		}
 
-		public void UnloadState(string alias)
+		public void UnloadScene(string alias)
 		{
-			_states.Remove(alias);
+			_scenes.Remove(alias);
 		}
 
-		public State ChangeState(string alias)
+		public Scene ChangeScene(string alias)
 		{
-			_states.ChangeState(alias);
-			return _states.CurrentState;
+			_scenes.ChangeState(alias);
+			return _scenes.CurrentScene;
 		}
 
-		public State CurrentState()
+		public Scene CurrentScene()
 		{
-			return _states.CurrentState;
+			return _scenes.CurrentScene;
 		}
 
 		#endregion

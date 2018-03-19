@@ -48,8 +48,8 @@
     <Compile Include="Managers\Manager.cs" />
     <Compile Include="Relm.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="States\State.cs" />
-    <Compile Include="States\StateManager.cs" />
+    <Compile Include="Scenes\Scene.cs" />
+    <Compile Include="Scenes\SceneManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">

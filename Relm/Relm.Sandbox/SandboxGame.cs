@@ -12,9 +12,9 @@ namespace Relm.Sandbox
 
 		protected override void LoadStates()
 		{
-			LoadState<TitleState>(TitleState.Alias);
+			LoadScene<TitleScene>(TitleScene.Alias);
 
-			ChangeState(TitleState.Alias);
+			ChangeScene(TitleScene.Alias);
 		}
 
 		protected override void LoadCustomContent()

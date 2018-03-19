@@ -45,7 +45,7 @@
     <Compile Include="SandboxGame.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="States\TitleState.cs" />
+    <Compile Include="States\TitleScene.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
