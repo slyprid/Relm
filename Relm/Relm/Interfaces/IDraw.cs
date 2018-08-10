@@ -8,6 +8,7 @@ namespace Relm.Interfaces
         bool IsVisible { get; set; }
         Vector2 Position { get; set; }
         Vector2 Size { get; set; }
+        SpriteBatch SpriteBatch { get; set; }
 
         void Draw(GameTime gameTime);
     }

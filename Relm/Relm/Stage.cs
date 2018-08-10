@@ -12,6 +12,7 @@ namespace Relm
         #region Fields / Properties
 
         public static FrameCounter FrameCounter { get; set; }
+        public static Stage Instance { get; set; }
 
         private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
@@ -32,7 +33,6 @@ namespace Relm
             }
         }
 
-
         #endregion
 
         #region Initialization
@@ -44,6 +44,8 @@ namespace Relm
 
             Resolution = new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
             Scenes = new Dictionary<string, Scene>();
+
+            Instance = this;
         }
 
         protected override void Initialize()

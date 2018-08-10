@@ -20,11 +20,6 @@ namespace Relm.Sandbox
             ChangeScene(TestScene.Alias);
         }
 
-        protected override void UnloadContent()
-        {
-            
-        }
-
         protected override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
