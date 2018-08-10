@@ -1,6 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
+using Relm.Components;
+using Relm.Scenes;
 
 namespace Relm
 {
@@ -9,10 +11,26 @@ namespace Relm
     {
         #region Fields / Properties
 
+        public static FrameCounter FrameCounter { get; set; }
+
         private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-
+        private string _currentSceneName;
+        private string _windowTitle;
+        
         public Vector2 Resolution { get; private set; }
+        public Dictionary<string, Scene> Scenes { get; }
+        public Scene CurrentScene => string.IsNullOrEmpty(_currentSceneName) ? null : Scenes[_currentSceneName];
+
+        public string WindowTitle
+        {
+            get => _windowTitle;
+            set
+            {
+                Window.Title = value;
+                _windowTitle = value;
+            }
+        }
 
 
         #endregion
@@ -25,10 +43,13 @@ namespace Relm
             Content.RootDirectory = "Content";
 
             Resolution = new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
+            Scenes = new Dictionary<string, Scene>();
         }
 
         protected override void Initialize()
         {
+            FrameCounter = new FrameCounter();
+
             base.Initialize();
         }
 
@@ -43,7 +64,7 @@ namespace Relm
 
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
+            
         }
 
         #endregion
@@ -52,17 +73,47 @@ namespace Relm
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+            FrameCounter?.Update(gameTime);
+
+            CurrentScene?.Update(gameTime);
 
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            FrameCounter?.Draw(gameTime);
+
+            GraphicsDevice.Clear(Color.DarkSlateBlue);
+
+            CurrentScene?.Draw(gameTime);
 
             base.Draw(gameTime);
+
+            Window.Title = $"{WindowTitle} - [{FrameCounter?.FrameRate} fps]";
+        }
+
+        #endregion
+
+        #region Scenes
+
+        public Scene AddScene(Scene scene)
+        {
+            Scenes.Add(scene.Name, scene);
+            scene.Content = Content;
+            scene.GraphicsDevice = GraphicsDevice;
+            scene.SpriteBatch = _spriteBatch;
+            return scene;
+        }
+
+        public void ChangeScene(string sceneName)
+        {
+            _currentSceneName = sceneName;
+
+            if (!CurrentScene.IsLoaded)
+            {
+                CurrentScene.LoadContent();
+            }
         }
 
         #endregion

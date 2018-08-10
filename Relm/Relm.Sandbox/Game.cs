@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Relm.Sandbox.Scenes;
 
 namespace Relm.Sandbox
 {
@@ -8,18 +9,15 @@ namespace Relm.Sandbox
         public Game()
         {
             ChangeResolution(1280, 720);
-            Window.Title = "Relm Sandbox";
+            WindowTitle = "Relm Sandbox";
             IsMouseVisible = true;
         }
-
-        protected override void Initialize()
-        {
-            base.Initialize();
-        }
-
+        
         protected override void LoadContent()
         {
-            
+            AddScene(new TestScene());
+
+            ChangeScene(TestScene.Alias);
         }
 
         protected override void UnloadContent()
