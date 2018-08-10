@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Relm.Core")]
-[assembly: AssemblyProduct("Relm.Core")]
+[assembly: AssemblyTitle("Relm")]
+[assembly: AssemblyProduct("Relm")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyCopyright("Copyright ©  2017")]
+[assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("5c83f7a8-99e4-431b-a0ed-db14bda58838")]
+[assembly: Guid("f67b817e-57be-4139-900a-5948e1f57b47")]
 
 // Version information for an assembly consists of the following four values:
 //
