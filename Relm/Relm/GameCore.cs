@@ -4,49 +4,106 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Relm
 {
-    public class GameCore : Game
+    public abstract class GameCore 
+        : Game
     {
-        private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
+        #region Fields / Properties
 
-        public GameCore()
+        private GraphicsDeviceManager _graphics;
+        
+        public static int ResolutionWidth = 720;
+        public static int ResolutionHeight = 1280;
+        public static int VirtualWidth = 720;
+        public static int VirtualHeight = 1280;
+        public static Texture2D Pixel { get; set; }
+        public static SpriteBatch SpriteBatch { get; set; }
+        
+        public RenderTarget2D Output { get; set; }
+        public RenderTarget2D Backbuffer { get; set; }
+
+        #endregion
+
+        #region Initialization
+
+        protected GameCore(int width = 720, int height = 1280)
         {
-            _graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
+            VirtualWidth = width;
+            VirtualHeight = height;
+
+            _graphics = new GraphicsDeviceManager(this)
+            {
+                SupportedOrientations = DisplayOrientation.Portrait | DisplayOrientation.PortraitDown,
+                PreferredBackBufferWidth = VirtualWidth,
+                PreferredBackBufferHeight = VirtualHeight
+            };
+            
             IsMouseVisible = true;
+
+            Content.RootDirectory = "Content";
         }
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
             base.Initialize();
         }
 
+        #endregion
+
+        #region Content
+
         protected override void LoadContent()
         {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            SpriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
+            Pixel = new Texture2D(GraphicsDevice, 1, 1);
+            Pixel.SetData(new [] { Color.White });
+
+            Backbuffer = new RenderTarget2D(GraphicsDevice, VirtualWidth, VirtualHeight);
+            Output = new RenderTarget2D(GraphicsDevice, ResolutionWidth, ResolutionHeight);
         }
+
+        #endregion
+
+        #region Update
 
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
-
             base.Update(gameTime);
         }
 
+        #endregion
+
+        #region Draw
+
         protected override void Draw(GameTime gameTime)
         {
+            // Render backbuffer
+            GraphicsDevice.SetRenderTarget(Backbuffer);
             GraphicsDevice.Clear(Color.CornflowerBlue);
+            SpriteBatch.Begin();
+            SpriteBatch.Draw(Pixel, new Rectangle(100, 100, 250, 250), Color.Red);
+            SpriteBatch.End();
 
-            // TODO: Add your drawing code here
+            // Scale backbuffer to output resolution
+            GraphicsDevice.SetRenderTarget(Output);
+            GraphicsDevice.Clear(Color.Black);
+            SpriteBatch.Begin();
+            SpriteBatch.Draw(Backbuffer, new Rectangle(0, 0, ResolutionWidth, ResolutionHeight), new Rectangle(0, 0, (int)VirtualWidth, (int)VirtualHeight), Color.White);
+            SpriteBatch.End();
+
+            // Render output to device
+            GraphicsDevice.SetRenderTarget(null);
+            GraphicsDevice.Clear(Color.Black);
+            SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
+            SpriteBatch.Draw(Output, new Rectangle(0, 0, VirtualWidth, VirtualHeight), new Rectangle(0, 0, (int)ResolutionWidth, (int)ResolutionHeight), Color.White);
+            SpriteBatch.End();
 
             base.Draw(gameTime);
         }
+
+        #endregion
     }
 }
