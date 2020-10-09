@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Relm.Constants;
+using Relm.States;
 
 namespace Relm
 {
@@ -15,7 +17,6 @@ namespace Relm
         public static int ResolutionHeight = 1280;
         public static int VirtualWidth = 720;
         public static int VirtualHeight = 1280;
-        public static Texture2D Pixel { get; set; }
         public static SpriteBatch SpriteBatch { get; set; }
         
         public RenderTarget2D Output { get; set; }
@@ -55,11 +56,13 @@ namespace Relm
         {
             SpriteBatch = new SpriteBatch(GraphicsDevice);
 
-            Pixel = new Texture2D(GraphicsDevice, 1, 1);
-            Pixel.SetData(new [] { Color.White });
-
             Backbuffer = new RenderTarget2D(GraphicsDevice, VirtualWidth, VirtualHeight);
             Output = new RenderTarget2D(GraphicsDevice, ResolutionWidth, ResolutionHeight);
+
+            GameState.GraphicsDevice = GraphicsDevice;
+            GameState.Content = Content;
+            GameState.Initialize();
+            GameState.InitializeRelm();
         }
 
         #endregion
@@ -80,11 +83,13 @@ namespace Relm
 
         protected override void Draw(GameTime gameTime)
         {
+            var pixel = GameState.Textures[TextureNames.Pixel];
+
             // Render backbuffer
             GraphicsDevice.SetRenderTarget(Backbuffer);
             GraphicsDevice.Clear(Color.CornflowerBlue);
             SpriteBatch.Begin();
-            SpriteBatch.Draw(Pixel, new Rectangle(100, 100, 250, 250), Color.Red);
+            SpriteBatch.Draw(pixel, new Rectangle(100, 100, 250, 250), Color.Red);
             SpriteBatch.End();
 
             // Scale backbuffer to output resolution
