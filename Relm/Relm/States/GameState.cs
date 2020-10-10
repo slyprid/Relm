@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Relm.Constants;
+using Relm.Scenes;
 
 namespace Relm.States
 {
@@ -10,6 +13,7 @@ namespace Relm.States
     {
         public static ContentManager Content { get; set; }
         public static GraphicsDevice GraphicsDevice { get; set; }
+        public static SceneManager Scenes { get; set; }
         public static Dictionary<string, Texture2D> Textures { get; set; }
         public static Dictionary<string, SpriteFont> Fonts { get; set; }
 
@@ -19,6 +23,7 @@ namespace Relm.States
         {
             Textures = new Dictionary<string, Texture2D>();
             Fonts = new Dictionary<string, SpriteFont>();
+            Scenes = new SceneManager();
         }
 
         public static void InitializeRelm()
@@ -54,6 +59,20 @@ namespace Relm.States
             var pixel = new Texture2D(GraphicsDevice, 1, 1);
             pixel.SetData(new[] { Color.White });
             LoadTexture(TextureNames.Pixel, pixel);
+
+            LoadTexture(TextureNames.Logo, "gfx/relm/ForgottenStarStudiosLogo");
+        }
+
+        public static void LoadScenes<T>()
+        {
+            var sceneTypes = typeof(T).Assembly.GetTypes().Where(x => x.IsSubclassOf(typeof(Scene)));
+
+            foreach (var sceneType in sceneTypes)
+            {
+                var scene = (Scene)Activator.CreateInstance(sceneType);
+                scene.SpriteBatch = new SpriteBatch(GraphicsDevice);
+                Scenes.AddScene(scene.Name, scene);
+            }
         }
 
         #endregion
