@@ -11,6 +11,7 @@ namespace Relm.Entities
         public bool IsEnabled { get; set; }
         public bool IsVisible { get; set; }
         public Color Tint { get; set; }
+        public float Opacity { get; set; }
 
         public int X => Position.X;
         public int Y => Position.Y;
@@ -22,6 +23,7 @@ namespace Relm.Entities
             IsVisible = true;
             IsEnabled = true;
             Tint = Color.White;
+            Opacity = 1f;
         }
 
         public virtual void Update(GameTime gameTime)

@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Relm.Entities;
+using Relm.Extensions;
 using Relm.States;
 
 namespace Relm.Sprites
@@ -31,7 +32,7 @@ namespace Relm.Sprites
         {
             base.Draw(gameTime, spriteBatch);
 
-            spriteBatch.Draw(GameState.Textures[TextureName], Position.ToVector2(), Tint);
+            spriteBatch.Draw(GameState.Textures[TextureName], Position.ToVector2(), Tint.WithOpacity(Opacity));
         }
     }
 }

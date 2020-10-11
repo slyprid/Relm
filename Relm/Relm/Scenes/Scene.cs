@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Relm.Entities;
+using Relm.Events;
 
 namespace Relm.Scenes
 {
@@ -15,6 +16,7 @@ namespace Relm.Scenes
         public bool IsEnabled { get; set; }
         public List<Entity> Entities { get; set; }
         public SpriteBatch SpriteBatch { get; set; }
+        public EventManager Events { get; private set; }
 
         public int X => Position.X;
         public int Y => Position.Y;
@@ -28,6 +30,7 @@ namespace Relm.Scenes
             Entities = new List<Entity>();
             IsVisible = true;
             IsEnabled = true;
+            Events = new EventManager();
         }
 
         public virtual void OnActivate() { }
@@ -35,6 +38,8 @@ namespace Relm.Scenes
 
         public virtual void Update(GameTime gameTime)
         {
+            Events.Update(gameTime);
+
             foreach (var entity in Entities)
             {
                 entity.Update(gameTime);
@@ -53,14 +58,26 @@ namespace Relm.Scenes
             SpriteBatch.End();
         }
 
-        public void AddEntity(Entity entity)
+        public Entity AddEntity(Entity entity)
         {
             Entities.Add(entity);
+            return entity;
         }
 
         public void RemoveEntity(Entity entity)
         {
             Entities.Remove(entity);
+        }
+
+        public Event AddEvent(Event evt)
+        {
+            Events.Add(evt);
+            return evt;
+        }
+
+        public void RemoveEvent(Event evt)
+        {
+            Events.Remove(evt);
         }
     }
 }
