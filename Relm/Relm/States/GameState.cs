@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Relm.Constants;
+using Relm.Input;
 using Relm.Scenes;
 
 namespace Relm.States
@@ -14,6 +15,7 @@ namespace Relm.States
         public static ContentManager Content { get; set; }
         public static GraphicsDevice GraphicsDevice { get; set; }
         public static SceneManager Scenes { get; set; }
+        public static InputManager Input { get; set; }
         public static Dictionary<string, Texture2D> Textures { get; set; }
         public static Dictionary<string, SpriteFont> Fonts { get; set; }
 
@@ -24,6 +26,7 @@ namespace Relm.States
             Textures = new Dictionary<string, Texture2D>();
             Fonts = new Dictionary<string, SpriteFont>();
             Scenes = new SceneManager();
+            Input = new InputManager();
         }
 
         public static void InitializeRelm()
