@@ -72,7 +72,7 @@ namespace Relm.Events
                 if (elapsed >= StartTime && !IsActive)
                 {
                     IsActive = true;
-                    OnActivate(this, AttachedObject);
+                    OnActivate?.Invoke(this, AttachedObject);
                 }
 
                 if (elapsed >= StartTime && elapsed < EndTime && IsActive)
@@ -82,14 +82,14 @@ namespace Relm.Events
                     if (Elapsed >= TickTime)
                     {
                         Elapsed -= TickTime;
-                        OnTick(this, AttachedObject);
+                        OnTick?.Invoke(this, AttachedObject);
                     }
                 }
 
                 if (elapsed >= EndTime && IsActive)
                 {
                     IsActive = false;
-                    OnDeactivate(this, AttachedObject);
+                    OnDeactivate?.Invoke(this, AttachedObject);
                 }
             }
             else
@@ -99,7 +99,7 @@ namespace Relm.Events
                 if (Elapsed >= TickTime)
                 {
                     Elapsed -= TickTime;
-                    OnTick(this, AttachedObject);
+                    OnTick?.Invoke(this, AttachedObject);
                 }
             }
         }

@@ -35,5 +35,11 @@ namespace Relm.Entities
         {
             if (!IsVisible) return;
         }
+
+        public T As<T>()
+            where T : Entity
+        {
+            return (T) this;
+        }
     }
 }

@@ -7,6 +7,8 @@ namespace Relm.Scenes
 {
     public class SceneManager
     {
+        private bool _isChangingScene = false;
+
         public Dictionary<string, Scene> Scenes { get; set; }
         public List<string> ActiveSceneNames { get; set; }
 
@@ -20,7 +22,9 @@ namespace Relm.Scenes
 
         public void Update(GameTime gameTime)
         {
-            foreach (var scene in ActiveSceneNames.Select(name => Scenes[name]))
+            if (_isChangingScene) return;
+
+            foreach (var scene in ActiveSceneNames.Select(name => Scenes[name]).ToList())
             {
                 scene.Update(gameTime);
             }
@@ -28,7 +32,9 @@ namespace Relm.Scenes
 
         public void Draw(GameTime gameTime)
         {
-            foreach (var scene in ActiveSceneNames.Select(name => Scenes[name]))
+            if (_isChangingScene) return;
+
+            foreach (var scene in ActiveSceneNames.Select(name => Scenes[name]).ToList())
             {
                 scene.Draw(gameTime);
             }
@@ -55,6 +61,20 @@ namespace Relm.Scenes
         {
             ActiveSceneNames.Remove(name);
             this[name].OnDeactivate();
+        }
+
+        public void ChangeScene(string name)
+        {
+            _isChangingScene = true;
+
+            foreach (var sceneName in ActiveSceneNames.ToList())
+            {
+                DeactivateScene(sceneName);
+            }
+
+            ActivateScene(name);
+
+            _isChangingScene = false;
         }
     }
 }
