@@ -14,7 +14,7 @@ namespace Relm.UI.Controls
     {
         private Point _size;
 
-        public override string Name { get; }
+        public override string Name { get; protected set; }
         public Action<Button> OnClick { get; set; }
         public bool IsHover { get; set; }
         public string Text { get; set; }
@@ -32,10 +32,7 @@ namespace Relm.UI.Controls
                 }
                 return _size;
             }
-            set
-            {
-                _size = value;
-            }
+            set => _size = value;
         }
 
         public override Rectangle Bounds

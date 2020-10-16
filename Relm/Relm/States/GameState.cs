@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Relm.Constants;
 using Relm.Input;
 using Relm.Scenes;
+using Relm.Sprites;
 using Relm.UI;
 
 namespace Relm.States
@@ -20,6 +21,7 @@ namespace Relm.States
         public static UserInterfaceSettings UserInterfaceSettings { get; set; }
         public static Dictionary<string, Texture2D> Textures { get; set; }
         public static Dictionary<string, SpriteFont> Fonts { get; set; }
+        public static Dictionary<string, SpriteSheet> SpriteSheets { get; set; }
 
         #region Initialization
 
@@ -27,6 +29,7 @@ namespace Relm.States
         {
             Textures = new Dictionary<string, Texture2D>();
             Fonts = new Dictionary<string, SpriteFont>();
+            SpriteSheets = new Dictionary<string, SpriteSheet>();
             Scenes = new SceneManager();
             Input = new InputManager();
         }
@@ -54,6 +57,13 @@ namespace Relm.States
         private static void LoadFont(string name, string assetName)
         {
             Fonts.Add(name, Content.Load<SpriteFont>(assetName));
+        }
+
+        public static SpriteSheet LoadSpriteSheet(string name, string textureName, int width, int height)
+        {
+            var ret = new SpriteSheet(textureName, width, height);
+            SpriteSheets.Add(name, ret);
+            return ret;
         }
 
         #endregion

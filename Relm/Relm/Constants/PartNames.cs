@@ -8,5 +8,8 @@
         public static string ButtonLeftHover = "ButtonLeftHover";
         public static string ButtonCenterHover = "ButtonCenterHover";
         public static string ButtonRightHover = "ButtonRightHover";
+
+        public static string IconButton = "IconButton";
+        public static string IconButtonHover = "IconButtonHover";
     }
 }

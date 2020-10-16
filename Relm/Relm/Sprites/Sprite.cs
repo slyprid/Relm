@@ -13,7 +13,7 @@ namespace Relm.Sprites
     {
         private string _textureName;
 
-        public override string Name { get; }
+        public override string Name { get; protected set; }
 
         public string TextureName
         {

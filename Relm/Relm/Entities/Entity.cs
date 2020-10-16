@@ -6,7 +6,7 @@ namespace Relm.Entities
 {
     public abstract class Entity
     {
-        public abstract string Name { get; }
+        public abstract string Name { get; protected set; }
         public Scene Scene { get; set; }
         public virtual Point Size { get; set; }
         public Point Position { get; set; }

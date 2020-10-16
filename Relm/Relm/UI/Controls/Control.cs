@@ -7,7 +7,7 @@ namespace Relm.UI.Controls
     public abstract class Control
         : Sprite
     {
-        public override string Name { get; }
+        public override string Name { get; protected set; }
 
         public abstract Skin Skin { get; }
 
