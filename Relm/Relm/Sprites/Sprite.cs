@@ -27,6 +27,7 @@ namespace Relm.Sprites
 
         public Texture2D Texture => GameState.Textures[_textureName];
 
+        public virtual Rectangle Bounds => new Rectangle(X, Y, (int)(Width * Scale), (int)(Height * Scale));
 
         public Sprite()
         {
@@ -47,16 +48,32 @@ namespace Relm.Sprites
         {
             base.Draw(gameTime, spriteBatch);
 
-            spriteBatch.Draw(Texture, new Rectangle(X, Y, Width, Height), new Rectangle(0, 0, Width, Height), Tint.WithOpacity(Opacity)); 
+            spriteBatch.Draw(Texture, new Rectangle(X, Y, (int)(Width * Scale), (int)(Height * Scale)), new Rectangle(0, 0, Width, Height), Tint.WithOpacity(Opacity)); 
         }
 
         #region Fluent Functions
 
-        public Sprite IsCenterScreen()
+        public Sprite IsCentered(CenteringDirection direction)
         {
             if (string.IsNullOrEmpty(TextureName)) return this;
 
-            Position = new Point((PositionConstants.CenterScreen.X) - (Width / 2), (PositionConstants.CenterScreen.Y) - (Height / 2));
+            var x = Position.X;
+            var y = Position.Y;
+            switch (direction)
+            {
+                case CenteringDirection.Both:
+                    x = (PositionConstants.CenterScreen.X) - (Width / 2);
+                    y = (PositionConstants.CenterScreen.Y) - (Height / 2);
+                    break;
+                case CenteringDirection.Horizontal:
+                    x = (PositionConstants.CenterScreen.X) - (Width / 2);
+                    break;
+                case CenteringDirection.Vertical:
+                    y = (PositionConstants.CenterScreen.Y) - (Height / 2);
+                    break;
+            }
+
+            Position = new Point(x, y);
 
             return this;
         }

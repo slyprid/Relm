@@ -8,10 +8,15 @@ namespace Relm.Input
         private MouseState _current;
         private MouseState _previous;
 
-        public int X => _current.X;
-        public int Y => _current.Y;
+        private float _ratioX => (float)GameCore.VirtualWidth / GameCore.ResolutionWidth;
+        private float _ratioY => (float) GameCore.VirtualHeight / GameCore.ResolutionHeight;
+
+        public int X => (int)(_current.X / _ratioX);
+        public int Y => (int)(_current.Y / _ratioY);
 
         public Vector2 Position => new Vector2(X, Y);
+
+        public Rectangle Bounds => new Rectangle(X, Y, 1, 1);
 
         public void Update(GameTime gameTime)
         {

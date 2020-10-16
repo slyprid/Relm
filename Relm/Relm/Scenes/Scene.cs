@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Relm.Entities;
 using Relm.Events;
+using Relm.UI.Controls;
 
 namespace Relm.Scenes
 {
@@ -60,8 +61,17 @@ namespace Relm.Scenes
 
         public Entity AddEntity(Entity entity)
         {
+            entity.Scene = this;
             Entities.Add(entity);
             return entity;
+        }
+
+        public Entity AddControl(Control control)
+        {
+            control.Scene = this;
+            Entities.Add(control);
+            control.InitializeEvents();
+            return control;
         }
 
         public void RemoveEntity(Entity entity)

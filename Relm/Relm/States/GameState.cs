@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Relm.Constants;
 using Relm.Input;
 using Relm.Scenes;
+using Relm.UI;
 
 namespace Relm.States
 {
@@ -16,6 +17,7 @@ namespace Relm.States
         public static GraphicsDevice GraphicsDevice { get; set; }
         public static SceneManager Scenes { get; set; }
         public static InputManager Input { get; set; }
+        public static UserInterfaceSettings UserInterfaceSettings { get; set; }
         public static Dictionary<string, Texture2D> Textures { get; set; }
         public static Dictionary<string, SpriteFont> Fonts { get; set; }
 
@@ -32,6 +34,7 @@ namespace Relm.States
         public static void InitializeRelm()
         {
             LoadTextures();
+            LoadFonts();
         }
 
         #endregion
@@ -64,6 +67,12 @@ namespace Relm.States
             LoadTexture(TextureNames.Pixel, pixel);
 
             LoadTexture(TextureNames.Logo, "gfx/relm/ForgottenStarStudiosLogo");
+            LoadTexture(TextureNames.UserInterfaceSkin, "gfx/relm/UserInterfaceSkin");
+        }
+
+        private static void LoadFonts()
+        {
+            LoadFont(FontNames.Default, "fonts/Default");
         }
 
         public static void LoadScenes<T>()
@@ -76,6 +85,15 @@ namespace Relm.States
                 scene.SpriteBatch = new SpriteBatch(GraphicsDevice);
                 Scenes.AddScene(scene.Name, scene);
             }
+        }
+
+        public static void LoadUserInterface<T>()
+        {
+            var settingTypes = typeof(T).Assembly.GetTypes().Where(x => x.IsSubclassOf(typeof(UserInterfaceSettings)));
+            var settingType = settingTypes.FirstOrDefault();
+            if (settingType == null) return;
+            UserInterfaceSettings = (UserInterfaceSettings)Activator.CreateInstance(settingType);
+            UserInterfaceSettings.Initialize(Content);
         }
 
         #endregion
