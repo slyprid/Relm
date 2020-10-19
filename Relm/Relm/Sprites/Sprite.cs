@@ -53,7 +53,7 @@ namespace Relm.Sprites
 
         #region Fluent Functions
 
-        public Sprite IsCentered(CenteringDirection direction)
+        public virtual Sprite IsCentered(CenteringDirection direction)
         {
             if (string.IsNullOrEmpty(TextureName)) return this;
 

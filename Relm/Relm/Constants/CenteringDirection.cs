@@ -2,6 +2,7 @@
 {
     public enum CenteringDirection
     {
+        None,
         Horizontal,
         Vertical,
         Both
