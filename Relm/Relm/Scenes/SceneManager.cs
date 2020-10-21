@@ -51,19 +51,21 @@ namespace Relm.Scenes
             ActiveSceneNames.Remove(name);
         }
 
-        public void ActivateScene(string name)
+        public Scene ActivateScene(string name)
         {
             ActiveSceneNames.Add(name);
             this[name].OnActivate();
+            return this[name];
         }
 
         public void DeactivateScene(string name)
         {
             ActiveSceneNames.Remove(name);
             this[name].OnDeactivate();
+            this[name].Cleanup();
         }
 
-        public void ChangeScene(string name)
+        public Scene ChangeScene(string name)
         {
             _isChangingScene = true;
 
@@ -72,9 +74,17 @@ namespace Relm.Scenes
                 DeactivateScene(sceneName);
             }
 
-            ActivateScene(name);
+            var ret = ActivateScene(name);
 
             _isChangingScene = false;
+
+            return ret;
+        }
+
+        public void SwapScene(string activeScene, string newScene)
+        {
+            DeactivateScene(activeScene);
+            ActivateScene(newScene);
         }
     }
 }

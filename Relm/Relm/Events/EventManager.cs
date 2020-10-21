@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 
 namespace Relm.Events
@@ -18,12 +19,22 @@ namespace Relm.Events
 
         public void Add(Event evt)
         {
+            if (Events.ContainsKey(evt.Name))
+            {
+                Debug.WriteLine("This event has already been added", "WARNING");
+                return;
+            }
             Events.Add(evt.Name, evt);
         }
 
         public void Remove(Event evt)
         {
             Events.Remove(evt.Name);
+        }
+
+        public void Clear()
+        {
+            Events.Clear();
         }
 
         public void Update(GameTime gameTime)

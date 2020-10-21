@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -36,6 +37,12 @@ namespace Relm.Scenes
 
         public virtual void OnActivate() { }
         public virtual void OnDeactivate() { }
+
+        public virtual void Cleanup()
+        {
+            Entities.Clear();
+            Events.Clear();
+        }
 
         public virtual void Update(GameTime gameTime)
         {
@@ -81,6 +88,7 @@ namespace Relm.Scenes
 
         public Event AddEvent(Event evt)
         {
+            evt.Parent = this;
             Events.Add(evt);
             return evt;
         }
@@ -88,6 +96,12 @@ namespace Relm.Scenes
         public void RemoveEvent(Event evt)
         {
             Events.Remove(evt);
+        }
+
+        public T As<T>()
+            where T : Scene
+        {
+            return (T) this;
         }
     }
 }

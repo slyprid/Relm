@@ -90,6 +90,62 @@ namespace Relm.Sprites
             return this;
         }
 
+        public Sprite Anchored(AnchoringPositions anchoringPositions)
+        {
+            if (string.IsNullOrEmpty(TextureName)) return this;
+
+            var x = Position.X;
+            var y = Position.Y;
+            switch (anchoringPositions)
+            {
+
+                case AnchoringPositions.TopLeft:
+                    x = 0;
+                    y = 0;
+                    break;
+                case AnchoringPositions.TopCenter:
+                    x = (PositionConstants.CenterScreen.X) - (Width / 2);
+                    y = 0;
+                    break;
+                case AnchoringPositions.TopRight:
+                    x = GameCore.ResolutionWidth - Width;
+                    y = 0;
+                    break;
+                case AnchoringPositions.CenterLeft:
+                    x = 0;
+                    y = (PositionConstants.CenterScreen.Y) - (Height / 2);
+                    break;
+                case AnchoringPositions.Center:
+                    x = (PositionConstants.CenterScreen.X) - (Width / 2);
+                    y = (PositionConstants.CenterScreen.Y) - (Height / 2);
+                    break;
+                case AnchoringPositions.CenterRight:
+                    x = GameCore.ResolutionWidth - Width;
+                    y = (PositionConstants.CenterScreen.Y) - (Height / 2);
+                    break;
+                case AnchoringPositions.BottomLeft:
+                    x = 0;
+                    y = GameCore.ResolutionHeight - Height;
+                    break;
+                case AnchoringPositions.BottomCenter:
+                    x = (PositionConstants.CenterScreen.X) - (Width / 2);
+                    y = GameCore.ResolutionHeight - Height;
+                    break;
+                case AnchoringPositions.BottomRight:
+                    x = GameCore.ResolutionWidth - Width;
+                    y = GameCore.ResolutionHeight - Height;
+                    break;
+
+                case AnchoringPositions.None:
+                default:
+                    break;
+            }
+
+            Position = new Point(x, y);
+
+            return this;
+        }
+
         #endregion
     }
 }

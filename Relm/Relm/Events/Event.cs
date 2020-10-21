@@ -28,6 +28,7 @@ namespace Relm.Events
         
         public bool IsRepeatable { get; set; }
         public double Elapsed { get; set; }
+        public object Parent { get; set; }
 
         public Action<Event, object> OnActivate { get; set; }
         public Action<Event, object> OnDeactivate { get; set; }
