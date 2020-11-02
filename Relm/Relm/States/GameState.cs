@@ -14,6 +14,7 @@ namespace Relm.States
 {
     public static partial class GameState
     {
+        public static int DebugValue { get; set; }
         public static ContentManager Content { get; set; }
         public static GraphicsDevice GraphicsDevice { get; set; }
         public static SceneManager Scenes { get; set; }
