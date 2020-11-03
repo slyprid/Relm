@@ -41,6 +41,13 @@ namespace Relm.Sprites
             Initialize();
         }
 
+        public SpriteSheet(string textureName, Dictionary<string, Rectangle> atlas)
+        {
+            TextureName = textureName;
+            Names = new List<string>();
+            InitializeAtlas(atlas);
+        }
+
         private void Initialize()
         {
             Bounds = new List<Rectangle>();
@@ -50,6 +57,16 @@ namespace Relm.Sprites
                 {
                     Bounds.Add(new Rectangle(x, y, Width, Height));
                 }
+            }
+        }
+
+        private void InitializeAtlas(Dictionary<string, Rectangle> atlas)
+        {
+            Bounds = new List<Rectangle>();
+            foreach (var kvp in atlas)
+            {
+                Names.Add(kvp.Key);
+                Bounds.Add(kvp.Value);
             }
         }
 

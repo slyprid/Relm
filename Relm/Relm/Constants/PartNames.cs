@@ -12,6 +12,9 @@
         public static string IconButton = "IconButton";
         public static string IconButtonHover = "IconButtonHover";
 
+        public static string NextButton = "NextButton";
+        public static string NextButtonHover = "NextButtonHover";
+
         public static string ProgressBarBackground = "ProgressBarBackground";
         public static string ProgressBarFill = "ProgressBarFill";
 

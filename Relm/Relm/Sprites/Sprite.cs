@@ -26,6 +26,7 @@ namespace Relm.Sprites
         }
 
         public Texture2D Texture => GameState.Textures[_textureName];
+        public string SourceName { get; set; }
 
         public virtual Rectangle Bounds => new Rectangle(X, Y, (int)(Width * Scale), (int)(Height * Scale));
 
@@ -48,7 +49,13 @@ namespace Relm.Sprites
         {
             base.Draw(gameTime, spriteBatch);
 
-            spriteBatch.Draw(Texture, new Rectangle(X, Y, (int)(Width * Scale), (int)(Height * Scale)), new Rectangle(0, 0, Width, Height), Tint.WithOpacity(Opacity)); 
+            var srcRect = new Rectangle(0, 0, Width, Height);
+            if (!string.IsNullOrEmpty(SourceName))
+            {
+                srcRect = Relm.States.GameState.SpriteSheets[TextureName][SourceName];
+                Size = new Point(srcRect.Width, srcRect.Height);
+            }
+            spriteBatch.Draw(Texture, new Rectangle(X, Y, (int)(Width * Scale), (int)(Height * Scale)), srcRect, Tint.WithOpacity(Opacity), Rotation, Origin, Effects, 0f); 
         }
 
         #region Fluent Functions
@@ -56,6 +63,12 @@ namespace Relm.Sprites
         public virtual Sprite IsCentered(CenteringDirection direction)
         {
             if (string.IsNullOrEmpty(TextureName)) return this;
+
+            if (!string.IsNullOrEmpty(SourceName))
+            {
+                var srcRect = Relm.States.GameState.SpriteSheets[TextureName][SourceName];
+                Size = new Point((int)(srcRect.Width * Scale), (int)(srcRect.Height * Scale));
+            }
 
             var x = Position.X;
             var y = Position.Y;

@@ -15,6 +15,9 @@ namespace Relm.Entities
         public Color Tint { get; set; }
         public float Opacity { get; set; }
         public float Scale { get; set; }
+        public float Rotation { get; set; }
+        public Vector2 Origin { get; set; }
+        public SpriteEffects Effects { get; set; }
 
         public int X => Position.X;
         public int Y => Position.Y;
@@ -28,6 +31,9 @@ namespace Relm.Entities
             Tint = Color.White;
             Opacity = 1f;
             Scale = 1f;
+            Rotation = 0f;
+            Origin = Vector2.Zero;
+            Effects = SpriteEffects.None;
         }
 
         public virtual void Update(GameTime gameTime)

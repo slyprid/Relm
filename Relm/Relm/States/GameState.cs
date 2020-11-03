@@ -67,6 +67,13 @@ namespace Relm.States
             return ret;
         }
 
+        public static SpriteSheet LoadSpriteSheet(string name, string textureName, Dictionary<string, Rectangle> atlas)
+        {
+            var ret = new SpriteSheet(textureName, atlas);
+            SpriteSheets.Add(name, ret);
+            return ret;
+        }
+
         #endregion
 
         #region Relm Load Methods
