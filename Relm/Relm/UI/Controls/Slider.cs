@@ -6,6 +6,7 @@ using Relm.Constants;
 using Relm.Events;
 using Relm.Extensions;
 using Relm.Input;
+using Relm.Sprites;
 using Relm.States;
 
 namespace Relm.UI.Controls
@@ -18,6 +19,7 @@ namespace Relm.UI.Controls
         private bool _isHoverLeft;
         private bool _isHoverRight;
 
+        private CenteringDirection _centeringDirection = CenteringDirection.None;
         private Rectangle _partLeft => Skin[_isHoverLeft ? PartNames.SliderLeftButton : PartNames.SliderLeftButtonHover];
         private Rectangle _partRight => Skin[_isHoverRight ? PartNames.SliderRightButton : PartNames.SliderRightButtonHover];
 
@@ -76,6 +78,7 @@ namespace Relm.UI.Controls
         public int Ticks { get; set; }
         public int PerTick { get; set; }
         public SliderTypes ColorType { get; set; }
+        public bool ShowButtons { get; set; }
 
         public Slider()
         {
@@ -87,6 +90,7 @@ namespace Relm.UI.Controls
             PerTick = 10;
             Scale = 2;
             ColorType = SliderTypes.Green;
+            ShowButtons = true;
         }
 
         public Slider(string name)
@@ -99,6 +103,7 @@ namespace Relm.UI.Controls
             PerTick = 10;
             Scale = 2;
             ColorType = SliderTypes.Green;
+            ShowButtons = true;
         }
 
         public override void InitializeEvents()
@@ -109,10 +114,12 @@ namespace Relm.UI.Controls
                 InputCheck = (input) => input.Mouse.Bounds.Intersects(_leftButtonBounds),
                 OnActivate = (evt, obj) =>
                 {
+                    if (!ShowButtons) return;
                     _isHoverLeft = true;
                 },
                 OnDeactivate = (evt, obj) =>
                 {
+                    if (!ShowButtons) return;
                     _isHoverLeft = false;
                 }
             });
@@ -123,6 +130,7 @@ namespace Relm.UI.Controls
                 InputCheck = (input) => _isHoverLeft && input.Mouse.IsHeld(MouseButtons.Left, Bounds),
                 OnActivate = (evt, obj) =>
                 {
+                    if (!ShowButtons) return;
                     Value--;
                 }
             });
@@ -133,10 +141,12 @@ namespace Relm.UI.Controls
                 InputCheck = (input) => input.Mouse.Bounds.Intersects(_rightButtonBounds),
                 OnActivate = (evt, obj) =>
                 {
+                    if (!ShowButtons) return;
                     _isHoverRight = true;
                 },
                 OnDeactivate = (evt, obj) =>
                 {
+                    if (!ShowButtons) return;
                     _isHoverRight = false;
                 }
             });
@@ -147,6 +157,7 @@ namespace Relm.UI.Controls
                 InputCheck = (input) => _isHoverRight && input.Mouse.IsHeld(MouseButtons.Left, Bounds),
                 OnActivate = (evt, obj) =>
                 {
+                    if (!ShowButtons) return;
                     Value++;
                 }
             });
@@ -165,8 +176,11 @@ namespace Relm.UI.Controls
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             if (!IsVisible) return;
-            
-            spriteBatch.Draw(Texture, new Rectangle(X, Y, (int)(_partLeft.Width * Scale), (int)(_partLeft.Height * Scale)), _partLeft, Tint.WithOpacity(Opacity));
+
+            if (ShowButtons)
+            {
+                spriteBatch.Draw(Texture, new Rectangle(X, Y, (int) (_partLeft.Width * Scale), (int) (_partLeft.Height * Scale)), _partLeft, Tint.WithOpacity(Opacity));
+            }
 
             var x = 0;
             var fullTicks = Value / PerTick;
@@ -177,8 +191,38 @@ namespace Relm.UI.Controls
                 spriteBatch.Draw(Texture, new Rectangle(x, Y, (int)(part.Width * Scale), (int)(part.Height * Scale)), part, Tint.WithOpacity(Opacity));
             }
 
-            x += (int)((_partTick.Width * Scale) + (2 * Scale));
-            spriteBatch.Draw(Texture, new Rectangle(x, Y + 1, (int)(_partRight.Width * Scale), (int)(_partRight.Height * Scale)), _partRight, Tint.WithOpacity(Opacity));
+            if (ShowButtons)
+            {
+                x += (int) ((_partTick.Width * Scale) + (2 * Scale));
+                spriteBatch.Draw(Texture, new Rectangle(x, Y + 1, (int) (_partRight.Width * Scale), (int) (_partRight.Height * Scale)), _partRight, Tint.WithOpacity(Opacity));
+            }
+        }
+
+        public override Sprite IsCentered(CenteringDirection direction)
+        {
+            _centeringDirection = direction;
+
+            var x = Position.X;
+            var y = Position.Y;
+            var width = (int)(((_partLeft.Width + (_partTick.Width * Ticks) + _partRight.Width)) * Scale);
+            var height = (int)_partLeft.Height;
+            switch (direction)
+            {
+                case CenteringDirection.Both:
+                    x = (PositionConstants.CenterScreen.X) - (width / 2);
+                    y = (PositionConstants.CenterScreen.Y) - (height / 2);
+                    break;
+                case CenteringDirection.Horizontal:
+                    x = (PositionConstants.CenterScreen.X) - (width / 2);
+                    break;
+                case CenteringDirection.Vertical:
+                    y = (PositionConstants.CenterScreen.Y) - (height / 2);
+                    break;
+            }
+
+            Position = new Point(x, y);
+
+            return this;
         }
     }
 }
