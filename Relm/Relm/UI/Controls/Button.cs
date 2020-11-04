@@ -19,6 +19,8 @@ namespace Relm.UI.Controls
         public bool IsHover { get; set; }
         public string Text { get; set; }
         public Color ForegroundColor { get; set; }
+        public float FontScale { get; set; }
+        public bool IsToggled { get; set; }
 
         public override Skin Skin => GameState.UserInterfaceSettings.Skins[typeof(Button)];
 
@@ -54,6 +56,8 @@ namespace Relm.UI.Controls
             Name = Guid.NewGuid().ToString();
             TextureName = TextureNames.UserInterfaceSkin;
             ForegroundColor = Color.Black;
+            FontScale = 1f;
+            IsToggled = false;
         }
 
         public Button(string name)
@@ -61,6 +65,8 @@ namespace Relm.UI.Controls
             Name = name;
             TextureName = TextureNames.UserInterfaceSkin;
             ForegroundColor = Color.Black;
+            FontScale = 1f;
+            IsToggled = false;
         }
 
         public override void InitializeEvents()
@@ -94,17 +100,17 @@ namespace Relm.UI.Controls
         {
             if (!IsVisible) return;
 
-            var partLeft = Skin[IsHover ? PartNames.ButtonLeftHover : PartNames.ButtonLeft];
-            var partCenter = Skin[IsHover ? PartNames.ButtonCenterHover : PartNames.ButtonCenter];
-            var partRight = Skin[IsHover ? PartNames.ButtonRightHover : PartNames.ButtonRight];
+            var partLeft = Skin[IsHover || IsToggled ? PartNames.ButtonLeftHover : PartNames.ButtonLeft];
+            var partCenter = Skin[IsHover || IsToggled ? PartNames.ButtonCenterHover : PartNames.ButtonCenter];
+            var partRight = Skin[IsHover || IsToggled ? PartNames.ButtonRightHover : PartNames.ButtonRight];
 
             spriteBatch.Draw(Texture, new Rectangle(X, Y, (int)(partLeft.Width * Scale), (int)(partLeft.Height * Scale)), partLeft, Tint.WithOpacity(Opacity));
             spriteBatch.Draw(Texture, new Rectangle(X + (int)(partLeft.Width * Scale), Y, (int)(partCenter.Width * Scale), (int)(partCenter.Height * Scale)), partCenter, Tint.WithOpacity(Opacity));
             spriteBatch.Draw(Texture, new Rectangle(X + (int)(partLeft.Width * Scale) + (int)(partCenter.Width * Scale), Y, (int)(partRight.Width * Scale), (int)(partRight.Height * Scale)), partRight, Tint.WithOpacity(Opacity));
 
             var fontSize = Skin.Font.MeasureString(Text);
-            var fontPosition = new Vector2(Position.X + ((Width / 2f) - (fontSize.X / 2)), Position.Y + ((Height / 2f) - (fontSize.Y / 2)));
-            spriteBatch.DrawString(Skin.Font, Text, fontPosition, ForegroundColor);
+            var fontPosition = new Vector2(Position.X + ((Width / 2f) - ((fontSize.X * FontScale) / 2)), Position.Y + ((Height / 2f) - ((fontSize.Y * FontScale) / 2)));
+            spriteBatch.DrawString(Skin.Font, Text, fontPosition, ForegroundColor, 0f, Vector2.Zero, FontScale, SpriteEffects.None, 0f);
         }
     }
 }
