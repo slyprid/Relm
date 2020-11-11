@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Relm.Constants;
@@ -14,6 +15,7 @@ namespace Relm.UI.Controls
         public override string Name { get; protected set; }
 
         private CenteringDirection _centeringDirection = CenteringDirection.None;
+        private List<string> _lines = new List<string>();
 
         public string Text { get; set; }
         public Color ForegroundColor { get; set; }
@@ -21,6 +23,7 @@ namespace Relm.UI.Controls
         public bool HasShadow { get; set; }
 
         public string FontName { get; set; }
+        public int CharacterWidth { get; set; }
 
         public SpriteFont Font => GameState.Fonts[FontName];
 
@@ -31,12 +34,14 @@ namespace Relm.UI.Controls
         {
             Name = Guid.NewGuid().ToString();
             ForegroundColor = Color.Black;
+            CharacterWidth = -1;
         }
 
         public Label(string name)
         {
             Name = name;
             ForegroundColor = Color.Black;
+            CharacterWidth = -1;
         }
 
         public override void InitializeEvents() { }
@@ -61,7 +66,48 @@ namespace Relm.UI.Controls
                 spriteBatch.DrawString(Font, Text, Position.ToVector2() + new Vector2(2f, 2f), Color.Black.WithOpacity(0.75f));
             }
 
-            spriteBatch.DrawString(Font, Text, Position.ToVector2(), ForegroundColor);
+            if (CharacterWidth == -1)
+            {
+                spriteBatch.DrawString(Font, Text, Position.ToVector2(), ForegroundColor, 0f, Vector2.Zero, Scale, SpriteEffects.None, 0f);
+            }
+            else
+            {
+                var line = 0;
+                for (var i = 0; i < Text.Length; i += CharacterWidth)
+                {
+                    var len = i + CharacterWidth > Text.Length ? Text.Length - i : CharacterWidth;
+                    var text = Text.Substring(i, len);
+                    var size = Font.MeasureString(text);
+
+                    var x = Position.X;
+                    var y = Position.Y;
+                    var width = (int)(size.X * Scale);
+                    var height = (int)(size.Y * Scale);
+                    switch (_centeringDirection)
+                    {
+                        case CenteringDirection.Both:
+                            x = (PositionConstants.CenterScreen.X) - (width / 2);
+                            y = (PositionConstants.CenterScreen.Y) - (height / 2);
+                            break;
+                        case CenteringDirection.Horizontal:
+                            x = (PositionConstants.CenterScreen.X) - (width / 2);
+                            break;
+                        case CenteringDirection.Vertical:
+                            y = (PositionConstants.CenterScreen.Y) - (height / 2);
+                            break;
+                        default:
+                            x = Position.X;
+                            y = Position.Y;
+                            break;
+                    }
+
+                    y += (int)(line * size.Y);
+                    
+                    spriteBatch.DrawString(Font, text, new Vector2(x, y), ForegroundColor, 0f, Vector2.Zero, Scale, SpriteEffects.None, 0f);
+
+                    line += 1;
+                }
+            }
         }
 
         public override Sprite IsCentered(CenteringDirection direction)
@@ -71,8 +117,8 @@ namespace Relm.UI.Controls
             var size = Font.MeasureString(Text);
             var x = Position.X;
             var y = Position.Y;
-            var width = (int)size.X;
-            var height = (int)size.Y;
+            var width = (int)(size.X * Scale);
+            var height = (int)(size.Y * Scale);
             switch (direction)
             {
                 case CenteringDirection.Both:

@@ -103,5 +103,10 @@ namespace Relm.Scenes
         {
             return (T) this;
         }
+
+        public bool EntityExists(string entityName)
+        {
+            return Entities.Any(x => x.Name == entityName);
+        }
     }
 }
