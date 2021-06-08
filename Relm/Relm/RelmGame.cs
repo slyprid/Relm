@@ -1,24 +1,29 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended.ViewportAdapters;
 
-namespace Relm.Sandbox.Win
+namespace Relm
 {
-    public class Game1 : Game
+    public class RelmGame 
+        : Game
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        private ViewportAdapter _viewportAdapter;
 
-        public Game1()
+        public RelmGame(string title = "", int virtualWidth = 1024, int virtualHeight = 768)
         {
             _graphics = new GraphicsDeviceManager(this);
+            
             Content.RootDirectory = "Content";
-            IsMouseVisible = true;
+            IsMouseVisible = true;            
         }
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            _viewportAdapter = new BoxingViewportAdapter(this.Window, GraphicsDevice, 1024, 768);
 
             base.Initialize();
         }
@@ -43,8 +48,6 @@ namespace Relm.Sandbox.Win
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // TODO: Add your drawing code here
 
             base.Draw(gameTime);
         }
