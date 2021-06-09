@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended;
 using MonoGame.Extended.ViewportAdapters;
 
 namespace Relm
@@ -12,18 +13,43 @@ namespace Relm
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private ViewportAdapter _viewportAdapter;
+        private OrthographicCamera _camera;
 
-        public RelmGame(string title = "", int virtualWidth = 1024, int virtualHeight = 768)
+        private readonly int _virtualWidth;
+        private readonly int _virtualHeight;
+        private readonly int _actualWidth;
+        private readonly int _actualHeight;
+
+        public Point2 Resolution => new Point2(_virtualWidth, _virtualHeight);
+        public SpriteBatch SpriteBatch => _spriteBatch;
+        public OrthographicCamera Camera => _camera;
+
+        public RelmGame(string title = "", int virtualWidth = 1024, int virtualHeight = 768, int actualWidth = 1024, int actualHeight = 768)
         {
-            _graphics = new GraphicsDeviceManager(this);
-            
+            _virtualWidth = virtualWidth;
+            _virtualHeight = virtualHeight;
+            _actualWidth = actualWidth;
+            _actualHeight = actualHeight;
+
+            _graphics = new GraphicsDeviceManager(this)
+            {
+                PreferredBackBufferWidth = _actualWidth,
+                PreferredBackBufferHeight = _actualHeight
+            };
+
             Content.RootDirectory = "Content";
-            IsMouseVisible = true;            
+            IsMouseVisible = true;   
+            
+            if(!string.IsNullOrEmpty(title))
+            {
+                Window.Title = title;
+            }
         }
 
         protected override void Initialize()
         {
-            _viewportAdapter = new BoxingViewportAdapter(this.Window, GraphicsDevice, 1024, 768);
+            _viewportAdapter = new BoxingViewportAdapter(Window, GraphicsDevice, _virtualWidth, _virtualHeight);
+            _camera = new OrthographicCamera(_viewportAdapter);
 
             base.Initialize();
         }
@@ -31,16 +57,12 @@ namespace Relm
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // TODO: use this.Content to load your game content here
         }
 
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
-            // TODO: Add your update logic here
 
             base.Update(gameTime);
         }
