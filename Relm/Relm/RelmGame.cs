@@ -1,8 +1,8 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
+using MonoGame.Extended.Screens;
 using MonoGame.Extended.ViewportAdapters;
 
 namespace Relm
@@ -45,6 +45,14 @@ namespace Relm
             {
                 Window.Title = title;
             }
+
+            LoadComponents();
+        }
+
+        private void LoadComponents()
+        {
+            Screens.ScreenManager = new ScreenManager();
+            Components.Add(Screens.ScreenManager);
         }
 
         protected override void Initialize()
