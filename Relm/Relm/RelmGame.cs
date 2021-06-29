@@ -53,6 +53,8 @@ namespace Relm
         {
             Screens.ScreenManager = new ScreenManager();
             Components.Add(Screens.ScreenManager);
+
+            Input.Register(this, Components);
         }
 
         protected override void Initialize()
@@ -71,9 +73,6 @@ namespace Relm
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-
             base.Update(gameTime);
         }
 

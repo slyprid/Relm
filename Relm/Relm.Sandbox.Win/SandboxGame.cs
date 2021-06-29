@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended.Input;
 using MonoGame.Extended.Screens.Transitions;
 using Relm.Sandbox.Win.Models.Screens;
 
@@ -12,6 +13,18 @@ namespace Relm.Sandbox.Win
             : base("Relm Sandbox", 1280, 720, 1280, 1024)
         {
             
+        }
+
+        protected override void Initialize()
+        {
+            base.Initialize();
+
+            Input.OnKeyPressed(Keys.Escape, (sender, args) => { Exit(); });
+            Input.OnKeyPressed(Keys.D1, (sender, args) => { Screens.Change(nameof(TestScreen1), new FadeTransition(GraphicsDevice, Color.Black)); });
+            Input.OnKeyPressed(Keys.D2, (sender, args) => { Screens.Change(nameof(TestScreen2), new FadeTransition(GraphicsDevice, Color.Black)); });
+            Input.OnKeyPressed(Keys.D3, (sender, args) => { Input.ClearKeyboardEvents(); });
+
+            Input.OnMouseDoubleClicked(MouseButton.Right, (sender, args) => { Exit(); });
         }
 
         protected override void LoadContent()
@@ -27,17 +40,6 @@ namespace Relm.Sandbox.Win
 
         protected override void Update(GameTime gameTime)
         {
-            KeyboardState keyboardState = Keyboard.GetState();
-            if (keyboardState.IsKeyDown(Keys.Escape))
-                Exit();
-            if (keyboardState.IsKeyDown(Keys.D1))
-            {
-                Screens.Change(nameof(TestScreen1), new FadeTransition(GraphicsDevice, Color.Black));
-            }
-            else if (keyboardState.IsKeyDown(Keys.D2))
-            {
-                Screens.Change(nameof(TestScreen2), new FadeTransition(GraphicsDevice, Color.Black));
-            }
             base.Update(gameTime);
         }
     }
