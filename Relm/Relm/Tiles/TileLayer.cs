@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Relm.Maps;
 
 namespace Relm.Tiles
@@ -13,6 +14,8 @@ namespace Relm.Tiles
 
         public Tile[,] Tiles { get; set; }
 
+        public Tile this[int x, int y] => Tiles[x, y];
+
         public TileLayer(Vector2 size, Vector2 tileSize)
             : base(size)
         {
@@ -26,7 +29,11 @@ namespace Relm.Tiles
             {
                 for (var x = 0; x < Width; x++)
                 {
-                    Tiles[x, y] = new Tile();
+                    Tiles[x, y] = new Tile
+                    {
+                        Size = TileSize,
+                        Position = new Vector2(x * TileWidth, y * TileHeight)
+                    };
                 }
             }
         }
@@ -42,13 +49,13 @@ namespace Relm.Tiles
             }
         }
 
-        public override void Draw(GameTime gameTime)
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             for (var y = 0; y < Height; y++)
             {
                 for (var x = 0; x < Width; x++)
                 {
-                    Tiles[x, y].Draw(gameTime);
+                    Tiles[x, y].Draw(gameTime, spriteBatch);
                 }
             }
         }

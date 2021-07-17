@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 
 namespace Relm.Entities
@@ -14,6 +15,6 @@ namespace Relm.Entities
         int X { get; }
         int Y { get; }
 
-        void Draw(GameTime gameTime);
+        void Draw(GameTime gameTime, SpriteBatch spriteBatch);
     }
 }

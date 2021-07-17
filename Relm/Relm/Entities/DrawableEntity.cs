@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Relm.Entities
 {
@@ -13,6 +14,6 @@ namespace Relm.Entities
         public int Y => (int) Position.Y;
 
         public abstract void Update(GameTime gameTime);
-        public abstract void Draw(GameTime gameTime);
+        public abstract void Draw(GameTime gameTime, SpriteBatch spriteBatch);
     }
 }
