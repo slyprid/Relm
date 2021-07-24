@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 
 namespace Relm.Extensions
 {
@@ -27,6 +28,16 @@ namespace Relm.Extensions
         public ColorEx(Color color)
         {
             Color = color;
+        }
+
+        public static Color FromRGB(byte red, byte green, byte blue)
+        {
+            return new Color(red, green, blue);
+        }
+
+        public static Color FromRGBA(byte red, byte green, byte blue, byte alpha)
+        {
+            return new Color(red, green, blue, alpha);
         }
     }
 }

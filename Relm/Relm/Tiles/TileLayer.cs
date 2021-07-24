@@ -14,7 +14,11 @@ namespace Relm.Tiles
 
         public Tile[,] Tiles { get; set; }
 
-        public Tile this[int x, int y] => Tiles[x, y];
+        public Tile this[int x, int y]
+        {
+            get => Tiles[x, y];
+            set => Tiles[x, y] = value;
+        }
 
         public TileLayer(Vector2 size, Vector2 tileSize)
             : base(size)
