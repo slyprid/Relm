@@ -20,7 +20,10 @@ namespace Relm.Tiles
         {
             if (Texture == null && TextureRegion == null) return;
 
-            if (Texture != null) spriteBatch.Draw(Texture, Position, Color.White);
+            if (Texture != null)
+            {
+                spriteBatch.Draw(Texture, Position, Color.White);
+            }
             if (TextureRegion != null)
             {
                 spriteBatch.Draw(TextureRegion, new Rectangle((int)Position.X, (int)Position.Y, Width, Height), Color.White);
@@ -29,13 +32,15 @@ namespace Relm.Tiles
 
         public static Tile Clone(Tile tile)
         {
-            return new Tile
+            var ret = new Tile
             {
                 Position = tile.Position,
                 Size = tile.Size,
                 Texture = tile.Texture,
                 TextureRegion = tile.TextureRegion
             };
+
+            return ret;
         }
     }
 }
