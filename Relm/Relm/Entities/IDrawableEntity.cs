@@ -15,6 +15,8 @@ namespace Relm.Entities
         int X { get; }
         int Y { get; }
 
+        Rectangle Bounds { get; }
+
         void Draw(GameTime gameTime, SpriteBatch spriteBatch);
     }
 }

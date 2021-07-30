@@ -30,7 +30,7 @@ namespace Relm
             _mouseEvents = new Dictionary<string, EventHandler<MouseEventArgs>>();
         }
         
-        internal static void Register(Game game, GameComponentCollection components)
+        public static void Register(Game game, GameComponentCollection components)
         {
             _keyboardListener = new KeyboardListener();
             _gamePadListener = new GamePadListener();

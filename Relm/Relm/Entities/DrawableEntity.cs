@@ -13,6 +13,8 @@ namespace Relm.Entities
         public int X => (int) Position.X;
         public int Y => (int) Position.Y;
 
+        public Rectangle Bounds => new Rectangle(X, Y, Width, Height);
+
         public abstract void Update(GameTime gameTime);
         public abstract void Draw(GameTime gameTime, SpriteBatch spriteBatch);
     }
