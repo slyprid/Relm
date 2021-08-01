@@ -33,11 +33,12 @@ namespace Relm.Tiles
             {
                 for (var x = 0; x < Width; x++)
                 {
-                    Tiles[x, y] = new Tile
-                    {
-                        Size = TileSize,
-                        Position = new Vector2(x * TileWidth, y * TileHeight)
-                    };
+                    Tiles[x, y] = null;
+                    //Tiles[x, y] = new Tile
+                    //{
+                    //    Size = TileSize,
+                    //    Position = new Vector2(x * TileWidth, y * TileHeight)
+                    //};
                 }
             }
         }
@@ -48,7 +49,8 @@ namespace Relm.Tiles
             {
                 for (var x = 0; x < Width; x++)
                 {
-                    Tiles[x, y].Update(gameTime);
+                    var tile = Tiles[x, y];
+                    tile?.Update(gameTime);
                 }
             }
         }
@@ -59,7 +61,8 @@ namespace Relm.Tiles
             {
                 for (var x = 0; x < Width; x++)
                 {
-                    Tiles[x, y].Draw(gameTime, spriteBatch);
+                    var tile = Tiles[x, y];
+                    tile?.Draw(gameTime, spriteBatch);
                 }
             }
         }
