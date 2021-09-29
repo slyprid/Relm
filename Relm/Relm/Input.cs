@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Input;
 using MonoGame.Extended.Input.InputListeners;
+using MonoGame.Extended.Screens;
 
 namespace Relm
 {
@@ -14,19 +15,19 @@ namespace Relm
         private static KeyboardListener _keyboardListener;
         private static MouseListener _mouseListener;
 
-        private static Dictionary<string, EventHandler<KeyboardEventArgs>> _keyboardEvents;
-        private static Dictionary<string, EventHandler<TouchEventArgs>> _touchEvents;
-        private static Dictionary<string, EventHandler<GamePadEventArgs>> _gamePadEvents;
-        private static Dictionary<string, EventHandler<MouseEventArgs>> _mouseEvents;
+        private static readonly Dictionary<string, EventHandler<KeyboardEventArgs>> KeyboardEvents;
+        private static readonly Dictionary<string, EventHandler<TouchEventArgs>> TouchEvents;
+        private static readonly Dictionary<string, EventHandler<GamePadEventArgs>> GamePadEvents;
+        private static readonly Dictionary<string, EventHandler<MouseEventArgs>> MouseEvents;
         
         #region Initialization
 
         static Input()
         {
-            _keyboardEvents = new Dictionary<string, EventHandler<KeyboardEventArgs>>();
-            _touchEvents = new Dictionary<string, EventHandler<TouchEventArgs>>();
-            _gamePadEvents = new Dictionary<string, EventHandler<GamePadEventArgs>>();
-            _mouseEvents = new Dictionary<string, EventHandler<MouseEventArgs>>();
+            KeyboardEvents = new Dictionary<string, EventHandler<KeyboardEventArgs>>();
+            TouchEvents = new Dictionary<string, EventHandler<TouchEventArgs>>();
+            GamePadEvents = new Dictionary<string, EventHandler<GamePadEventArgs>>();
+            MouseEvents = new Dictionary<string, EventHandler<MouseEventArgs>>();
         }
         
         public static void Register(Game game, GameComponentCollection components)
@@ -40,7 +41,7 @@ namespace Relm
         }
 
         #endregion
-
+        
         #region Keyboard
 
         public static KeyboardStateExtended GetKeyboardState()
@@ -50,56 +51,59 @@ namespace Relm
 
         public static void ClearKeyboardEvents()
         {
-            foreach (var kvp in _keyboardEvents)
+            foreach (var kvp in KeyboardEvents)
             {
                 if (kvp.Key.StartsWith(nameof(_keyboardListener.KeyPressed))) _keyboardListener.KeyPressed -= kvp.Value;
                 if (kvp.Key.StartsWith(nameof(_keyboardListener.KeyReleased))) _keyboardListener.KeyReleased -= kvp.Value;
                 if (kvp.Key.StartsWith(nameof(_keyboardListener.KeyTyped))) _keyboardListener.KeyTyped -= kvp.Value;
             }
 
-            _keyboardEvents.Clear();
+            KeyboardEvents.Clear();
         }
 
         private static void KeyPressed(EventHandler<KeyboardEventArgs> eventHandler)
         {
             _keyboardListener.KeyPressed += eventHandler;
-            _keyboardEvents.Add($"{nameof(_keyboardListener.KeyPressed)}_{Guid.NewGuid()}", eventHandler);
+            KeyboardEvents.Add($"{nameof(_keyboardListener.KeyPressed)}_{Guid.NewGuid()}", eventHandler);
         }
 
         private static void KeyReleased(EventHandler<KeyboardEventArgs> eventHandler)
         {
             _keyboardListener.KeyReleased += eventHandler;
-            _keyboardEvents.Add($"{nameof(_keyboardListener.KeyReleased)}_{Guid.NewGuid()}", eventHandler);
+            KeyboardEvents.Add($"{nameof(_keyboardListener.KeyReleased)}_{Guid.NewGuid()}", eventHandler);
         }
 
         private static void KeyTyped(EventHandler<KeyboardEventArgs> eventHandler)
         {
             _keyboardListener.KeyTyped += eventHandler;
-            _keyboardEvents.Add($"{nameof(_keyboardListener.KeyTyped)}_{Guid.NewGuid()}", eventHandler);
+            KeyboardEvents.Add($"{nameof(_keyboardListener.KeyTyped)}_{Guid.NewGuid()}", eventHandler);
         }
 
-        public static void OnKeyPressed(Keys key, Action<object, KeyboardEventArgs> action)
+        public static void OnKeyPressed(Keys key, Action<object, KeyboardEventArgs> action, GameScreen screen)
         {
             KeyPressed((sender, args) =>
             {
+                if (screen != UserInterface.ActiveScreen && screen != Screens.ActiveScreen) return;
                 if (args.Key != key) return;
                 action?.Invoke(sender, args);
             });
         }
 
-        public static void OnKeyReleased(Keys key, Action<object, KeyboardEventArgs> action)
+        public static void OnKeyReleased(Keys key, Action<object, KeyboardEventArgs> action, GameScreen screen)
         {
             KeyReleased((sender, args) =>
             {
+                if (screen != UserInterface.ActiveScreen && screen != Screens.ActiveScreen) return;
                 if (args.Key != key) return;
                 action?.Invoke(sender, args);
             });
         }
 
-        public static void OnKeyTyped(Keys key, Action<object, KeyboardEventArgs> action)
+        public static void OnKeyTyped(Keys key, Action<object, KeyboardEventArgs> action, GameScreen screen)
         {
             KeyTyped((sender, args) =>
             {
+                if (screen != UserInterface.ActiveScreen && screen != Screens.ActiveScreen) return;
                 if (args.Key != key) return;
                 action?.Invoke(sender, args);
             });
@@ -111,7 +115,7 @@ namespace Relm
 
         public static void ClearGamepadEvents()
         {
-            foreach (var kvp in _gamePadEvents)
+            foreach (var kvp in GamePadEvents)
             {
                 if (kvp.Key.StartsWith(nameof(_gamePadListener.ButtonUp))) _gamePadListener.ButtonUp -= kvp.Value;
                 if (kvp.Key.StartsWith(nameof(_gamePadListener.ButtonDown))) _gamePadListener.ButtonDown -= kvp.Value;
@@ -120,78 +124,83 @@ namespace Relm
                 if (kvp.Key.StartsWith(nameof(_gamePadListener.TriggerMoved))) _gamePadListener.TriggerMoved -= kvp.Value;
             }
 
-            _gamePadEvents.Clear();
+            GamePadEvents.Clear();
         }
 
         private static void ButtonDown(EventHandler<GamePadEventArgs> eventHandler)
         {
             _gamePadListener.ButtonDown += eventHandler;
-            _gamePadEvents.Add($"{nameof(_gamePadListener.ButtonDown)}_{Guid.NewGuid()}", eventHandler);
+            GamePadEvents.Add($"{nameof(_gamePadListener.ButtonDown)}_{Guid.NewGuid()}", eventHandler);
         }
 
         private static void ButtonRepeated(EventHandler<GamePadEventArgs> eventHandler)
         {
             _gamePadListener.ButtonRepeated += eventHandler;
-            _gamePadEvents.Add($"{nameof(_gamePadListener.ButtonRepeated)}_{Guid.NewGuid()}", eventHandler);
+            GamePadEvents.Add($"{nameof(_gamePadListener.ButtonRepeated)}_{Guid.NewGuid()}", eventHandler);
         }
 
         private static void ButtonUp(EventHandler<GamePadEventArgs> eventHandler)
         {
             _gamePadListener.ButtonUp += eventHandler;
-            _gamePadEvents.Add($"{nameof(_gamePadListener.ButtonUp)}_{Guid.NewGuid()}", eventHandler);
+            GamePadEvents.Add($"{nameof(_gamePadListener.ButtonUp)}_{Guid.NewGuid()}", eventHandler);
         }
 
         private static void ThumbStickMoved(EventHandler<GamePadEventArgs> eventHandler)
         {
             _gamePadListener.ThumbStickMoved += eventHandler;
-            _gamePadEvents.Add($"{nameof(_gamePadListener.ThumbStickMoved)}_{Guid.NewGuid()}", eventHandler);
+            GamePadEvents.Add($"{nameof(_gamePadListener.ThumbStickMoved)}_{Guid.NewGuid()}", eventHandler);
         }
 
         private static void TriggerMoved(EventHandler<GamePadEventArgs> eventHandler)
         {
             _gamePadListener.TriggerMoved += eventHandler;
-            _gamePadEvents.Add($"{nameof(_gamePadListener.TriggerMoved)}_{Guid.NewGuid()}", eventHandler);
+            GamePadEvents.Add($"{nameof(_gamePadListener.TriggerMoved)}_{Guid.NewGuid()}", eventHandler);
         }
 
-        public static void OnButtonDown(Buttons button, Action<object, GamePadEventArgs> action)
+        public static void OnButtonDown(Buttons button, Action<object, GamePadEventArgs> action, GameScreen screen)
         {
             ButtonDown((sender, args) =>
             {
+                if (screen != UserInterface.ActiveScreen && screen != Screens.ActiveScreen) return;
                 if (args.Button != button) return;
                 action?.Invoke(sender, args);
             });
         }
 
-        public static void OnButtonRepeated(Buttons button, Action<object, GamePadEventArgs> action)
+        public static void OnButtonRepeated(Buttons button, Action<object, GamePadEventArgs> action, GameScreen screen)
         {
             ButtonRepeated((sender, args) =>
             {
+                if (screen != UserInterface.ActiveScreen && screen != Screens.ActiveScreen) return;
                 if (args.Button != button) return;
                 action?.Invoke(sender, args);
             });
         }
 
-        public static void OnButtonUp(Buttons button, Action<object, GamePadEventArgs> action)
+        public static void OnButtonUp(Buttons button, Action<object, GamePadEventArgs> action, GameScreen screen)
         {
             ButtonUp((sender, args) =>
             {
+                if (screen != UserInterface.ActiveScreen && screen != Screens.ActiveScreen) return;
                 if (args.Button != button) return;
                 action?.Invoke(sender, args);
             });
         }
 
-        public static void OnThumbStickMoved(Action<object, GamePadEventArgs> action)
+        public static void OnThumbStickMoved(Action<object, GamePadEventArgs> action, GameScreen screen)
         {
             ThumbStickMoved((sender, args) =>
             {
+                if (screen != UserInterface.ActiveScreen && screen != Screens.ActiveScreen) return;
                 action?.Invoke(sender, args);
             });
         }
 
-        public static void OnTriggerMoved(Action<object, GamePadEventArgs> action)
+        public static void OnTriggerMoved(Action<object, GamePadEventArgs> action, GameScreen screen)
         {
             TriggerMoved((sender, args) =>
             {
+                if (screen != UserInterface.ActiveScreen && screen != Screens.ActiveScreen) return;
                 action?.Invoke(sender, args);
             });
         }
@@ -207,7 +216,7 @@ namespace Relm
 
         public static void ClearMouseEvents()
         {
-            foreach (var kvp in _mouseEvents)
+            foreach (var kvp in MouseEvents)
             {
                 if (kvp.Key.StartsWith(nameof(_mouseListener.MouseClicked))) _mouseListener.MouseClicked -= kvp.Value;
                 if (kvp.Key.StartsWith(nameof(_mouseListener.MouseDoubleClicked))) _mouseListener.MouseDoubleClicked -= kvp.Value;
@@ -220,121 +229,129 @@ namespace Relm
                 if (kvp.Key.StartsWith(nameof(_mouseListener.MouseWheelMoved))) _mouseListener.MouseWheelMoved -= kvp.Value;
             }
 
-            _mouseEvents.Clear();
+            MouseEvents.Clear();
         }
 
         private static void MouseClicked(EventHandler<MouseEventArgs> eventHandler)
         {
             _mouseListener.MouseClicked += eventHandler;
-            _mouseEvents.Add($"{nameof(_mouseListener.MouseClicked)}_{Guid.NewGuid()}", eventHandler);
+            MouseEvents.Add($"{nameof(_mouseListener.MouseClicked)}_{Guid.NewGuid()}", eventHandler);
         }
 
         private static void MouseDoubleClicked(EventHandler<MouseEventArgs> eventHandler)
         {
             _mouseListener.MouseDoubleClicked += eventHandler;
-            _mouseEvents.Add($"{nameof(_mouseListener.MouseDoubleClicked)}_{Guid.NewGuid()}", eventHandler);
+            MouseEvents.Add($"{nameof(_mouseListener.MouseDoubleClicked)}_{Guid.NewGuid()}", eventHandler);
         }
 
         private static void MouseDown(EventHandler<MouseEventArgs> eventHandler)
         {
             _mouseListener.MouseDown += eventHandler;
-            _mouseEvents.Add($"{nameof(_mouseListener.MouseDown)}_{Guid.NewGuid()}", eventHandler);
+            MouseEvents.Add($"{nameof(_mouseListener.MouseDown)}_{Guid.NewGuid()}", eventHandler);
         }
 
         private static void MouseDrag(EventHandler<MouseEventArgs> eventHandler)
         {
             _mouseListener.MouseDrag += eventHandler;
-            _mouseEvents.Add($"{nameof(_mouseListener.MouseDrag)}_{Guid.NewGuid()}", eventHandler);
+            MouseEvents.Add($"{nameof(_mouseListener.MouseDrag)}_{Guid.NewGuid()}", eventHandler);
         }
 
         private static void MouseDragEnd(EventHandler<MouseEventArgs> eventHandler)
         {
             _mouseListener.MouseDragEnd += eventHandler;
-            _mouseEvents.Add($"{nameof(_mouseListener.MouseDragEnd)}_{Guid.NewGuid()}", eventHandler);
+            MouseEvents.Add($"{nameof(_mouseListener.MouseDragEnd)}_{Guid.NewGuid()}", eventHandler);
         }
 
         private static void MouseDragStart(EventHandler<MouseEventArgs> eventHandler)
         {
             _mouseListener.MouseDragStart += eventHandler;
-            _mouseEvents.Add($"{nameof(_mouseListener.MouseDragStart)}_{Guid.NewGuid()}", eventHandler);
+            MouseEvents.Add($"{nameof(_mouseListener.MouseDragStart)}_{Guid.NewGuid()}", eventHandler);
         }
 
         private static void MouseMoved(EventHandler<MouseEventArgs> eventHandler)
         {
             _mouseListener.MouseMoved += eventHandler;
-            _mouseEvents.Add($"{nameof(_mouseListener.MouseMoved)}_{Guid.NewGuid()}", eventHandler);
+            MouseEvents.Add($"{nameof(_mouseListener.MouseMoved)}_{Guid.NewGuid()}", eventHandler);
         }
 
         private static void MouseUp(EventHandler<MouseEventArgs> eventHandler)
         {
             _mouseListener.MouseUp += eventHandler;
-            _mouseEvents.Add($"{nameof(_mouseListener.MouseUp)}_{Guid.NewGuid()}", eventHandler);
+            MouseEvents.Add($"{nameof(_mouseListener.MouseUp)}_{Guid.NewGuid()}", eventHandler);
         }
 
 
-        public static void OnMouseClicked(MouseButton button, Action<object, MouseEventArgs> action)
+        public static void OnMouseClicked(MouseButton button, Action<object, MouseEventArgs> action, GameScreen screen)
         {
             MouseClicked((sender, args) =>
             {
+                if (screen != UserInterface.ActiveScreen && screen != Screens.ActiveScreen) return;
                 if (args.Button != button) return;
                 action?.Invoke(sender, args);
             });
         }
 
-        public static void OnMouseDoubleClicked(MouseButton button, Action<object, MouseEventArgs> action)
+        public static void OnMouseDoubleClicked(MouseButton button, Action<object, MouseEventArgs> action, GameScreen screen)
         {
             MouseDoubleClicked((sender, args) =>
             {
+                if (screen != UserInterface.ActiveScreen && screen != Screens.ActiveScreen) return;
                 if (args.Button != button) return;
                 action?.Invoke(sender, args);
             });
         }
 
-        public static void OnMouseDown(MouseButton button, Action<object, MouseEventArgs> action)
+        public static void OnMouseDown(MouseButton button, Action<object, MouseEventArgs> action, GameScreen screen)
         {
             MouseDown((sender, args) =>
             {
+                if (screen != UserInterface.ActiveScreen && screen != Screens.ActiveScreen) return;
                 if (args.Button != button) return;
                 action?.Invoke(sender, args);
             });
         }
 
-        public static void OnMouseDrag(Action<object, MouseEventArgs> action)
+        public static void OnMouseDrag(Action<object, MouseEventArgs> action, GameScreen screen)
         {
             MouseDrag((sender, args) =>
             {
+                if (screen != UserInterface.ActiveScreen && screen != Screens.ActiveScreen) return;
                 action?.Invoke(sender, args);
             });
         }
 
-        public static void OnMouseDragEnd(Action<object, MouseEventArgs> action)
+        public static void OnMouseDragEnd(Action<object, MouseEventArgs> action, GameScreen screen)
         {
             MouseDragEnd((sender, args) =>
             {
+                if (screen != UserInterface.ActiveScreen && screen != Screens.ActiveScreen) return;
                 action?.Invoke(sender, args);
             });
         }
 
-        public static void OnMouseDragStart(Action<object, MouseEventArgs> action)
+        public static void OnMouseDragStart(Action<object, MouseEventArgs> action, GameScreen screen)
         {
             MouseDragStart((sender, args) =>
             {
+                if (screen != UserInterface.ActiveScreen && screen != Screens.ActiveScreen) return;
                 action?.Invoke(sender, args);
             });
         }
 
-        public static void OnMouseMoved(Action<object, MouseEventArgs> action)
+        public static void OnMouseMoved(Action<object, MouseEventArgs> action, GameScreen screen)
         {
             MouseMoved((sender, args) =>
             {
+                if (screen != UserInterface.ActiveScreen && screen != Screens.ActiveScreen) return;
                 action?.Invoke(sender, args);
             });
         }
 
-        public static void OnMouseUp(MouseButton button, Action<object, MouseEventArgs> action)
+        public static void OnMouseUp(MouseButton button, Action<object, MouseEventArgs> action, GameScreen screen)
         {
             MouseUp((sender, args) =>
             {
+                if (screen != UserInterface.ActiveScreen && screen != Screens.ActiveScreen) return;
                 if (args.Button != button) return;
                 action?.Invoke(sender, args);
             });
@@ -346,7 +363,7 @@ namespace Relm
 
         public static void ClearTouchEvents()
         {
-            foreach (var kvp in _touchEvents)
+            foreach (var kvp in TouchEvents)
             {
                 if (kvp.Key.StartsWith(nameof(_touchListener.TouchCancelled))) _touchListener.TouchCancelled -= kvp.Value;
                 if (kvp.Key.StartsWith(nameof(_touchListener.TouchEnded))) _touchListener.TouchEnded -= kvp.Value;
@@ -354,62 +371,66 @@ namespace Relm
                 if (kvp.Key.StartsWith(nameof(_touchListener.TouchStarted))) _touchListener.TouchStarted -= kvp.Value;
             }
 
-            _touchEvents.Clear();
+            TouchEvents.Clear();
         }
 
         private static void TouchCancelled(EventHandler<TouchEventArgs> eventHandler)
         {
             _touchListener.TouchCancelled += eventHandler;
-            _touchEvents.Add($"{nameof(_touchListener.TouchCancelled)}_{Guid.NewGuid()}", eventHandler);
+            TouchEvents.Add($"{nameof(_touchListener.TouchCancelled)}_{Guid.NewGuid()}", eventHandler);
         }
 
         private static void TouchEnded(EventHandler<TouchEventArgs> eventHandler)
         {
             _touchListener.TouchEnded += eventHandler;
-            _touchEvents.Add($"{nameof(_touchListener.TouchEnded)}_{Guid.NewGuid()}", eventHandler);
+            TouchEvents.Add($"{nameof(_touchListener.TouchEnded)}_{Guid.NewGuid()}", eventHandler);
         }
 
         private static void TouchMoved(EventHandler<TouchEventArgs> eventHandler)
         {
             _touchListener.TouchMoved += eventHandler;
-            _touchEvents.Add($"{nameof(_touchListener.TouchMoved)}_{Guid.NewGuid()}", eventHandler);
+            TouchEvents.Add($"{nameof(_touchListener.TouchMoved)}_{Guid.NewGuid()}", eventHandler);
         }
 
         private static void TouchStarted(EventHandler<TouchEventArgs> eventHandler)
         {
             _touchListener.TouchStarted += eventHandler;
-            _touchEvents.Add($"{nameof(_touchListener.TouchStarted)}_{Guid.NewGuid()}", eventHandler);
+            TouchEvents.Add($"{nameof(_touchListener.TouchStarted)}_{Guid.NewGuid()}", eventHandler);
         }
 
 
-        public static void OnTouchCancelled(Action<object, TouchEventArgs> action)
+        public static void OnTouchCancelled(Action<object, TouchEventArgs> action, GameScreen screen)
         {
             TouchCancelled((sender, args) =>
             {
+                if (screen != UserInterface.ActiveScreen && screen != Screens.ActiveScreen) return;
                 action?.Invoke(sender, args);
             });
         }
 
-        public static void OnTouchEnded(Action<object, TouchEventArgs> action)
+        public static void OnTouchEnded(Action<object, TouchEventArgs> action, GameScreen screen)
         {
             TouchEnded((sender, args) =>
             {
+                if (screen != UserInterface.ActiveScreen && screen != Screens.ActiveScreen) return;
                 action?.Invoke(sender, args);
             });
         }
 
-        public static void OnTouchMoved(Action<object, TouchEventArgs> action)
+        public static void OnTouchMoved(Action<object, TouchEventArgs> action, GameScreen screen)
         {
             TouchMoved((sender, args) =>
             {
+                if (screen != UserInterface.ActiveScreen && screen != Screens.ActiveScreen) return;
                 action?.Invoke(sender, args);
             });
         }
 
-        public static void OnTouchStarted(Action<object, TouchEventArgs> action)
+        public static void OnTouchStarted(Action<object, TouchEventArgs> action, GameScreen screen)
         {
             TouchStarted((sender, args) =>
             {
+                if (screen != UserInterface.ActiveScreen && screen != Screens.ActiveScreen) return;
                 action?.Invoke(sender, args);
             });
         }

@@ -3,11 +3,10 @@ using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Screens.Transitions;
 using Relm.Sandbox.Win.Naming;
 using Relm.UI;
-using Relm.UI.Controls;
 
 namespace Relm.Sandbox.Win.Models.UI
 {
-    public class MainMenu
+    public class Hud
         : UserInterfaceScreen
     {
         private new SandboxGame Game => (SandboxGame)base.Game;
@@ -20,33 +19,18 @@ namespace Relm.Sandbox.Win.Models.UI
             public static string ExitButton = "btnExit";
         }
 
-        public override string Name => nameof(MainMenu);
+        public override string Name => nameof(Hud);
 
         private Vector2 _position = new Vector2(50, 50);
 
-        public MainMenu(Game game) 
+        public Hud(Game game)
             : base(game)
         {
-            
-        }
-
-        public override void Initialize()
-        {
-            if (IsInitialized) return;
-
             Input.OnKeyPressed(Keys.Escape, (sender, args) =>
             {
-                UserInterface.Change(nameof(Hud));
-                Relm.Screens.UnPause();
+                UserInterface.Change(nameof(MainMenu), new FadeTransition(GraphicsDevice, Color.Black)); 
+                Relm.Screens.Pause();
             }, this);
-
-            Controls.Add<Button>(ControlNames.NewGameButton)
-                .SetPosition(100, 100)
-                .SetText("New Game");
-
-            base.Initialize();
-
-            IsInitialized = true;
         }
 
         public override void Update(GameTime gameTime)
@@ -57,7 +41,7 @@ namespace Relm.Sandbox.Win.Models.UI
         public override void Draw(GameTime gameTime)
         {
             Game.SpriteBatch.Begin();
-            Game.SpriteBatch.Draw(ContentLibrary.Textures.Get(TextureNames.Test64), new Vector2(128, 128), Color.Blue);
+            Game.SpriteBatch.Draw(ContentLibrary.Textures.Get(TextureNames.Test64), new Vector2(8, 8), Color.Green);
             Game.SpriteBatch.End();
 
             base.Draw(gameTime);

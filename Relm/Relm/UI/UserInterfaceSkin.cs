@@ -9,6 +9,7 @@ namespace Relm.UI
     {
         public Dictionary<Type, IConfig> ControlConfigurations { get; internal set; }
         public Texture2D Texture { get; set; }
+        public SpriteFont Font { get; set; }
 
         protected UserInterfaceSkin()
         {

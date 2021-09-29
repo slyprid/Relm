@@ -11,6 +11,8 @@ namespace Relm.UI
         private UserInterfaceScreen _activeScreen;
         private Transition _activeTransition;
 
+        public UserInterfaceScreen ActiveScreen => _activeScreen;
+
         public UserInterfaceManager()
         {
             DrawOrder = int.MaxValue;

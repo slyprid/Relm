@@ -22,6 +22,8 @@ namespace Relm.UI.Controls
         public Texture2D Icon { get; set; }
         public Vector2 IconSize { get; set; }
         public Vector2 IconOffset { get; set; }
+        public string Text { get; set; }
+        public Color TextColor { get; set; }
 
 
         public int Width => (int)Size.X;
@@ -35,6 +37,7 @@ namespace Relm.UI.Controls
         {
             State = ButtonState.Normal;
             Scale = Vector2.One;
+            TextColor = Color.Black;
         }
 
         public KeyboardStateExtended KeyboardState { get; set; }
@@ -65,9 +68,19 @@ namespace Relm.UI.Controls
             var region = TextureAtlas[(int) State];
             spriteBatch.Draw(region, Bounds, Color.White);
 
-            if (Icon == null) return;
-            var iconRect = new Rectangle((int)(X + IconOffset.X), (int)(Y + IconOffset.Y), (int) IconSize.X, (int) IconSize.Y);
-            spriteBatch.Draw(Icon, iconRect, Color.White);
+            if (Icon != null)
+            {
+                var iconRect = new Rectangle((int) (X + IconOffset.X), (int) (Y + IconOffset.Y), (int) IconSize.X, (int) IconSize.Y);
+                spriteBatch.Draw(Icon, iconRect, Color.White);
+            }
+
+            if (!string.IsNullOrEmpty(Text))
+            {
+                var font = UserInterface.Skin.Font;
+                var textSize = font.MeasureString(Text);
+                var textPosition = Position + new Vector2((Width / 2) - (textSize.X / 2), (Height / 2) - (textSize.Y / 2));
+                spriteBatch.DrawString(font, Text, textPosition, TextColor);
+            }
         }
 
         #region Fluent Methods
@@ -111,6 +124,19 @@ namespace Relm.UI.Controls
             Icon = texture;
             IconSize = new Vector2(iconWidth, iconHeight);
             IconOffset = new Vector2(offsetX, offsetY);
+            return this;
+        }
+
+        public Button SetText(string text)
+        {
+            Text = text;
+            return this;
+        }
+
+        public Button SetText(string text, Color color)
+        {
+            Text = text;
+            TextColor = color;
             return this;
         }
 

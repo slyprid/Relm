@@ -14,6 +14,8 @@ namespace Relm
         public static Dictionary<string, UserInterfaceScreen> ScreenList { get; }
         public static UserInterfaceSkin Skin { get; internal set; }
 
+        public static UserInterfaceScreen ActiveScreen => UserInterfaceManager.ActiveScreen;
+
         static UserInterface()
         {
             ScreenList = new Dictionary<string, UserInterfaceScreen>();
@@ -49,13 +51,14 @@ namespace Relm
             return ScreenList[name];
         }
 
-        public static void UseSkin(string skinName)
+        public static void UseSkin(string skinName, string fontName)
         {
             var shortName = skinName.Split('/').Last();
             var asm = Assembly.GetCallingAssembly();
             var fullName = $"{asm.FullName.Split(',').First()}.Content.{shortName}";
             Skin = (UserInterfaceSkin)Activator.CreateInstance(asm.GetType(fullName));
             Skin.Texture = ContentLibrary.Textures[skinName];
+            Skin.Font = ContentLibrary.Fonts[fontName];
         }
     }
 }

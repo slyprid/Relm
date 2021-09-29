@@ -7,6 +7,7 @@ namespace Relm.UI
         : GameScreen
     {
         public abstract string Name { get; }
+        public bool IsInitialized { get; set; }
 
         public UserInterfaceManager UserInterfaceManager { get; internal set; }
         public ControlManager Controls { get; set; }
@@ -15,6 +16,7 @@ namespace Relm.UI
             : base(game)
         {
             Controls = new ControlManager();
+            IsInitialized = false;
         }
 
         public override void Update(GameTime gameTime)

@@ -22,12 +22,12 @@ namespace Relm.Sandbox.Win
             base.Initialize();
 
             //Input.OnKeyPressed(Keys.Escape, (sender, args) => { Exit(); });
-            Input.OnKeyPressed(Keys.Escape, (sender, args) => { UserInterface.Change(nameof(MainMenu), new FadeTransition(GraphicsDevice, Color.Black)); });
-            Input.OnKeyPressed(Keys.D1, (sender, args) => { Screens.Change(nameof(TestScreen1), new FadeTransition(GraphicsDevice, Color.Black)); });
-            Input.OnKeyPressed(Keys.D2, (sender, args) => { Screens.Change(nameof(TestScreen2), new FadeTransition(GraphicsDevice, Color.Black)); });
-            Input.OnKeyPressed(Keys.D3, (sender, args) => { Input.ClearKeyboardEvents(); });
+            //Input.OnKeyPressed(Keys.Escape, (sender, args) => { UserInterface.Change(nameof(MainMenu), new FadeTransition(GraphicsDevice, Color.Black)); });
+            //Input.OnKeyPressed(Keys.D1, (sender, args) => { Screens.Change(nameof(TestScreen1), new FadeTransition(GraphicsDevice, Color.Black)); });
+            //Input.OnKeyPressed(Keys.D2, (sender, args) => { Screens.Change(nameof(TestScreen2), new FadeTransition(GraphicsDevice, Color.Black)); });
+            //Input.OnKeyPressed(Keys.D3, (sender, args) => { Input.ClearKeyboardEvents(); });
 
-            Input.OnMouseDoubleClicked(MouseButton.Right, (sender, args) => { Exit(); });
+            //Input.OnMouseDoubleClicked(MouseButton.Right, (sender, args) => { Exit(); });
         }
 
         protected override void LoadContent()
@@ -38,11 +38,16 @@ namespace Relm.Sandbox.Win
             ContentLibrary.Textures.Add(TextureNames.Background);
             ContentLibrary.Textures.Add(TextureNames.UserInterfaceSkin);
 
+            ContentLibrary.Fonts.Add(FontNames.Default, x => x.Texture.Name = FontNames.Default);
+
             Screens.Add(new TestScreen1(this));
             Screens.Add(new TestScreen2(this));
 
-            UserInterface.UseSkin(TextureNames.UserInterfaceSkin);
+            UserInterface.UseSkin(TextureNames.UserInterfaceSkin, FontNames.Default);
             UserInterface.Add(new MainMenu(this));
+            UserInterface.Add(new Hud(this));
+
+            Screens.Change(nameof(TestScreen1));
         }
 
         protected override void Update(GameTime gameTime)

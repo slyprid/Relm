@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using Relm.Models;
+using Relm.Sandbox.Win.Models.UI;
 using Relm.Sandbox.Win.Naming;
 
 namespace Relm.Sandbox.Win.Models.Screens
@@ -17,6 +18,14 @@ namespace Relm.Sandbox.Win.Models.Screens
 
         public TestScreen1(Game game) : base(game)
         {
+            
+        }
+
+        public override void Initialize()
+        {
+            UserInterface.Change(nameof(Hud));
+
+            base.Initialize();
         }
 
         public override void Update(GameTime gameTime)

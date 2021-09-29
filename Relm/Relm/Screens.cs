@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Reflection;
 using MonoGame.Extended.Screens;
 using MonoGame.Extended.Screens.Transitions;
 using Relm.Models;
@@ -9,11 +10,35 @@ namespace Relm
     {
         internal static ScreenManager ScreenManager { get; set; }
 
+        public static bool IsPaused { get; private set; }
+
+        public static GameScreen ActiveScreen
+        {
+            get
+            {
+                var field = ScreenManager.GetType().GetField("_activeScreen", BindingFlags.NonPublic | BindingFlags.Instance);
+                return (GameScreen)field?.GetValue(ScreenManager);
+            }
+        }
+
         public static Dictionary<string, RelmGameScreen> ScreenList { get; }
 
         static Screens()
         {
             ScreenList = new Dictionary<string, RelmGameScreen>();
+            IsPaused = false;
+        }
+
+        public static void Pause()
+        {
+            IsPaused = true;
+            ScreenManager.IsEnabled = false;
+        }
+
+        public static void UnPause()
+        {
+            IsPaused = false;
+            ScreenManager.IsEnabled = true;
         }
 
         public static void LoadScreen(RelmGameScreen screen)
