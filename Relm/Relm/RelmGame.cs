@@ -14,7 +14,8 @@ namespace Relm
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private ViewportAdapter _viewportAdapter;
-        private OrthographicCamera _camera;
+        private static OrthographicCamera _camera;
+        private static RelmGame _instance;
 
         private readonly int _virtualWidth;
         private readonly int _virtualHeight;
@@ -23,10 +24,11 @@ namespace Relm
 
         public Point2 Resolution => new Point2(_virtualWidth, _virtualHeight);
         public SpriteBatch SpriteBatch => _spriteBatch;
-        public OrthographicCamera Camera => _camera;
+        public static OrthographicCamera Camera => _camera;
 
         public RelmGame(string title = "", int virtualWidth = 1024, int virtualHeight = 768, int actualWidth = 1024, int actualHeight = 768)
         {
+            _instance = this;
             _virtualWidth = virtualWidth;
             _virtualHeight = virtualHeight;
             _actualWidth = actualWidth;
@@ -85,6 +87,11 @@ namespace Relm
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             base.Draw(gameTime);
+        }
+
+        public new static void Exit()
+        {
+            ((Game) _instance).Exit();
         }
     }
 }

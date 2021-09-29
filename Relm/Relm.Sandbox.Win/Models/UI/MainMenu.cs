@@ -36,13 +36,28 @@ namespace Relm.Sandbox.Win.Models.UI
 
             Input.OnKeyPressed(Keys.Escape, (sender, args) =>
             {
-                UserInterface.Change(nameof(Hud));
+                UserInterface.Change(nameof(Hud), new FadeTransition(GraphicsDevice, Color.Black));
                 Relm.Screens.UnPause();
             }, this);
 
             Controls.Add<Button>(ControlNames.NewGameButton)
-                .SetPosition(100, 100)
+                .SetPosition<Button>(Layout.CenterScreen)
+                .Offset<Button>(0, Layout.Height - (128 * 3) + (16 * 2))
                 .SetText("New Game");
+
+            Controls.Add<Button>(ControlNames.ContinueGameButton)
+                .SetPosition<Button>(Layout.CenterScreen)
+                .Offset<Button>(0, Layout.Height - (128 * 2) + (16 * 1))
+                .SetText("Continue Game");
+
+            Controls.Add<Button>(ControlNames.ExitButton)
+                .SetPosition<Button>(Layout.CenterScreen)
+                .Offset<Button>(0, Layout.Height - (128 * 1))
+                .SetText("Exit")
+                .OnClick((sender, args) =>
+                {
+                    RelmGame.Exit();
+                }, this);
 
             base.Initialize();
 

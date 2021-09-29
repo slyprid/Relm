@@ -4,6 +4,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Input;
+using MonoGame.Extended.Input.InputListeners;
+using MonoGame.Extended.Screens;
 using MonoGame.Extended.TextureAtlases;
 using Relm.UI.Configuration;
 using ButtonState = Relm.UI.States.ButtonState;
@@ -11,27 +13,16 @@ using ButtonState = Relm.UI.States.ButtonState;
 namespace Relm.UI.Controls
 {
     public class Button
-        : IControl
+        : Control
     {
-        public bool IsConfigured { get; private set; }
-        public Vector2 Size { get; set; }
-        public Vector2 Position { get; set; }
         public TextureAtlas TextureAtlas { get; set; }
         public States.ButtonState State { get; set; }
-        public Vector2 Scale { get; set; }
         public Texture2D Icon { get; set; }
         public Vector2 IconSize { get; set; }
         public Vector2 IconOffset { get; set; }
         public string Text { get; set; }
         public Color TextColor { get; set; }
-
-
-        public int Width => (int)Size.X;
-        public int Height => (int) Size.Y;
-        public int X => (int)Position.X;
-        public int Y => (int) Position.Y;
-
-        public Rectangle Bounds => new Rectangle(X, Y, (int)(Width * Scale.X), (int)(Height * Scale.Y));
+        
 
         public Button()
         {
@@ -39,18 +30,15 @@ namespace Relm.UI.Controls
             Scale = Vector2.One;
             TextColor = Color.Black;
         }
-
-        public KeyboardStateExtended KeyboardState { get; set; }
-        public MouseStateExtended MouseState { get; set; }
-
-        public void Configure()
+        
+        public override void Configure()
         {
             var config = (ButtonConfig)UserInterface.Skin.ControlConfigurations[typeof(Button)];
             TextureAtlas = new TextureAtlas(Guid.NewGuid().ToString(), UserInterface.Skin.Texture, config.Regions);
             Size = new Vector2(config.Width, config.Height);
         }
 
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             State = ButtonState.Normal;
 
@@ -63,7 +51,7 @@ namespace Relm.UI.Controls
             }
         }
 
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             var region = TextureAtlas[(int) State];
             spriteBatch.Draw(region, Bounds, Color.White);
@@ -84,25 +72,7 @@ namespace Relm.UI.Controls
         }
 
         #region Fluent Methods
-
-        public Button SetPosition(int x, int y)
-        {
-            Position = new Vector2(x, y);
-            return this;
-        }
-
-        public Button SetScale(float scale)
-        {
-            Scale = new Vector2(scale, scale);
-            return this;
-        }
-
-        public Button SetScale(float scaleX, float scaleY)
-        {
-            Scale = new Vector2(scaleX, scaleY);
-            return this;
-        }
-
+        
         public Button HasIcon(Texture2D texture)
         {
             Icon = texture;
@@ -137,6 +107,12 @@ namespace Relm.UI.Controls
         {
             Text = text;
             TextColor = color;
+            return this;
+        }
+
+        public Button OnClick(Action<object, MouseEventArgs> action, UserInterfaceScreen screen)
+        {
+            Input.OnMouseClicked(MouseButton.Left, action, screen);
             return this;
         }
 

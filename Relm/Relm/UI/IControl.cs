@@ -1,6 +1,6 @@
-﻿using MonoGame.Extended.Input;
+﻿using Microsoft.Xna.Framework;
+using MonoGame.Extended.Input;
 using Relm.Entities;
-using Relm.UI.Configuration;
 
 namespace Relm.UI
 {
@@ -9,8 +9,21 @@ namespace Relm.UI
     {
         KeyboardStateExtended KeyboardState { get; set; }
         MouseStateExtended MouseState { get; set; }
-        bool IsConfigured { get; }
+        Vector2 Scale { get; set; }
 
         void Configure();
+
+        #region Fluent Functions
+
+        T As<T>() where T : IControl;
+        T SetPosition<T>(int x, int y) where T : IControl;
+        T SetPosition<T>(Vector2 position) where T : IControl;
+        T SetScale<T>(float scale) where T : IControl;
+        T SetScale<T>(float scaleX, float scaleY) where T : IControl;
+        T SetSize<T>(int width, int height) where T : IControl;
+        T Offset<T>(int x, int y) where T : IControl;
+        T Offset<T>(Vector2 offset) where T : IControl;
+
+        #endregion
     }
 }
