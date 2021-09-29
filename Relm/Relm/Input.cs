@@ -18,8 +18,7 @@ namespace Relm
         private static Dictionary<string, EventHandler<TouchEventArgs>> _touchEvents;
         private static Dictionary<string, EventHandler<GamePadEventArgs>> _gamePadEvents;
         private static Dictionary<string, EventHandler<MouseEventArgs>> _mouseEvents;
-
-
+        
         #region Initialization
 
         static Input()
@@ -43,6 +42,11 @@ namespace Relm
         #endregion
 
         #region Keyboard
+
+        public static KeyboardStateExtended GetKeyboardState()
+        {
+            return KeyboardExtended.GetState();
+        }
 
         public static void ClearKeyboardEvents()
         {
@@ -195,6 +199,11 @@ namespace Relm
         #endregion
 
         #region Mouse
+
+        public static MouseStateExtended GetMouseState()
+        {
+            return MouseExtended.GetState();
+        }
 
         public static void ClearMouseEvents()
         {

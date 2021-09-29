@@ -2,13 +2,14 @@
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using Relm.Models;
+using Relm.Sandbox.Win.Naming;
 
 namespace Relm.Sandbox.Win.Models.Screens
 {
     public class TestScreen1
         : RelmGameScreen
     {
-        private SandboxGame Game => (SandboxGame)base.Game;
+        private new SandboxGame Game => (SandboxGame)base.Game;
 
         public override string Name => nameof(TestScreen1);
 
@@ -27,7 +28,7 @@ namespace Relm.Sandbox.Win.Models.Screens
         {
             Game.GraphicsDevice.Clear(new Color(16, 139, 204));
             Game.SpriteBatch.Begin();
-            Game.SpriteBatch.Draw(ContentLibrary.Textures.Get("Test-64"), _position, Color.White);
+            Game.SpriteBatch.Draw(ContentLibrary.Textures.Get(TextureNames.Test64), _position, Color.White);
             Game.SpriteBatch.End();
         }
     }

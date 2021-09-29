@@ -7,10 +7,10 @@ namespace Relm.UI
     public interface IControl
         : IDrawableEntity
     {
-        bool UseExternalInputStates { get; set; }
         KeyboardStateExtended KeyboardState { get; set; }
         MouseStateExtended MouseState { get; set; }
+        bool IsConfigured { get; }
 
-        void Configure<T>(T config) where T : IConfig;
+        void Configure();
     }
 }

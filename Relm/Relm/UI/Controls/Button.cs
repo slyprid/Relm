@@ -13,6 +13,7 @@ namespace Relm.UI.Controls
     public class Button
         : IControl
     {
+        public bool IsConfigured { get; private set; }
         public Vector2 Size { get; set; }
         public Vector2 Position { get; set; }
         public TextureAtlas TextureAtlas { get; set; }
@@ -36,29 +37,19 @@ namespace Relm.UI.Controls
             Scale = Vector2.One;
         }
 
-        public bool UseExternalInputStates { get; set; }
         public KeyboardStateExtended KeyboardState { get; set; }
         public MouseStateExtended MouseState { get; set; }
 
-        public void Configure<T>(T config) 
-            where T : IConfig
+        public void Configure()
         {
-            var buttonConfig = (ButtonConfig)(IConfig)config;
-            var regions = new Dictionary<string, Rectangle>();
-            var w = (int)buttonConfig.SourceSize.X;
-            var h = (int)buttonConfig.SourceSize.Y;
-            regions.Add(ButtonState.Normal.ToString(), new Rectangle(0, 0, w, h));
-            regions.Add(ButtonState.Hover.ToString(), new Rectangle(0, h, w, h));
-            regions.Add(ButtonState.Active.ToString(), new Rectangle(0, h * 2, w, h));
-            TextureAtlas = new TextureAtlas(Guid.NewGuid().ToString(), buttonConfig.Texture, regions);
-            Size = new Vector2(w, h);
+            var config = (ButtonConfig)UserInterface.Skin.ControlConfigurations[typeof(Button)];
+            TextureAtlas = new TextureAtlas(Guid.NewGuid().ToString(), UserInterface.Skin.Texture, config.Regions);
+            Size = new Vector2(config.Width, config.Height);
         }
 
         public void Update(GameTime gameTime)
         {
             State = ButtonState.Normal;
-
-            if(!UseExternalInputStates) MouseState = MouseExtended.GetState();
 
             if (!Bounds.Intersects(new Rectangle(MouseState.X, MouseState.Y, 1, 1))) return;
 

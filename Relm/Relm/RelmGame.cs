@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using MonoGame.Extended.Screens;
 using MonoGame.Extended.ViewportAdapters;
+using Relm.UI;
 
 namespace Relm
 {
@@ -53,6 +54,9 @@ namespace Relm
         {
             Screens.ScreenManager = new ScreenManager();
             Components.Add(Screens.ScreenManager);
+
+            UserInterface.UserInterfaceManager = new UserInterfaceManager();
+            Components.Add(UserInterface.UserInterfaceManager);
 
             Input.Register(this, Components);
         }

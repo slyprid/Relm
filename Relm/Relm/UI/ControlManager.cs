@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended.Collections;
+using MonoGame.Extended;
 using MonoGame.Extended.Input;
 using Relm.UI.Configuration;
 
@@ -23,35 +23,27 @@ namespace Relm.UI
         {
             return (T) _controls[id];
         }
-
+        
         public T Add<T>(string id)
             where T : IControl
         {
             var control = Activator.CreateInstance<T>();
+            control.Configure();
             _controls.Add(id, control);
             return control;
         }
-
-        public T Add<T>(string id, IConfig config)
-            where T : IControl
-        {
-            var control = Add<T>(id);
-            control.Configure(config);
-            return control;
-        }
-
+        
         public void Remove(string id)
         {
             _controls.Remove(id);
         }
 
-        public void UpdateInput(KeyboardStateExtended keyboardState, MouseStateExtended mouseState)
+        public void UpdateInput()
         {
             foreach (var control in _controls.Values)
             {
-                control.UseExternalInputStates = true;
-                control.KeyboardState = keyboardState;
-                control.MouseState = mouseState;
+                control.KeyboardState = Input.GetKeyboardState();
+                control.MouseState = Input.GetMouseState();
             }
         }
 
