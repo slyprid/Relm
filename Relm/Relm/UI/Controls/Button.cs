@@ -111,7 +111,13 @@ namespace Relm.UI.Controls
 
         public Button OnClick(Action<object, MouseEventArgs> action, UserInterfaceScreen screen)
         {
-            Input.OnMouseClicked(MouseButton.Left, action, screen);
+            void OnClickAction(object sender, MouseEventArgs args)
+            {
+                if (!Bounds.Intersects(new Rectangle(MouseState.X, MouseState.Y, 1, 1))) return;
+                action.Invoke(sender, args);
+            }
+
+            Input.OnMouseClicked(MouseButton.Left, OnClickAction, screen);
             return this;
         }
 

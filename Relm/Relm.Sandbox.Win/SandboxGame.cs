@@ -1,7 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
-using MonoGame.Extended.Input;
-using MonoGame.Extended.Screens.Transitions;
 using Relm.Sandbox.Win.Models.Screens;
 using Relm.Sandbox.Win.Models.UI;
 using Relm.Sandbox.Win.Naming;
