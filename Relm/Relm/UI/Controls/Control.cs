@@ -24,6 +24,11 @@ namespace Relm.UI.Controls
         public abstract void Update(GameTime gameTime);
         public abstract void Draw(GameTime gameTime, SpriteBatch spriteBatch);
 
+        protected Control()
+        {
+            Scale = Vector2.One;
+        }
+
         #region Fluent Functions
 
         public T As<T>()

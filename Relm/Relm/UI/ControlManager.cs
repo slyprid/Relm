@@ -23,6 +23,12 @@ namespace Relm.UI
         {
             return (T) _controls[id];
         }
+
+        public T Add<T>()
+            where T : IControl
+        {
+            return Add<T>(Guid.NewGuid().ToString());
+        }
         
         public T Add<T>(string id)
             where T : IControl

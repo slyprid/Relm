@@ -40,19 +40,28 @@ namespace Relm.Sandbox.Win.Models.UI
                 Relm.Screens.UnPause();
             }, this);
 
+            var panelWidth = 192;
+            var panelHeight = 192;
+            Controls.Add<Panel>()
+                .SetPosition<Panel>(Layout.Centered(panelWidth, panelHeight))
+                .SetSize<Panel>(panelWidth, panelHeight)
+                .Offset<Panel>(0, -256);
+
+            var buttonWidth = 128;
+            var buttonHeight = 64;
             Controls.Add<Button>(ControlNames.NewGameButton)
-                .SetPosition<Button>(Layout.CenterScreen)
-                .Offset<Button>(0, Layout.Height - (128 * 3) + (16 * 2))
+                .SetPosition<Button>(Layout.Centered(buttonWidth, buttonHeight))
+                .Offset<Button>(0, (Layout.Height / 2) - (buttonHeight * 3) - (16 * 2))
                 .SetText("New Game");
 
             Controls.Add<Button>(ControlNames.ContinueGameButton)
-                .SetPosition<Button>(Layout.CenterScreen)
-                .Offset<Button>(0, Layout.Height - (128 * 2) + (16 * 1))
+                .SetPosition<Button>(Layout.Centered(buttonWidth, buttonHeight))
+                .Offset<Button>(0, (Layout.Height / 2) - (buttonHeight * 2) - (16 * 1))
                 .SetText("Continue Game");
 
             Controls.Add<Button>(ControlNames.ExitButton)
-                .SetPosition<Button>(Layout.CenterScreen)
-                .Offset<Button>(0, Layout.Height - (128 * 1))
+                .SetPosition<Button>(Layout.Centered(buttonWidth, buttonHeight))
+                .Offset<Button>(0, (Layout.Height / 2) - (buttonHeight * 1))
                 .SetText("Exit")
                 .OnClick((sender, args) =>
                 {

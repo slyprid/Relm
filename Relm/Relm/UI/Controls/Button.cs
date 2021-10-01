@@ -27,7 +27,6 @@ namespace Relm.UI.Controls
         public Button()
         {
             State = ButtonState.Normal;
-            Scale = Vector2.One;
             TextColor = Color.Black;
         }
         

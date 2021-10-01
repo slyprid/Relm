@@ -15,5 +15,10 @@ namespace Relm.UI
         public static Vector2 BottomLeft => new Vector2(0, CenterScreen.Y);
         public static Vector2 BottomCenter => new Vector2(CenterScreen.X, Height);
         public static Vector2 BottomRight => new Vector2(Width, Height);
+
+        public static Vector2 Centered(int width, int height)
+        {
+            return CenterScreen - new Vector2(width / 2f, height / 2f);
+        }
     }
 }

@@ -12,7 +12,7 @@ namespace Relm.Sandbox.Win
         : RelmGame
     {
         public SandboxGame()
-            : base("Relm Sandbox", 1280, 720, 1280, 1024)
+            : base("Relm Sandbox", 1280, 720, 1280, 720)
         {
             
         }
