@@ -19,10 +19,10 @@ namespace Relm.UI.Controls
         public int X => (int)Position.X;
         public int Y => (int)Position.Y;
         public Rectangle Bounds => new Rectangle(X, Y, (int)(Width * Scale.X), (int)(Height * Scale.Y));
-
-        public abstract void Configure();
-        public abstract void Update(GameTime gameTime);
-        public abstract void Draw(GameTime gameTime, SpriteBatch spriteBatch);
+        
+        public virtual void Configure() { }
+        public virtual void Update(GameTime gameTime) { }
+        public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch) { }
 
         protected Control()
         {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Screens;
 
 namespace Relm.UI
@@ -28,7 +29,7 @@ namespace Relm.UI
         public override void Draw(GameTime gameTime)
         {
             var spriteBatch = ((RelmGame) Game).SpriteBatch;
-            spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
             Controls.Draw(gameTime, spriteBatch);
             spriteBatch.End();
         }

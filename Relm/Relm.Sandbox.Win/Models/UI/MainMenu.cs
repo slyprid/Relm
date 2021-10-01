@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Screens.Transitions;
+using Relm.Extensions;
 using Relm.Sandbox.Win.Naming;
 using Relm.UI;
 using Relm.UI.Controls;
@@ -67,6 +68,16 @@ namespace Relm.Sandbox.Win.Models.UI
                 {
                     RelmGame.Exit();
                 }, this);
+
+            Controls.Add<Icon>()
+                .SetPosition<Icon>(480, 256)
+                .Using(TextureNames.Icons, "Chat", 32, 32)
+                .AddRegion("Chat", 96, 0, 32, 32);
+
+            Controls.Add<Image>()
+                .SetPosition<Image>(256, 256)
+                .Using(TextureNames.Test64)
+                .WithColor(Color.Green.WithOpacity(0.05f));
 
             base.Initialize();
 

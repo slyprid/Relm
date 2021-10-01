@@ -5,5 +5,6 @@
         public static string Test64 = "images/Test-64";
         public static string Background = "images/Background";
         public static string UserInterfaceSkin = "images/RelmSkin";
+        public static string Icons = "images/Icons";
     }
 }
