@@ -41,13 +41,16 @@ namespace Relm.Sandbox.Win.Models.UI
                 Relm.Screens.UnPause();
             }, this);
 
+            Controls.Add<Background>()
+                .Using(TextureNames.Background);
+
             var panelWidth = 192;
             var panelHeight = 192;
             Controls.Add<Panel>()
                 .SetPosition<Panel>(Layout.Centered(panelWidth, panelHeight))
                 .SetSize<Panel>(panelWidth, panelHeight)
                 .Offset<Panel>(0, -256);
-
+            
             var buttonWidth = 128;
             var buttonHeight = 64;
             Controls.Add<Button>(ControlNames.NewGameButton)
