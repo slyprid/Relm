@@ -46,6 +46,8 @@ namespace Relm.Sandbox.Win
             UserInterface.Add(new Hud(this));
 
             Screens.Change(nameof(TestScreen1));
+
+            Console.Initialize(FontNames.Default);
         }
 
         protected override void Update(GameTime gameTime)

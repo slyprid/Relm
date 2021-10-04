@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended.Input.InputListeners;
 using MonoGame.Extended.Screens.Transitions;
 using Relm.Extensions;
 using Relm.Sandbox.Win.Naming;
@@ -19,6 +20,7 @@ namespace Relm.Sandbox.Win.Models.UI
             public static string ContinueGameButton = "btnContinueGame";
             public static string CreditsButton = "btnCredits";
             public static string ExitButton = "btnExit";
+            public static string HealthProgressBar = "pbHealth";
         }
 
         public override string Name => nameof(MainMenu);
@@ -92,6 +94,31 @@ namespace Relm.Sandbox.Win.Models.UI
                 .Add(ControlNames.ExitButton, btnExitGame)
                 .SetSize<Container>(128, 256);
 
+            Controls.Add<ProgressBar>(ControlNames.HealthProgressBar)
+                .SetPosition<ProgressBar>(256, 320)
+                .SetSize<ProgressBar>(256, 32)
+                .WithFillColor(Color.Red)
+                .SetValues(0, 100, 12);
+
+
+            Input.OnKeyPressed(Keys.A, (sender, args) =>
+            {
+                var listener = (KeyboardListener)sender;
+                if (!listener.RepeatPress) return;
+                var progressBar = (ProgressBar) Controls[ControlNames.HealthProgressBar];
+                progressBar.Value -= 1;
+
+            }, this);
+
+            Input.OnKeyPressed(Keys.D, (sender, args) =>
+            {
+                var listener = (KeyboardListener)sender;
+                if (!listener.RepeatPress) return;
+                var progressBar = (ProgressBar)Controls[ControlNames.HealthProgressBar];
+                progressBar.Value += 1;
+
+            }, this);
+
             base.Initialize();
 
             IsInitialized = true;
@@ -99,6 +126,7 @@ namespace Relm.Sandbox.Win.Models.UI
 
         public override void Update(GameTime gameTime)
         {
+            Console.WriteLine($"Value: {((ProgressBar)Controls[ControlNames.HealthProgressBar]).Value}");
             base.Update(gameTime);
         }
 

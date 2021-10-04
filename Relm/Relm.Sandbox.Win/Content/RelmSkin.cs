@@ -29,6 +29,18 @@ namespace Relm.Sandbox.Win.Content
                 .With(PanelPiece.BottomRight, 192, 64, 32, 32)
                 .SizeOf(96, 96);
 
+            Add<ProgressBar, ProgressBarConfig>()
+                .With(ProgressBarPiece.LeftOverlay, 128, 96, 32, 32)
+                .With(ProgressBarPiece.CenterOverlay, 160, 96, 32, 32)
+                .With(ProgressBarPiece.RightOverlay, 192, 96, 32, 32)
+                .With(ProgressBarPiece.LeftFill, 128, 128, 32, 32)
+                .With(ProgressBarPiece.CenterFill, 160, 128, 32, 32)
+                .With(ProgressBarPiece.RightFill, 192, 128, 32, 32)
+                .With(ProgressBarPiece.LeftFillRounded, 128, 128, 8, 32)
+                .With(ProgressBarPiece.RightFillRounded, 216, 128, 8, 32)
+                .SizeOf(96, 32);
+
+
         }
     }
 }

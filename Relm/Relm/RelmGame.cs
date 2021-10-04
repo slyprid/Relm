@@ -1,9 +1,11 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.ObjectModel;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using MonoGame.Extended.Screens;
 using MonoGame.Extended.ViewportAdapters;
+using Relm.Components;
 using Relm.UI;
 
 namespace Relm
@@ -59,6 +61,10 @@ namespace Relm
 
             UserInterface.UserInterfaceManager = new UserInterfaceManager();
             Components.Add(UserInterface.UserInterfaceManager);
+
+            Console.ConsoleComponent = new ConsoleComponent();
+            Console.ConsoleComponent.Game = this;
+            Components.Add(Console.ConsoleComponent);
 
             Input.Register(this, Components);
         }
