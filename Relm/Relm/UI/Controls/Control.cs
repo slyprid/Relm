@@ -9,7 +9,7 @@ namespace Relm.UI.Controls
         : IControl
     {
         public Vector2 Size { get; set; }
-        public Vector2 Position { get; set; }
+        public virtual Vector2 Position { get; set; }
         public KeyboardStateExtended KeyboardState { get; set; }
         public MouseStateExtended MouseState { get; set; }
         public Vector2 Scale { get; set; }

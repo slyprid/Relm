@@ -43,7 +43,7 @@ namespace Relm.Sandbox.Win.Models.UI
 
             Controls.Add<Background>()
                 .Using(TextureNames.Background);
-
+            
             var panelWidth = 192;
             var panelHeight = 192;
             Controls.Add<Panel>()
@@ -53,19 +53,22 @@ namespace Relm.Sandbox.Win.Models.UI
             
             var buttonWidth = 128;
             var buttonHeight = 64;
-            Controls.Add<Button>(ControlNames.NewGameButton)
-                .SetPosition<Button>(Layout.Centered(buttonWidth, buttonHeight))
-                .Offset<Button>(0, (Layout.Height / 2) - (buttonHeight * 3) - (16 * 2))
+            var btnNewGame = Controls.Add<Button>(ControlNames.NewGameButton)
+                //.SetPosition<Button>(Layout.Centered(buttonWidth, buttonHeight))
+                //.Offset<Button>(0, (Layout.Height / 2) - (buttonHeight * 3) - (16 * 2))
+                .SetPosition<Button>(0, 0)
                 .SetText("New Game");
 
-            Controls.Add<Button>(ControlNames.ContinueGameButton)
-                .SetPosition<Button>(Layout.Centered(buttonWidth, buttonHeight))
-                .Offset<Button>(0, (Layout.Height / 2) - (buttonHeight * 2) - (16 * 1))
+            var btnContinueGame = Controls.Add<Button>(ControlNames.ContinueGameButton)
+                //.SetPosition<Button>(Layout.Centered(buttonWidth, buttonHeight))
+                //.Offset<Button>(0, (Layout.Height / 2) - (buttonHeight * 2) - (16 * 1))
+                .SetPosition<Button>(0, buttonHeight + (16 * 1))
                 .SetText("Continue Game");
 
-            Controls.Add<Button>(ControlNames.ExitButton)
-                .SetPosition<Button>(Layout.Centered(buttonWidth, buttonHeight))
-                .Offset<Button>(0, (Layout.Height / 2) - (buttonHeight * 1))
+            var btnExitGame = Controls.Add<Button>(ControlNames.ExitButton)
+                //.SetPosition<Button>(Layout.Centered(buttonWidth, buttonHeight))
+                //.Offset<Button>(0, (Layout.Height / 2) - (buttonHeight * 1))
+                .SetPosition<Button>(0, (buttonHeight * 2) + (16 * 2))
                 .SetText("Exit")
                 .OnClick((sender, args) =>
                 {
@@ -81,6 +84,13 @@ namespace Relm.Sandbox.Win.Models.UI
                 .SetPosition<Image>(256, 256)
                 .Using(TextureNames.Test64)
                 .WithColor(Color.Green.WithOpacity(0.05f));
+
+            Controls.Add<Container>()
+                .SetPosition<Container>(Layout.Centered(128, 256))
+                .Add(ControlNames.NewGameButton, btnNewGame)
+                .Add(ControlNames.ContinueGameButton, btnContinueGame)
+                .Add(ControlNames.ExitButton, btnExitGame)
+                .SetSize<Container>(128, 256);
 
             base.Initialize();
 

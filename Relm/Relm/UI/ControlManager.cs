@@ -1,16 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using MonoGame.Extended.Input;
 using Relm.UI.Configuration;
+using Relm.UI.Controls;
 
 namespace Relm.UI
 {
     public class ControlManager
     {
         private readonly Dictionary<string, IControl> _controls;
+
+        public List<IControl> Controls => _controls.Values.ToList();
 
         public IControl this[string id] => _controls[id];
 
@@ -34,6 +38,14 @@ namespace Relm.UI
             where T : IControl
         {
             var control = Activator.CreateInstance<T>();
+            control.Configure();
+            _controls.Add(id, control);
+            return control;
+        }
+
+        public T Add<T>(string id, T control)
+            where T : IControl
+        {
             control.Configure();
             _controls.Add(id, control);
             return control;
