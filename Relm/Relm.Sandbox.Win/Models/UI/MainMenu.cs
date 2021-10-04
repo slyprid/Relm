@@ -100,6 +100,15 @@ namespace Relm.Sandbox.Win.Models.UI
                 .WithFillColor(Color.Red)
                 .SetValues(0, 100, 12);
 
+            Controls.Add<Label>()
+                .SetPosition<Label>(256, 384)
+                .Using(FontNames.Default)
+                .WithColor(Color.Red)
+                .OnUpdate((label) =>
+                {
+                    label.Text = $"{((ProgressBar) Controls[ControlNames.HealthProgressBar]).Value}";
+                });
+
 
             Input.OnKeyPressed(Keys.A, (sender, args) =>
             {
