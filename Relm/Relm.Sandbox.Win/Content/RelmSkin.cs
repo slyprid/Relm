@@ -40,7 +40,10 @@ namespace Relm.Sandbox.Win.Content
                 .With(ProgressBarPiece.RightFillRounded, 216, 128, 8, 32)
                 .SizeOf(96, 32);
 
-
+            Add<CheckBox, CheckBoxConfig>()
+                .With(CheckBoxState.Unchecked, 128, 160, 32, 32)
+                .With(CheckBoxState.Checked, 160, 160, 32, 32)
+                .SizeOf(32, 32);
         }
     }
 }

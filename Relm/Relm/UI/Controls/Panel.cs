@@ -18,12 +18,7 @@ namespace Relm.UI.Controls
             TextureAtlas = new TextureAtlas(Guid.NewGuid().ToString(), UserInterface.Skin.Texture, config.Pieces);
             Size = new Vector2(config.Width, config.Height);
         }
-
-        public override void Update(GameTime gameTime)
-        {
-            
-        }
-
+        
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             // Top Left

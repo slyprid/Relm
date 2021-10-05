@@ -19,7 +19,10 @@ namespace Relm
         private static readonly Dictionary<string, EventHandler<TouchEventArgs>> TouchEvents;
         private static readonly Dictionary<string, EventHandler<GamePadEventArgs>> GamePadEvents;
         private static readonly Dictionary<string, EventHandler<MouseEventArgs>> MouseEvents;
-        
+
+        private static MouseState _currentMouseState;
+        private static MouseState _previousMouseState;
+
         #region Initialization
 
         static Input()
@@ -38,6 +41,12 @@ namespace Relm
             _touchListener = new TouchListener();
 
             components.Add(new InputListenerComponent(game, _keyboardListener, _gamePadListener, _mouseListener, _touchListener));
+        }
+
+        public static void Update()
+        {
+            _previousMouseState = _currentMouseState;
+            _currentMouseState = Mouse.GetState();
         }
 
         #endregion
@@ -211,7 +220,9 @@ namespace Relm
 
         public static MouseStateExtended GetMouseState()
         {
-            return MouseExtended.GetState();
+            //return MouseExtended.GetState();
+
+            return new MouseStateExtended(_currentMouseState, _previousMouseState);
         }
 
         public static void ClearMouseEvents()
@@ -232,10 +243,12 @@ namespace Relm
             MouseEvents.Clear();
         }
 
-        private static void MouseClicked(EventHandler<MouseEventArgs> eventHandler)
+        private static string MouseClicked(EventHandler<MouseEventArgs> eventHandler)
         {
+            var eventName = $"{nameof(_mouseListener.MouseClicked)}_{Guid.NewGuid()}";
             _mouseListener.MouseClicked += eventHandler;
-            MouseEvents.Add($"{nameof(_mouseListener.MouseClicked)}_{Guid.NewGuid()}", eventHandler);
+            MouseEvents.Add($"{eventName}", eventHandler);
+            return eventName;
         }
 
         private static void MouseDoubleClicked(EventHandler<MouseEventArgs> eventHandler)
@@ -281,9 +294,9 @@ namespace Relm
         }
 
 
-        public static void OnMouseClicked(MouseButton button, Action<object, MouseEventArgs> action, GameScreen screen)
+        public static string OnMouseClicked(MouseButton button, Action<object, MouseEventArgs> action, GameScreen screen)
         {
-            MouseClicked((sender, args) =>
+            return MouseClicked((sender, args) =>
             {
                 if (screen != UserInterface.ActiveScreen && screen != Screens.ActiveScreen) return;
                 if (args.Button != button) return;
@@ -355,6 +368,58 @@ namespace Relm
                 if (args.Button != button) return;
                 action?.Invoke(sender, args);
             });
+        }
+
+        public static bool WasMouseJustDown(MouseButton button)
+        {
+            switch (button)
+            {
+                case MouseButton.Left: return _currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released;
+                case MouseButton.Middle: return _currentMouseState.MiddleButton == ButtonState.Pressed && _previousMouseState.MiddleButton == ButtonState.Released;
+                case MouseButton.Right: return _currentMouseState.RightButton == ButtonState.Pressed && _previousMouseState.RightButton == ButtonState.Released;
+                case MouseButton.XButton1: return _currentMouseState.XButton1 == ButtonState.Pressed && _previousMouseState.XButton1 == ButtonState.Released;
+                case MouseButton.XButton2: return _currentMouseState.XButton2 == ButtonState.Pressed && _previousMouseState.XButton2 == ButtonState.Released;
+                default: return false;
+            }
+        }
+
+        public static bool IsMouseDown(MouseButton button)
+        {
+            switch (button)
+            {
+                case MouseButton.Left: return _currentMouseState.LeftButton == ButtonState.Pressed;
+                case MouseButton.Middle: return _currentMouseState.MiddleButton == ButtonState.Pressed;
+                case MouseButton.Right: return _currentMouseState.RightButton == ButtonState.Pressed;
+                case MouseButton.XButton1: return _currentMouseState.XButton1 == ButtonState.Pressed;
+                case MouseButton.XButton2: return _currentMouseState.XButton2 == ButtonState.Pressed;
+                default: return false;
+            }
+        }
+
+        public static bool WasMouseJustUp(MouseButton button)
+        {
+            switch (button)
+            {
+                case MouseButton.Left: return _currentMouseState.LeftButton == ButtonState.Released && _previousMouseState.LeftButton == ButtonState.Pressed;
+                case MouseButton.Middle: return _currentMouseState.MiddleButton == ButtonState.Released && _previousMouseState.MiddleButton == ButtonState.Pressed;
+                case MouseButton.Right: return _currentMouseState.RightButton == ButtonState.Released && _previousMouseState.RightButton == ButtonState.Pressed;
+                case MouseButton.XButton1: return _currentMouseState.XButton1 == ButtonState.Released && _previousMouseState.XButton1 == ButtonState.Pressed;
+                case MouseButton.XButton2: return _currentMouseState.XButton2 == ButtonState.Released && _previousMouseState.XButton2 == ButtonState.Pressed;
+                default: return false;
+            }
+        }
+
+        public static bool IsMouseUp(MouseButton button)
+        {
+            switch (button)
+            {
+                case MouseButton.Left: return _currentMouseState.LeftButton == ButtonState.Released;
+                case MouseButton.Middle: return _currentMouseState.MiddleButton == ButtonState.Released;
+                case MouseButton.Right: return _currentMouseState.RightButton == ButtonState.Released;
+                case MouseButton.XButton1: return _currentMouseState.XButton1 == ButtonState.Released;
+                case MouseButton.XButton2: return _currentMouseState.XButton2 == ButtonState.Released;
+                default: return false;
+            }
         }
 
         #endregion

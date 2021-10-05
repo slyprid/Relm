@@ -15,6 +15,8 @@ namespace Relm.UI.Controls
     public class Button
         : Control
     {
+        private Action<Button> _onClick;
+
         public TextureAtlas TextureAtlas { get; set; }
         public States.ButtonState State { get; set; }
         public Texture2D Icon { get; set; }
@@ -41,13 +43,17 @@ namespace Relm.UI.Controls
         {
             State = ButtonState.Normal;
 
-            if (!Bounds.Intersects(new Rectangle(MouseState.X, MouseState.Y, 1, 1))) return;
-
-            State = ButtonState.Hover;
-            if (MouseState.WasButtonJustDown(MouseButton.Left))
+            if (Bounds.Intersects(new Rectangle(MouseState.X, MouseState.Y, 1, 1)))
             {
-                State = ButtonState.Active;
+                State = ButtonState.Hover;
+                if (Input.WasMouseJustDown(MouseButton.Left))
+                {
+                    State = ButtonState.Active;
+                    _onClick?.Invoke(this);
+                }
             }
+
+            base.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -109,15 +115,9 @@ namespace Relm.UI.Controls
             return this;
         }
 
-        public Button OnClick(Action<object, MouseEventArgs> action, UserInterfaceScreen screen)
+        public Button OnClick(Action<Button> action)
         {
-            void OnClickAction(object sender, MouseEventArgs args)
-            {
-                if (!Bounds.Intersects(new Rectangle(MouseState.X, MouseState.Y, 1, 1))) return;
-                action.Invoke(sender, args);
-            }
-
-            Input.OnMouseClicked(MouseButton.Left, OnClickAction, screen);
+            _onClick = action;
             return this;
         }
 

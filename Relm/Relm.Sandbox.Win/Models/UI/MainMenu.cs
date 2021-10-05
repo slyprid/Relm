@@ -72,10 +72,10 @@ namespace Relm.Sandbox.Win.Models.UI
                 //.Offset<Button>(0, (Layout.Height / 2) - (buttonHeight * 1))
                 .SetPosition<Button>(0, (buttonHeight * 2) + (16 * 2))
                 .SetText("Exit")
-                .OnClick((sender, args) =>
+                .OnClick(button =>
                 {
                     RelmGame.Exit();
-                }, this);
+                });
 
             Controls.Add<Icon>()
                 .SetPosition<Icon>(480, 256)
@@ -100,13 +100,23 @@ namespace Relm.Sandbox.Win.Models.UI
                 .WithFillColor(Color.Red)
                 .SetValues(0, 100, 12);
 
-            Controls.Add<Label>()
+            Controls.Add<Label>("lblValue")
                 .SetPosition<Label>(256, 384)
                 .Using(FontNames.Default)
                 .WithColor(Color.Red)
                 .OnUpdate((label) =>
                 {
                     label.Text = $"{((ProgressBar) Controls[ControlNames.HealthProgressBar]).Value}";
+                });
+
+            Controls.Add<CheckBox>()
+                .SetPosition<CheckBox>(256, 448)
+                .Using(FontNames.Default)
+                .SetText("Cheats enabled")
+                .OnClick(checkBox =>
+                {
+                    var color = checkBox.Checked ? Color.Green : Color.Red;
+                    ((Label) Controls["lblValue"]).Color = color;
                 });
 
 

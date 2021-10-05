@@ -85,6 +85,7 @@ namespace Relm
 
         protected override void Update(GameTime gameTime)
         {
+            Input.Update();
             base.Update(gameTime);
         }
 
