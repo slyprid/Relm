@@ -35,6 +35,7 @@ namespace Relm.Sandbox.Win
             ContentLibrary.Textures.Add(TextureNames.Background);
             ContentLibrary.Textures.Add(TextureNames.UserInterfaceSkin);
             ContentLibrary.Textures.Add(TextureNames.Icons);
+            ContentLibrary.Textures.Add(TextureNames.Fire);
 
             ContentLibrary.Fonts.Add(FontNames.Default, x => x.Texture.Name = FontNames.Default);
 

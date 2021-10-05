@@ -6,6 +6,7 @@ using Relm.Extensions;
 using Relm.Sandbox.Win.Naming;
 using Relm.UI;
 using Relm.UI.Controls;
+using Relm.UI.Extensions;
 
 namespace Relm.Sandbox.Win.Models.UI
 {
@@ -123,6 +124,13 @@ namespace Relm.Sandbox.Win.Models.UI
                 .SetPosition<TextBox>(256, 512)
                 .SetSize<TextBox>(256, 32)
                 .Using(FontNames.Default);
+
+            Controls.Add<AnimatedImage>(this)
+                .SetPosition<AnimatedImage>(784, 256)
+                .SetScale<AnimatedImage>(3f)
+                .Using(TextureNames.Fire)
+                .AddCycle("loop", 10, 26, 0.05f)
+                .AddFrames(0, 59);
 
             Input.OnKeyPressed(Keys.A, (sender, args) =>
             {
