@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Input;
-using MonoGame.Extended.Input.InputListeners;
 using MonoGame.Extended.TextureAtlases;
 using Relm.UI.Configuration;
 using Relm.UI.States;

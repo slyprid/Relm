@@ -118,6 +118,15 @@ namespace Relm
             });
         }
 
+        public static void OnKeyTyped(Action<object, KeyboardEventArgs> action, GameScreen screen)
+        {
+            KeyTyped((sender, args) =>
+            {
+                if (screen != UserInterface.ActiveScreen && screen != Screens.ActiveScreen) return;
+                action?.Invoke(sender, args);
+            });
+        }
+
         #endregion
 
         #region Gamepad

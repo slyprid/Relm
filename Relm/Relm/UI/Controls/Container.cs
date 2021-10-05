@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended.Screens;
 using Relm.Extensions;
 
 namespace Relm.UI.Controls
@@ -45,37 +46,40 @@ namespace Relm.UI.Controls
 
         #region Fluent Functions
 
-        public T Add<T>()
+        public T Add<T>(GameScreen parentScreen)
             where T : IControl
         {
-            return Add<T>(Guid.NewGuid().ToString());
+            return Add<T>(Guid.NewGuid().ToString(), parentScreen);
         }
 
-        public T Add<T>(string id)
+        public T Add<T>(string id, GameScreen parentScreen)
             where T : IControl
         {
             if (Position == Vector2.Zero) throw new Exception("Must set position of container before adding controls");
-            var control = _controls.Add<T>(id);
+            var control = _controls.Add<T>(id, parentScreen);
+            control.ParentScreen = parentScreen;
             control.Position = Position + control.Position;
             return control;
         }
 
-        public Container Add<T>(T control)
+        public Container Add<T>(GameScreen parentScreen, T control)
             where T : IControl
         {
             if (Position == Vector2.Zero) throw new Exception("Must set position of container before adding controls");
             var id = Guid.NewGuid().ToString();
+            control.ParentScreen = parentScreen;
             control.Position = Position + control.Position;
-            _controls.Add(id, control);
+            _controls.Add(id, parentScreen, control);
             return this;
         }
 
-        public Container Add<T>(string id, T control)
+        public Container Add<T>(string id, GameScreen parentScreen, T control)
             where T : IControl
         {
             if (Position == Vector2.Zero) throw new Exception("Must set position of container before adding controls");
+            control.ParentScreen = parentScreen;
             control.Position = Position + control.Position;
-            _controls.Add(id, control);
+            _controls.Add(id, parentScreen, control);
             return this;
         }
 

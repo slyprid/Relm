@@ -44,6 +44,12 @@ namespace Relm.Sandbox.Win.Content
                 .With(CheckBoxState.Unchecked, 128, 160, 32, 32)
                 .With(CheckBoxState.Checked, 160, 160, 32, 32)
                 .SizeOf(32, 32);
+
+            Add<TextBox, TextBoxConfig>()
+                .With(TextBoxPiece.Left, 224, 0, 8, 32)
+                .With(TextBoxPiece.Center, 232, 0, 80, 32)
+                .With(TextBoxPiece.Right, 312, 0, 8, 32)
+                .SizeOf(96, 32);
         }
     }
 }

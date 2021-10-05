@@ -43,31 +43,31 @@ namespace Relm.Sandbox.Win.Models.UI
                 Relm.Screens.UnPause();
             }, this);
 
-            Controls.Add<Background>()
+            Controls.Add<Background>(this)
                 .Using(TextureNames.Background);
             
             var panelWidth = 192;
             var panelHeight = 192;
-            Controls.Add<Panel>()
+            Controls.Add<Panel>(this)
                 .SetPosition<Panel>(Layout.Centered(panelWidth, panelHeight))
                 .SetSize<Panel>(panelWidth, panelHeight)
                 .Offset<Panel>(0, -256);
             
             var buttonWidth = 128;
             var buttonHeight = 64;
-            var btnNewGame = Controls.Add<Button>(ControlNames.NewGameButton)
+            var btnNewGame = Controls.Add<Button>(ControlNames.NewGameButton, this)
                 //.SetPosition<Button>(Layout.Centered(buttonWidth, buttonHeight))
                 //.Offset<Button>(0, (Layout.Height / 2) - (buttonHeight * 3) - (16 * 2))
                 .SetPosition<Button>(0, 0)
                 .SetText("New Game");
 
-            var btnContinueGame = Controls.Add<Button>(ControlNames.ContinueGameButton)
+            var btnContinueGame = Controls.Add<Button>(ControlNames.ContinueGameButton, this)
                 //.SetPosition<Button>(Layout.Centered(buttonWidth, buttonHeight))
                 //.Offset<Button>(0, (Layout.Height / 2) - (buttonHeight * 2) - (16 * 1))
                 .SetPosition<Button>(0, buttonHeight + (16 * 1))
                 .SetText("Continue Game");
 
-            var btnExitGame = Controls.Add<Button>(ControlNames.ExitButton)
+            var btnExitGame = Controls.Add<Button>(ControlNames.ExitButton, this)
                 //.SetPosition<Button>(Layout.Centered(buttonWidth, buttonHeight))
                 //.Offset<Button>(0, (Layout.Height / 2) - (buttonHeight * 1))
                 .SetPosition<Button>(0, (buttonHeight * 2) + (16 * 2))
@@ -77,30 +77,30 @@ namespace Relm.Sandbox.Win.Models.UI
                     RelmGame.Exit();
                 });
 
-            Controls.Add<Icon>()
+            Controls.Add<Icon>(this)
                 .SetPosition<Icon>(480, 256)
                 .Using(TextureNames.Icons, "Chat", 32, 32)
                 .AddRegion("Chat", 96, 0, 32, 32);
 
-            Controls.Add<Image>()
+            Controls.Add<Image>(this)
                 .SetPosition<Image>(256, 256)
                 .Using(TextureNames.Test64)
                 .WithColor(Color.Green.WithOpacity(0.05f));
 
-            Controls.Add<Container>()
+            Controls.Add<Container>(this)
                 .SetPosition<Container>(Layout.Centered(128, 256))
-                .Add(ControlNames.NewGameButton, btnNewGame)
-                .Add(ControlNames.ContinueGameButton, btnContinueGame)
-                .Add(ControlNames.ExitButton, btnExitGame)
+                .Add(ControlNames.NewGameButton, this, btnNewGame)
+                .Add(ControlNames.ContinueGameButton, this, btnContinueGame)
+                .Add(ControlNames.ExitButton, this, btnExitGame)
                 .SetSize<Container>(128, 256);
 
-            Controls.Add<ProgressBar>(ControlNames.HealthProgressBar)
+            Controls.Add<ProgressBar>(ControlNames.HealthProgressBar, this)
                 .SetPosition<ProgressBar>(256, 320)
                 .SetSize<ProgressBar>(256, 32)
                 .WithFillColor(Color.Red)
                 .SetValues(0, 100, 12);
 
-            Controls.Add<Label>("lblValue")
+            Controls.Add<Label>("lblValue", this)
                 .SetPosition<Label>(256, 384)
                 .Using(FontNames.Default)
                 .WithColor(Color.Red)
@@ -109,7 +109,7 @@ namespace Relm.Sandbox.Win.Models.UI
                     label.Text = $"{((ProgressBar) Controls[ControlNames.HealthProgressBar]).Value}";
                 });
 
-            Controls.Add<CheckBox>()
+            Controls.Add<CheckBox>(this)
                 .SetPosition<CheckBox>(256, 448)
                 .Using(FontNames.Default)
                 .SetText("Cheats enabled")
@@ -119,6 +119,10 @@ namespace Relm.Sandbox.Win.Models.UI
                     ((Label) Controls["lblValue"]).Color = color;
                 });
 
+            Controls.Add<TextBox>(this)
+                .SetPosition<TextBox>(256, 512)
+                .SetSize<TextBox>(256, 32)
+                .Using(FontNames.Default);
 
             Input.OnKeyPressed(Keys.A, (sender, args) =>
             {

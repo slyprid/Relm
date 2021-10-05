@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoGame.Extended.Input;
+using MonoGame.Extended.Screens;
 using Relm.Entities;
 
 namespace Relm.UI
@@ -10,6 +11,7 @@ namespace Relm.UI
         KeyboardStateExtended KeyboardState { get; set; }
         MouseStateExtended MouseState { get; set; }
         Vector2 Scale { get; set; }
+        GameScreen ParentScreen { get; set; }
 
         void Configure();
 
