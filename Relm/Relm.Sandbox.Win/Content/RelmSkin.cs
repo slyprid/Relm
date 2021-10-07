@@ -50,6 +50,27 @@ namespace Relm.Sandbox.Win.Content
                 .With(TextBoxPiece.Center, 232, 0, 80, 32)
                 .With(TextBoxPiece.Right, 312, 0, 8, 32)
                 .SizeOf(96, 32);
+
+            Add<ScrollBar, ScrollBarConfig>()
+                .With(ScrollBarPiece.LeftButtonNormal, 224, 32, 32, 32)
+                .With(ScrollBarPiece.LeftButtonHover, 256, 32, 32, 32)
+                .With(ScrollBarPiece.LeftButtonActive, 288, 32, 32, 32)
+                .With(ScrollBarPiece.HorizontalBar, 256, 160, 32, 32)
+                .With(ScrollBarPiece.HorizontalSlider, 224, 192, 32, 32)
+                .With(ScrollBarPiece.HorizontalSliderHover, 288, 192, 32, 32)
+                .With(ScrollBarPiece.VerticalSlider, 224, 160, 32, 32)
+                .With(ScrollBarPiece.VerticalSliderHover, 288, 160, 32, 32)
+                .With(ScrollBarPiece.RightButtonNormal, 224, 64, 32, 32)
+                .With(ScrollBarPiece.RightButtonHover, 256, 64, 32, 32)
+                .With(ScrollBarPiece.RightButtonActive, 288, 64, 32, 32)
+                .With(ScrollBarPiece.UpButtonNormal, 224, 96, 32, 32)
+                .With(ScrollBarPiece.UpButtonHover, 256, 96, 32, 32)
+                .With(ScrollBarPiece.UpButtonActive, 288, 96, 32, 32)
+                .With(ScrollBarPiece.VerticalBar, 256, 192, 32, 32)
+                .With(ScrollBarPiece.DownButtonNormal, 224, 128, 32, 32)
+                .With(ScrollBarPiece.DownButtonHover, 256, 128, 32, 32)
+                .With(ScrollBarPiece.DownButtonActive, 288, 128, 32, 32)
+                .SizeOf(96, 32);
         }
     }
 }

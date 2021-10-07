@@ -7,6 +7,7 @@ using Relm.Sandbox.Win.Naming;
 using Relm.UI;
 using Relm.UI.Controls;
 using Relm.UI.Extensions;
+using Relm.UI.States;
 
 namespace Relm.Sandbox.Win.Models.UI
 {
@@ -22,6 +23,8 @@ namespace Relm.Sandbox.Win.Models.UI
             public static string CreditsButton = "btnCredits";
             public static string ExitButton = "btnExit";
             public static string HealthProgressBar = "pbHealth";
+            public static string HorizontalScroll = "hScrollBar";
+            public static string VerticalScroll = "vScrollBar";
         }
 
         public override string Name => nameof(MainMenu);
@@ -132,12 +135,23 @@ namespace Relm.Sandbox.Win.Models.UI
                 .AddCycle("loop", 10, 26, 0.05f)
                 .AddFrames(0, 59);
 
+            Controls.Add<ScrollBar>(ControlNames.HorizontalScroll, this)
+                .SetPosition<ScrollBar>(784, 384)
+                .SetSize<ScrollBar>(256, 32)
+                .SetValues(0, 100, 33)
+                .SetOrientation(ScrollBarOrientation.Horizontal);
+
+            Controls.Add<ScrollBar>(ControlNames.VerticalScroll, this)
+                .SetPosition<ScrollBar>(784, 448)
+                .SetSize<ScrollBar>(32, 256)
+                .SetOrientation(ScrollBarOrientation.Vertical);
+
             Input.OnKeyPressed(Keys.A, (sender, args) =>
             {
                 var listener = (KeyboardListener)sender;
                 if (!listener.RepeatPress) return;
-                var progressBar = (ProgressBar) Controls[ControlNames.HealthProgressBar];
-                progressBar.Value -= 1;
+                var scrollBar = (ScrollBar) Controls[ControlNames.HorizontalScroll];
+                scrollBar.Value -= 1;
 
             }, this);
 
@@ -145,8 +159,26 @@ namespace Relm.Sandbox.Win.Models.UI
             {
                 var listener = (KeyboardListener)sender;
                 if (!listener.RepeatPress) return;
-                var progressBar = (ProgressBar)Controls[ControlNames.HealthProgressBar];
-                progressBar.Value += 1;
+                var scrollBar = (ScrollBar)Controls[ControlNames.HorizontalScroll];
+                scrollBar.Value += 1;
+
+            }, this);
+
+            Input.OnKeyPressed(Keys.W, (sender, args) =>
+            {
+                var listener = (KeyboardListener)sender;
+                if (!listener.RepeatPress) return;
+                var scrollBar = (ScrollBar)Controls[ControlNames.VerticalScroll];
+                scrollBar.Value -= 1;
+
+            }, this);
+
+            Input.OnKeyPressed(Keys.S, (sender, args) =>
+            {
+                var listener = (KeyboardListener)sender;
+                if (!listener.RepeatPress) return;
+                var scrollBar = (ScrollBar)Controls[ControlNames.VerticalScroll];
+                scrollBar.Value += 1;
 
             }, this);
 
