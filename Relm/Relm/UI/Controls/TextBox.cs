@@ -146,7 +146,7 @@ namespace Relm.UI.Controls
             {
                 Text = Text.Substring(0, Text.Length - 1);
             }
-            if (keyChar < 33) return;
+            if (keyChar < 32 && keyChar != 33) return;
             
             if (args.Modifiers == KeyboardModifiers.Shift)
             {

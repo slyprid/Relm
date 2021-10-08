@@ -23,6 +23,7 @@ namespace Relm.UI.Controls
         public TextureAtlas TextureAtlas { get; set; }
         public int MinimumValue { get; set; }
         public int MaximumValue { get; set; }
+        public Action<ScrollBar> OnValueChanged { get; set; }
 
         public int Value
         {
@@ -85,11 +86,13 @@ namespace Relm.UI.Controls
                 {
                     _leftButtonState = ButtonState.Active;
                     Value -= 1;
+                    OnValueChanged?.Invoke(this);
                 }
                 else if (Input.IsMouseDown(MouseButton.Left))
                 {
                     _leftButtonState = ButtonState.Active;
                     Value -= 1;
+                    OnValueChanged?.Invoke(this);
                 }
             }
 
@@ -100,11 +103,13 @@ namespace Relm.UI.Controls
                 {
                     _rightButtonState = ButtonState.Active;
                     Value += 1;
+                    OnValueChanged?.Invoke(this);
                 }
                 else if (Input.IsMouseDown(MouseButton.Left))
                 {
                     _rightButtonState = ButtonState.Active;
                     Value += 1;
+                    OnValueChanged?.Invoke(this);
                 }
             }
 
@@ -145,11 +150,13 @@ namespace Relm.UI.Controls
                 {
                     _upButtonState = ButtonState.Active;
                     Value -= 1;
+                    OnValueChanged?.Invoke(this);
                 }
                 else if (Input.IsMouseDown(MouseButton.Left))
                 {
                     _upButtonState = ButtonState.Active;
                     Value -= 1;
+                    OnValueChanged?.Invoke(this);
                 }
             }
 
@@ -160,11 +167,13 @@ namespace Relm.UI.Controls
                 {
                     _downButtonState = ButtonState.Active;
                     Value += 1;
+                    OnValueChanged?.Invoke(this);
                 }
                 else if (Input.IsMouseDown(MouseButton.Left))
                 {
                     _downButtonState = ButtonState.Active;
                     Value += 1;
+                    OnValueChanged?.Invoke(this);
                 }
             }
 
@@ -247,7 +256,7 @@ namespace Relm.UI.Controls
             bounds = new Rectangle((int)Position.X, yPos, sliderPiece.Width, sliderPiece.Height);
             spriteBatch.Draw(sliderPiece, bounds, Color.White);
         }
-
+        
         #region Fluent Functions
 
         public ScrollBar SetOrientation(ScrollBarOrientation orientation)

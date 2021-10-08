@@ -71,6 +71,18 @@ namespace Relm.Sandbox.Win.Content
                 .With(ScrollBarPiece.DownButtonHover, 256, 128, 32, 32)
                 .With(ScrollBarPiece.DownButtonActive, 288, 128, 32, 32)
                 .SizeOf(96, 32);
+
+            Add<ListBox, ListBoxConfig>()
+                .With(PanelPiece.TopLeft, 320, 0, 32, 32)
+                .With(PanelPiece.Top, 352, 0, 32, 32)
+                .With(PanelPiece.TopRight, 384, 0, 32, 32)
+                .With(PanelPiece.Left, 320, 32, 32, 32)
+                .With(PanelPiece.Center, 352, 32, 32, 32)
+                .With(PanelPiece.Right, 384, 32, 32, 32)
+                .With(PanelPiece.BottomLeft, 320, 64, 32, 32)
+                .With(PanelPiece.Bottom, 352, 64, 32, 32)
+                .With(PanelPiece.BottomRight, 384, 64, 32, 32);
+
         }
     }
 }

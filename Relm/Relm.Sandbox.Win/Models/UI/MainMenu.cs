@@ -25,6 +25,7 @@ namespace Relm.Sandbox.Win.Models.UI
             public static string HealthProgressBar = "pbHealth";
             public static string HorizontalScroll = "hScrollBar";
             public static string VerticalScroll = "vScrollBar";
+            public static string List = "listList";
         }
 
         public override string Name => nameof(MainMenu);
@@ -145,6 +146,19 @@ namespace Relm.Sandbox.Win.Models.UI
                 .SetPosition<ScrollBar>(784, 448)
                 .SetSize<ScrollBar>(32, 256)
                 .SetOrientation(ScrollBarOrientation.Vertical);
+
+            var listBox = Controls.Add<ListBox>(ControlNames.List, this)
+                .SetPosition<ListBox>(848, 8)
+                .SetSize<ListBox>(256, 320)
+                .UsingFont(FontNames.Default)
+                .AddItem("Item 1")
+                .AddItem("Item 2")
+                .AddItem("Item 3");
+
+            for (var i = 4; i < 101; i++)
+            {
+                listBox.AddItem($"Item {i}");
+            }
 
             Input.OnKeyPressed(Keys.A, (sender, args) =>
             {

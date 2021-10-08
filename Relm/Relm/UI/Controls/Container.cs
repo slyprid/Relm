@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Screens;
@@ -11,6 +12,10 @@ namespace Relm.UI.Controls
     {
         private readonly ControlManager _controls;
         private Vector2 _position;
+
+        public List<IControl> Controls => _controls.Controls;
+
+        public IControl this[string id] => _controls[id];
 
         public override Vector2 Position
         {
@@ -59,6 +64,26 @@ namespace Relm.UI.Controls
             var control = _controls.Add<T>(id, parentScreen);
             control.ParentScreen = parentScreen;
             control.Position = Position + control.Position;
+            return control;
+        }
+
+        public T Add<T>(string id, int x, int y, GameScreen parentScreen)
+            where T : IControl
+        {
+            if (Position == Vector2.Zero) throw new Exception("Must set position of container before adding controls");
+            var control = _controls.Add<T>(id, parentScreen);
+            control.ParentScreen = parentScreen;
+            control.Position = Position + new Vector2(x, y);
+            return control;
+        }
+
+        public T Add<T>(string id, Vector2 pos, GameScreen parentScreen)
+            where T : IControl
+        {
+            if (Position == Vector2.Zero) throw new Exception("Must set position of container before adding controls");
+            var control = _controls.Add<T>(id, parentScreen);
+            control.ParentScreen = parentScreen;
+            control.Position = Position + pos;
             return control;
         }
 
