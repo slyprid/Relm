@@ -8,6 +8,13 @@ namespace Relm
         : KeyedCollection<TKey, TValue>
     {
         private readonly ContentManager _content;
+        private readonly Func<TValue, TKey, TValue> _setKey;
+
+        public ContentLibrarySection(Func<TValue, TKey> getKey, Func<TValue, TKey, TValue> setKey, ContentManager content) : base(getKey)
+        {
+            _content = content;
+            _setKey = setKey;
+        }
 
         public ContentLibrarySection(Func<TValue, TKey> getKey, ContentManager content) : base(getKey)
         {
@@ -17,6 +24,12 @@ namespace Relm
         public void Add(string assetName)
         {
             var asset = _content.Load<TValue>(assetName);
+            Add(asset);
+        }
+
+        public void Add(TKey assetName, TValue asset)
+        {
+            _setKey?.Invoke(asset, assetName);
             Add(asset);
         }
 

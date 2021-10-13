@@ -42,7 +42,6 @@ namespace Relm
                 PreferredBackBufferHeight = _actualHeight
             };
 
-            ContentLibrary.Content = Content;
             Content.RootDirectory = "Content";
             IsMouseVisible = true;   
             
@@ -80,6 +79,9 @@ namespace Relm
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            ContentLibrary.Content = Content;
+            ContentLibrary.GraphicsDevice = GraphicsDevice;
             ContentLibrary.Initialize();
         }
 
