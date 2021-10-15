@@ -21,6 +21,11 @@ namespace Relm
             ScreenList = new Dictionary<string, UserInterfaceScreen>();
         }
 
+        public static bool IsActiveScreen(UserInterfaceScreen screen)
+        {
+            return ActiveScreen == screen;
+        }
+
         public static void LoadScreen(UserInterfaceScreen screen)
         {
             UserInterfaceManager.LoadScreen(screen);

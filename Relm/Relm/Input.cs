@@ -88,6 +88,15 @@ namespace Relm
             KeyboardEvents.Add($"{nameof(_keyboardListener.KeyTyped)}_{Guid.NewGuid()}", eventHandler);
         }
 
+        public static void OnAnyKeyPressed(Action<object, KeyboardEventArgs> action, GameScreen screen)
+        {
+            KeyPressed((sender, args) =>
+            {
+                if (screen != UserInterface.ActiveScreen && screen != Screens.ActiveScreen) return;
+                action?.Invoke(sender, args);
+            });
+        }
+
         public static void OnKeyPressed(Keys key, Action<object, KeyboardEventArgs> action, GameScreen screen)
         {
             KeyPressed((sender, args) =>

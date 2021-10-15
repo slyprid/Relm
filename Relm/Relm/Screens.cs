@@ -29,6 +29,11 @@ namespace Relm
             IsPaused = false;
         }
 
+        public static bool IsActiveScreen(GameScreen screen)
+        {
+            return ActiveScreen == screen;
+        }
+
         public static void Pause()
         {
             IsPaused = true;
