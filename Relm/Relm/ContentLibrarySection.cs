@@ -21,23 +21,34 @@ namespace Relm
             _content = content;
         }
 
-        public void Add(string assetName)
+        public TValue Add(string assetName)
         {
             var asset = _content.Load<TValue>(assetName);
             Add(asset);
+            return asset;
         }
 
-        public void Add(TKey assetName, TValue asset)
+        public TValue Add(TKey assetName, TValue asset)
         {
             _setKey?.Invoke(asset, assetName);
             Add(asset);
+            return asset;
         }
 
-        public void Add(string assetName, Func<TValue, TKey> setKey)
+        public TValue Add(string assetName, Func<TValue, TKey> setKey)
         {
             var asset = _content.Load<TValue>(assetName);
             setKey.Invoke(asset);
             Add(asset);
+            return asset;
+        }
+
+        public TValue NoLoadAdd(string assetName, Func<TValue, TKey> setKey)
+        {
+            var asset = Activator.CreateInstance<TValue>();
+            setKey.Invoke(asset);
+            Add(asset);
+            return asset;
         }
 
         public TValue Get(TKey key)

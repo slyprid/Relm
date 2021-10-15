@@ -17,6 +17,8 @@ namespace Relm.UI.Controls
         public Texture2D Texture { get; set; }
         public Color Color { get; set; }
         public string Key { get; set; }
+        public Action<AnimatedImage> OnComplete { get; set; }
+        public bool IsPaused { get; set; }
 
         public AnimatedImage()
         {
@@ -28,8 +30,11 @@ namespace Relm.UI.Controls
             if (_sprite == null) CreateSprite();
 
             var deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            _sprite.Play(Key);
-            _sprite.Update(deltaSeconds);
+            _sprite.Play(Key, () =>
+            {
+                OnComplete?.Invoke(this);
+            });
+            if (!IsPaused) _sprite.Update(deltaSeconds);
 
             base.Update(gameTime);
         }
@@ -60,7 +65,7 @@ namespace Relm.UI.Controls
             return this;
         }
 
-        public SpriteSheetAnimationCycle AddCycle(string cycleName, int frameWidth, int frameHeight, float frameDuration = 0.2f)
+        public SpriteSheetAnimationCycle AddCycle(string cycleName, int frameWidth, int frameHeight, float frameDuration = 0.2f, bool isLooping = true)
         {
             Key = cycleName;
 
@@ -69,12 +74,18 @@ namespace Relm.UI.Controls
             
             var cycle = new SpriteSheetAnimationCycle
             {
-                IsLooping = true,
+                IsLooping = isLooping,
                 FrameDuration = frameDuration
             };
             
             _spriteSheet.Cycles.Add(cycleName, cycle);
             return cycle;
+        }
+
+        public AnimatedImage OnAnimationComplete(Action<AnimatedImage> action)
+        {
+            OnComplete = action;
+            return this;
         }
 
         #endregion

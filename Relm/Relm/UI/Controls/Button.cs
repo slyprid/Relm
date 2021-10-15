@@ -24,12 +24,18 @@ namespace Relm.UI.Controls
         public Vector2 IconOffset { get; set; }
         public string Text { get; set; }
         public Color TextColor { get; set; }
-        
+        public int FontSize { get; set; }
+        public bool HasTextShadow { get; set; }
+        public Vector2 TextShadowOffset { get; set; }
+
 
         public Button()
         {
             State = ButtonState.Normal;
             TextColor = Color.Black;
+            FontSize = 16;
+            HasTextShadow = true;
+            TextShadowOffset = new Vector2(2f, 2f);
         }
         
         public override void Configure()
@@ -69,9 +75,14 @@ namespace Relm.UI.Controls
 
             if (!string.IsNullOrEmpty(Text))
             {
-                var font = UserInterface.Skin.Font;
+                var fontSet = UserInterface.Skin.FontSet;
+                var font = fontSet[FontSize];
                 var textSize = font.MeasureString(Text);
                 var textPosition = Position + new Vector2((Width / 2) - (textSize.X / 2), (Height / 2) - (textSize.Y / 2));
+                if (HasTextShadow)
+                {
+                    spriteBatch.DrawString(font, Text, textPosition + TextShadowOffset, Color.Black);
+                }
                 spriteBatch.DrawString(font, Text, textPosition, TextColor);
             }
         }
@@ -112,6 +123,14 @@ namespace Relm.UI.Controls
         {
             Text = text;
             TextColor = color;
+            return this;
+        }
+
+        public Button SetText(string text, int fontSize, Color color)
+        {
+            Text = text;
+            TextColor = color;
+            FontSize = fontSize;
             return this;
         }
 

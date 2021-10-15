@@ -51,14 +51,14 @@ namespace Relm
             return ScreenList[name];
         }
 
-        public static void UseSkin(string skinName, string fontName)
+        public static void UseSkin(string skinName, string fontSetName)
         {
             var shortName = skinName.Split('/').Last();
             var asm = Assembly.GetCallingAssembly();
             var fullName = $"{asm.FullName.Split(',').First()}.Content.{shortName}";
             Skin = (UserInterfaceSkin)Activator.CreateInstance(asm.GetType(fullName));
             Skin.Texture = ContentLibrary.Textures[skinName];
-            Skin.Font = ContentLibrary.Fonts[fontName];
+            Skin.FontSet = ContentLibrary.FontSets[fontSetName];
         }
     }
 }

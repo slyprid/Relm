@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
+using Relm.Fonts;
 using Relm.UI.Configuration;
 
 namespace Relm.UI
@@ -9,7 +10,7 @@ namespace Relm.UI
     {
         public Dictionary<Type, IConfig> ControlConfigurations { get; internal set; }
         public Texture2D Texture { get; set; }
-        public SpriteFont Font { get; set; }
+        public FontSet FontSet { get; set; }
 
         protected UserInterfaceSkin()
         {

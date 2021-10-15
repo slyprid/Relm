@@ -7,6 +7,8 @@ namespace Relm.Models
         : GameScreen
     {
         public abstract string Name { get; }
+        public Microsoft.Xna.Framework.Graphics.SpriteBatch SpriteBatch => ((RelmGame)Game).SpriteBatch;
+
         protected RelmGameScreen(Game game) 
             : base(game)
         {
