@@ -38,6 +38,8 @@ namespace Relm.Sandbox.Win
             ContentLibrary.Textures.Add(TextureNames.Fire);
 
             ContentLibrary.Fonts.Add(FontNames.Default, x => x.Texture.Name = FontNames.Default);
+            var fontSet = ContentLibrary.FontSets.NoLoadAdd(FontNames.Default, x => x.Name = FontNames.Default);
+            fontSet.Add(16, FontNames.Default);
 
             Screens.Add(new TestScreen1(this));
             Screens.Add(new TestScreen2(this));

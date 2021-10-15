@@ -10,6 +10,8 @@ namespace Relm.UI
         public abstract string Name { get; }
         public bool IsInitialized { get; set; }
 
+        public SpriteBatch SpriteBatch => ((RelmGame)Game).SpriteBatch;
+
         public UserInterfaceManager UserInterfaceManager { get; internal set; }
         public ControlManager Controls { get; set; }
 

@@ -1,11 +1,10 @@
-﻿using System.Collections.ObjectModel;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using MonoGame.Extended.Screens;
 using MonoGame.Extended.ViewportAdapters;
 using Relm.Components;
+using Relm.Media;
 using Relm.UI;
 
 namespace Relm
@@ -27,6 +26,8 @@ namespace Relm
         public Point2 Resolution => new Point2(_virtualWidth, _virtualHeight);
         public SpriteBatch SpriteBatch => _spriteBatch;
         public static OrthographicCamera Camera => _camera;
+        public static VideoPlayer VideoPlayer { get; set; }
+        public static Video Video { get; set; }
 
         public RelmGame(string title = "", int virtualWidth = 1024, int virtualHeight = 768, int actualWidth = 1024, int actualHeight = 768)
         {
@@ -83,6 +84,8 @@ namespace Relm
             ContentLibrary.Content = Content;
             ContentLibrary.GraphicsDevice = GraphicsDevice;
             ContentLibrary.Initialize();
+
+            VideoPlayer = new VideoPlayer(GraphicsDevice);
         }
 
         protected override void Update(GameTime gameTime)
@@ -101,6 +104,15 @@ namespace Relm
         public new static void Exit()
         {
             ((Game) _instance).Exit();
+        }
+
+        protected override void UnloadContent()
+        {
+            VideoPlayer?.Stop();
+            Video?.Dispose();
+            VideoPlayer?.Dispose();
+
+            base.UnloadContent();
         }
     }
 }
