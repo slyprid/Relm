@@ -1,12 +1,12 @@
-﻿using System.Collections.ObjectModel;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using MonoGame.Extended.Screens;
 using MonoGame.Extended.ViewportAdapters;
 using Relm.Components;
 using Relm.UI;
+using Microsoft.Xna.Framework.Media;
+using Relm.Time;
 
 namespace Relm
 {
@@ -23,6 +23,8 @@ namespace Relm
         private readonly int _virtualHeight;
         private readonly int _actualWidth;
         private readonly int _actualHeight;
+
+        //private VideoPlayer _videoPlayer;
 
         public Point2 Resolution => new Point2(_virtualWidth, _virtualHeight);
         public SpriteBatch SpriteBatch => _spriteBatch;
@@ -64,6 +66,9 @@ namespace Relm
             Console.ConsoleComponent = new ConsoleComponent();
             Console.ConsoleComponent.Game = this;
             Components.Add(Console.ConsoleComponent);
+
+            Timers.TimerManager = new TimerManager();
+            Components.Add(Timers.TimerManager);
 
             Input.Register(this, Components);
         }
