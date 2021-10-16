@@ -59,6 +59,11 @@ namespace Relm.UI
             _controls.Remove(id);
         }
 
+        public void Clear()
+        {
+            _controls.Clear();
+        }
+
         public void UpdateInput()
         {
             foreach (var control in _controls.Values)
