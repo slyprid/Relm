@@ -1,11 +1,11 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using MonoGame.Extended.Screens;
 using MonoGame.Extended.ViewportAdapters;
 using Relm.Components;
 using Relm.UI;
-using Microsoft.Xna.Framework.Media;
 using Relm.Time;
 
 namespace Relm
@@ -23,13 +23,11 @@ namespace Relm
         private readonly int _virtualHeight;
         private readonly int _actualWidth;
         private readonly int _actualHeight;
-
-        //private VideoPlayer _videoPlayer;
-
+        
         public Point2 Resolution => new Point2(_virtualWidth, _virtualHeight);
         public SpriteBatch SpriteBatch => _spriteBatch;
         public static OrthographicCamera Camera => _camera;
-
+        
         public RelmGame(string title = "", int virtualWidth = 1024, int virtualHeight = 768, int actualWidth = 1024, int actualHeight = 768)
         {
             _instance = this;
@@ -38,11 +36,8 @@ namespace Relm
             _actualWidth = actualWidth;
             _actualHeight = actualHeight;
 
-            _graphics = new GraphicsDeviceManager(this)
-            {
-                PreferredBackBufferWidth = _actualWidth,
-                PreferredBackBufferHeight = _actualHeight
-            };
+            _graphics = new GraphicsDeviceManager(this);
+            _graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";
             IsMouseVisible = true;   
@@ -75,10 +70,14 @@ namespace Relm
 
         protected override void Initialize()
         {
-            _viewportAdapter = new BoxingViewportAdapter(Window, GraphicsDevice, _virtualWidth, _virtualHeight);
-            _camera = new OrthographicCamera(_viewportAdapter);
+            _graphics.PreferredBackBufferWidth = _actualWidth;
+            _graphics.PreferredBackBufferHeight = _actualHeight;
+            _graphics.ApplyChanges();
 
             base.Initialize();
+
+            _viewportAdapter = new BoxingViewportAdapter(Window, GraphicsDevice, _virtualWidth, _virtualHeight);
+            _camera = new OrthographicCamera(_viewportAdapter);
         }
 
         protected override void LoadContent()

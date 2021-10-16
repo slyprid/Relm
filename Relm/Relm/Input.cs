@@ -322,6 +322,15 @@ namespace Relm
             });
         }
 
+        public static string OnAnyMouseClicked(Action<object, MouseEventArgs> action, GameScreen screen)
+        {
+            return MouseClicked((sender, args) =>
+            {
+                if (screen != UserInterface.ActiveScreen && screen != Screens.ActiveScreen) return;
+                action?.Invoke(sender, args);
+            });
+        }
+
         public static void OnMouseDoubleClicked(MouseButton button, Action<object, MouseEventArgs> action, GameScreen screen)
         {
             MouseDoubleClicked((sender, args) =>
@@ -518,5 +527,6 @@ namespace Relm
             });
         }
         #endregion
+
     }
 }
