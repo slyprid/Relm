@@ -12,6 +12,7 @@ namespace Relm.UI
         MouseStateExtended MouseState { get; set; }
         Vector2 Scale { get; set; }
         GameScreen ParentScreen { get; set; }
+        bool IsVisible { get; set; }
 
         void Configure();
 

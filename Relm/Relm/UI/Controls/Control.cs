@@ -15,6 +15,7 @@ namespace Relm.UI.Controls
         public MouseStateExtended MouseState { get; set; }
         public Vector2 Scale { get; set; }
         public GameScreen ParentScreen { get; set; }
+        public bool IsVisible { get; set; }
 
         public int Width => (int)Size.X;
         public int Height => (int)Size.Y;
@@ -33,6 +34,7 @@ namespace Relm.UI.Controls
         protected Control()
         {
             Scale = Vector2.One;
+            IsVisible = true;
         }
 
         #region Fluent Functions
@@ -89,6 +91,12 @@ namespace Relm.UI.Controls
             where T : IControl
         {
             Position += offset;
+            return (T)Convert.ChangeType(this, typeof(T));
+        }
+
+        public T SetVisibility<T>(bool value)
+        {
+            IsVisible = value;
             return (T)Convert.ChangeType(this, typeof(T));
         }
 

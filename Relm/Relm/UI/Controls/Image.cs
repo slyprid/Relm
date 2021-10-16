@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Relm.UI.Configuration;
 
 namespace Relm.UI.Controls
 {
@@ -17,6 +16,7 @@ namespace Relm.UI.Controls
         
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            if (!IsVisible) return;
             spriteBatch.Draw(Texture, Bounds, Color);
         }
 

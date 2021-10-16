@@ -41,6 +41,7 @@ namespace Relm.UI.Controls
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            if (!IsVisible) return;
             if (_sprite == null) CreateSprite();
 
             spriteBatch.Draw(_sprite, Position, 0f, Scale);
