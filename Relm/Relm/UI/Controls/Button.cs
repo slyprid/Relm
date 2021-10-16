@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Input;
-using MonoGame.Extended.Input.InputListeners;
-using MonoGame.Extended.Screens;
 using MonoGame.Extended.TextureAtlases;
 using Relm.UI.Configuration;
 using ButtonState = Relm.UI.States.ButtonState;
@@ -27,7 +23,7 @@ namespace Relm.UI.Controls
         public int FontSize { get; set; }
         public bool HasTextShadow { get; set; }
         public Vector2 TextShadowOffset { get; set; }
-
+        public bool IsToggled { get; set; }
 
         public Button()
         {
@@ -36,6 +32,7 @@ namespace Relm.UI.Controls
             FontSize = 16;
             HasTextShadow = true;
             TextShadowOffset = new Vector2(2f, 2f);
+            IsToggled = false;
         }
         
         public override void Configure()
@@ -66,6 +63,12 @@ namespace Relm.UI.Controls
         {
             var region = TextureAtlas[(int) State];
             spriteBatch.Draw(region, Bounds, Color.White);
+
+            if (IsToggled)
+            {
+                region = TextureAtlas[(int)ButtonState.Toggled];
+                spriteBatch.Draw(region, Bounds, Color.White);
+            }
 
             if (Icon != null)
             {
@@ -137,6 +140,12 @@ namespace Relm.UI.Controls
         public Button OnClick(Action<Button> action)
         {
             _onClick = action;
+            return this;
+        }
+
+        public Button SetToggled(bool value)
+        {
+            IsToggled = value;
             return this;
         }
 
