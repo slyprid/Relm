@@ -12,6 +12,7 @@ namespace Relm.UI.Controls
         : Control
     {
         private Action<CheckBox> _onClick;
+        private bool _locked;
 
         public TextureAtlas TextureAtlas { get; set; }
         public CheckBoxState State { get; set; }
@@ -27,6 +28,7 @@ namespace Relm.UI.Controls
             State = CheckBoxState.Unchecked;
             TextColor = Color.Black;
             TextPadding = 8;
+            _locked = false;
         }
         
         public override void Configure()
@@ -44,8 +46,16 @@ namespace Relm.UI.Controls
             {
                 if (Input.WasMouseJustDown(MouseButton.Left))
                 {
-                    State = State == CheckBoxState.Unchecked ? CheckBoxState.Checked : CheckBoxState.Unchecked;
-                    _onClick?.Invoke(this);
+                    if (!_locked)
+                    {
+                        State = State == CheckBoxState.Unchecked ? CheckBoxState.Checked : CheckBoxState.Unchecked;
+                        _onClick?.Invoke(this);
+                        _locked = true;
+                    }
+                }
+                else if (Input.IsMouseUp(MouseButton.Left))
+                {
+                    _locked = false;
                 }
             }
         }
@@ -61,11 +71,12 @@ namespace Relm.UI.Controls
                 spriteBatch.Draw(region, Bounds, Color.White);
             }
 
+            region = TextureAtlas[(int)CheckBoxState.Unchecked];
             if (Font != null && !string.IsNullOrEmpty(Text))
             {
                 var txtSize = Font.MeasureString(Text);
-                var yOffset = (Height / 2) - (txtSize.Y / 2);
-                spriteBatch.DrawString(Font, Text, Position + new Vector2(region.Width + TextPadding, yOffset), TextColor);
+                var yOffset = ((Height * Scale.Y) / 2) - (txtSize.Y / 2);
+                spriteBatch.DrawString(Font, Text, Position + new Vector2((region.Width * Scale.X) + TextPadding, yOffset), TextColor);
             }
         }
         
@@ -93,6 +104,14 @@ namespace Relm.UI.Controls
         public CheckBox Using(string fontName)
         {
             Font = ContentLibrary.Fonts[fontName];
+            return this;
+        }
+
+        public CheckBox Using(string fontSetName, int size)
+        {
+            var fontSet = ContentLibrary.FontSets[fontSetName];
+            var font = fontSet[size];
+            Font = font;
             return this;
         }
 
