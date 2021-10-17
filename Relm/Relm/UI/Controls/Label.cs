@@ -15,6 +15,26 @@ namespace Relm.UI.Controls
         public Color Color { get; set; }
         public string Text { get; set; }
 
+        public override int Width
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(Text) || Font == null) return base.Width;
+                var size = Font.MeasureString(Text);
+                return (int)size.X;
+            }
+        }
+
+        public override int Height
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(Text) || Font == null) return base.Height;
+                var size = Font.MeasureString(Text);
+                return (int)size.Y;
+            }
+        }
+
         public Label()
         {
             Color = Color.White;
@@ -41,6 +61,13 @@ namespace Relm.UI.Controls
             return this;
         }
 
+        public Label Using(string fontSetName, int size)
+        {
+            var fontSet = ContentLibrary.FontSets[fontSetName];
+            Font = fontSet[size];
+            return this;
+        }
+
         public Label WithColor(Color color)
         {
             Color = color;
@@ -50,6 +77,12 @@ namespace Relm.UI.Controls
         public Label OnUpdate(Action<Label> action)
         {
             _onUpdate = action;
+            return this;
+        }
+
+        public Label SetText(string text)
+        {
+            Text = text;
             return this;
         }
 

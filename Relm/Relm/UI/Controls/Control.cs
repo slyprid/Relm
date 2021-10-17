@@ -17,8 +17,8 @@ namespace Relm.UI.Controls
         public GameScreen ParentScreen { get; set; }
         public bool IsVisible { get; set; }
 
-        public int Width => (int)Size.X;
-        public int Height => (int)Size.Y;
+        public virtual int Width => (int)Size.X;
+        public virtual int Height => (int)Size.Y;
         public int X => (int)Position.X;
         public int Y => (int)Position.Y;
         public Rectangle Bounds => new Rectangle(X, Y, (int)(Width * Scale.X), (int)(Height * Scale.Y));

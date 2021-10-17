@@ -14,6 +14,7 @@ namespace Relm.UI.Controls
         private Action<IconButton> _onClick;
         private TextureAtlas _iconAtlas;
         private string _iconIndex;
+        private bool _locked;
 
 
         public TextureAtlas TextureAtlas { get; set; }
@@ -38,14 +39,22 @@ namespace Relm.UI.Controls
         public override void Update(GameTime gameTime)
         {
             State = ButtonState.Normal;
-
+            
             if (Bounds.Intersects(new Rectangle(MouseState.X, MouseState.Y, 1, 1)))
             {
                 State = ButtonState.Hover;
                 if (Input.WasMouseJustDown(MouseButton.Left))
                 {
-                    State = ButtonState.Active;
-                    _onClick?.Invoke(this);
+                    if (!_locked)
+                    {
+                        State = ButtonState.Active;
+                        _onClick?.Invoke(this);
+                        _locked = true;
+                    }
+                }
+                else if (Input.IsMouseUp(MouseButton.Left))
+                {
+                    _locked = false;
                 }
             }
 
@@ -66,7 +75,7 @@ namespace Relm.UI.Controls
             if (_iconAtlas != null)
             {
                 var icon = _iconAtlas[_iconIndex];
-                var iconRect = new Rectangle((int)(X + IconOffset.X), (int)(Y + IconOffset.Y), (int)IconSize.X, (int)IconSize.Y);
+                var iconRect = new Rectangle((int)(X + (IconOffset.X * Scale.X)), (int)(Y + (IconOffset.Y * Scale.Y)), (int)(IconSize.X * Scale.X), (int)(IconSize.Y * Scale.Y));
                 spriteBatch.Draw(icon, iconRect, Color.White);
             }
         }

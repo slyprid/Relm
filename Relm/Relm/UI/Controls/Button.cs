@@ -12,6 +12,7 @@ namespace Relm.UI.Controls
         : Control
     {
         private Action<Button> _onClick;
+        private bool _locked;
 
         public TextureAtlas TextureAtlas { get; set; }
         public States.ButtonState State { get; set; }
@@ -51,8 +52,16 @@ namespace Relm.UI.Controls
                 State = ButtonState.Hover;
                 if (Input.WasMouseJustDown(MouseButton.Left))
                 {
-                    State = ButtonState.Active;
-                    _onClick?.Invoke(this);
+                    if (!_locked)
+                    {
+                        State = ButtonState.Active;
+                        _onClick?.Invoke(this);
+                        _locked = true;
+                    }
+                }
+                else if (Input.IsMouseUp(MouseButton.Left))
+                {
+                    _locked = false;
                 }
             }
 

@@ -5,6 +5,8 @@ using MonoGame.Extended;
 using MonoGame.Extended.Screens;
 using MonoGame.Extended.ViewportAdapters;
 using Relm.Components;
+using Relm.Graphics;
+using Relm.Helpers;
 using Relm.UI;
 using Relm.Time;
 
@@ -24,10 +26,11 @@ namespace Relm
         private readonly int _actualWidth;
         private readonly int _actualHeight;
         
-        public Point2 Resolution => new Point2(_virtualWidth, _virtualHeight);
+        public static Point2 Resolution { get; set; }
+        public static DEVMODE1 CurrentDisplayMode { get; set; }
         public SpriteBatch SpriteBatch => _spriteBatch;
         public static OrthographicCamera Camera => _camera;
-        
+
         public RelmGame(string title = "", int virtualWidth = 1024, int virtualHeight = 768, int actualWidth = 1024, int actualHeight = 768)
         {
             _instance = this;
@@ -38,6 +41,14 @@ namespace Relm
 
             _graphics = new GraphicsDeviceManager(this);
             _graphics.ApplyChanges();
+
+            Resolution = new Point2(_virtualWidth, _virtualHeight);
+            CurrentDisplayMode = new DEVMODE1
+            {
+                dmPelsWidth = _virtualWidth,
+                dmPelsHeight = _virtualHeight,
+                IsCustom = true
+            };
 
             Content.RootDirectory = "Content";
             IsMouseVisible = true;   
@@ -105,6 +116,28 @@ namespace Relm
         public new static void Exit()
         {
             ((Game) _instance).Exit();
+        }
+
+        public static void ChangeResolution(ref DEVMODE1 mode)
+        {
+            if (ResolutionHelper.ChangeResolution(ref mode))
+            {
+                _instance._viewportAdapter = new BoxingViewportAdapter(_instance.Window, _instance.GraphicsDevice, mode.dmPelsWidth, mode.dmPelsHeight);
+                _camera = new OrthographicCamera(_instance._viewportAdapter);
+                Resolution = new Point2(mode.dmPelsWidth, mode.dmPelsHeight);
+                CurrentDisplayMode = mode;
+            }
+        }
+
+        public static void ChangeResolution(int width, int height, bool isFullscreen = false)
+        {
+            _instance._graphics.PreferredBackBufferWidth = width;
+            _instance._graphics.PreferredBackBufferHeight = height;
+            _instance._graphics.IsFullScreen = isFullscreen;
+            _instance._graphics.ApplyChanges();
+
+            _instance._viewportAdapter = new BoxingViewportAdapter(_instance.Window, _instance.GraphicsDevice, width, height);
+            _camera = new OrthographicCamera(_instance._viewportAdapter);
         }
     }
 }
