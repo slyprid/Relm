@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Input;
 using MonoGame.Extended.TextureAtlases;
+using Relm.Extensions;
 using Relm.UI.Configuration;
 using Relm.UI.States;
 
@@ -11,9 +12,8 @@ namespace Relm.UI.Controls
     public class Slider
         : Control
     {
-        private bool _isDragging;
-        private int _startMouseX;
         private int _value;
+        
         public TextureAtlas TextureAtlas { get; set; }
         public string Text { get; set; }
         public Color TextColor { get; set; }
@@ -46,6 +46,8 @@ namespace Relm.UI.Controls
             }
         }
 
+        public int SliderPosition => SliderBounds.X;
+
         public Slider()
         {
             TextColor = Color.Black;
@@ -67,29 +69,26 @@ namespace Relm.UI.Controls
 
         public override void Update(GameTime gameTime)
         {
-            if (SliderBounds.Intersects(new Rectangle(MouseState.X, MouseState.Y, 1, 1)))
+            var state = Input.GetMouseState();
+
+            if (Bounds.ExtendWidthBoth(16).Intersects(new Rectangle(MouseState.X, MouseState.Y, 1, 1)))
             {
-                if (Input.IsMouseDown(MouseButton.Left))
+                if (state.IsButtonDown(MouseButton.Left))
                 {
-                    if (!_isDragging)
-                    {
-                        _isDragging = true;
-                        _startMouseX = MouseState.X;
-                    }
+                    var region = TextureAtlas[(int)SliderPieces.Slider];
+                    var max = (int)Position.X + Width - (int)(region.Width / 2f);
+                    var min = (int)Position.X - (int)(region.Width / 2f);
+                    var range = (max - min);
+                    var position = MouseState.X;
+                    var valuePosition = range - (max - position);
+                    var percent = (float)valuePosition / (float)range;
+                    Value = (int)(percent * MaximumValue);
+                    if (position < min) Value = MinimumValue;
+                    if (position > max) Value = MaximumValue;
                 }
             }
 
-            if (_isDragging)
-            {
-                var deltaX = MouseState.X - _startMouseX;
-                Value += deltaX;
-                _startMouseX = MouseState.X;
-            }
-
-            if (Input.IsMouseUp(MouseButton.Left) && _isDragging)
-            {
-                _isDragging = false;
-            }
+            
 
             base.Update(gameTime);
         }

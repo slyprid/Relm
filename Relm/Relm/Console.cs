@@ -22,5 +22,10 @@ namespace Relm
         {
             ConsoleComponent.WriteLine(msg, color);
         }
+
+        public static void Clear()
+        {
+            ConsoleComponent.Clear();
+        }
     }
 }

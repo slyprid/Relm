@@ -56,5 +56,10 @@ namespace Relm.Components
         {
             _lines.Add(new Tuple<string, Color>(message, color));
         }
+
+        public void Clear()
+        {
+            _lines.Clear();
+        }
     }
 }
