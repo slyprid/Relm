@@ -20,10 +20,12 @@ namespace Relm.UI.Controls
         public States.ButtonState State { get; set; }
         public Vector2 IconSize { get; set; }
         public Vector2 IconOffset { get; set; }
-        
+        public bool IsToggled { get; set; }
+
         public IconButton()
         {
             State = ButtonState.Normal;
+            IsToggled = false;
         }
 
         public override void Configure()
@@ -54,6 +56,12 @@ namespace Relm.UI.Controls
         {
             var region = TextureAtlas[(int)State];
             spriteBatch.Draw(region, Bounds, Color.White);
+
+            if (IsToggled)
+            {
+                region = TextureAtlas[(int)ButtonState.Toggled];
+                spriteBatch.Draw(region, Bounds, Color.White);
+            }
 
             if (_iconAtlas != null)
             {
@@ -87,6 +95,12 @@ namespace Relm.UI.Controls
         public IconButton OnClick(Action<IconButton> action)
         {
             _onClick = action;
+            return this;
+        }
+
+        public IconButton SetToggled(bool value)
+        {
+            IsToggled = value;
             return this;
         }
 
