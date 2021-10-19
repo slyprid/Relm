@@ -1,6 +1,10 @@
-﻿namespace Relm.Data
+﻿using System;
+
+namespace Relm.Data
 {
-    public class GameState
+    public abstract class GameState
     {
+        public string Name { get; set; }
+        public DateTime Timestamp { get; set; }
     }
 }

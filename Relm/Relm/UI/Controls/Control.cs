@@ -16,6 +16,7 @@ namespace Relm.UI.Controls
         public Vector2 Scale { get; set; }
         public GameScreen ParentScreen { get; set; }
         public bool IsVisible { get; set; }
+        public bool IsInitialized { get; set; }
 
         public virtual int Width => (int)Size.X;
         public virtual int Height => (int)Size.Y;
