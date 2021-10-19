@@ -14,6 +14,7 @@ namespace Relm.UI.Controls
         public SpriteFont Font { get; set; }
         public Color Color { get; set; }
         public string Text { get; set; }
+        public int FontSize { get; set; }
 
         public override int Width
         {
@@ -38,6 +39,7 @@ namespace Relm.UI.Controls
         public Label()
         {
             Color = Color.White;
+            FontSize = 16;
         }
 
         public override void Update(GameTime gameTime)
@@ -83,6 +85,21 @@ namespace Relm.UI.Controls
         public Label SetText(string text)
         {
             Text = text;
+            return this;
+        }
+
+        public Label SetText(string text, Color color)
+        {
+            Text = text;
+            Color = color;
+            return this;
+        }
+
+        public Label SetText(string text, int fontSize, Color color)
+        {
+            Text = text;
+            Color = color;
+            FontSize = fontSize;
             return this;
         }
 

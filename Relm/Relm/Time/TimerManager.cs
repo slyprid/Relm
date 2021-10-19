@@ -28,5 +28,10 @@ namespace Relm.Time
                 Timers.Remove(timer.Key);
             }
         }
+
+        public void Clear()
+        {
+            Timers.Clear();
+        }
     }
 }

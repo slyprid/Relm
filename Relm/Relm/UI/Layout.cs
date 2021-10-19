@@ -20,5 +20,13 @@ namespace Relm.UI
         {
             return CenterScreen - new Vector2(width / 2f, height / 2f);
         }
+
+        public static Vector2 CenteredFont(string fontSetName, int size, string text)
+        {
+            var fontSet = ContentLibrary.FontSets[fontSetName];
+            var font = fontSet[size];
+            var txtSize = font.MeasureString(text);
+            return CenterScreen - new Vector2(txtSize.X / 2f, txtSize.Y / 2f);
+        }
     }
 }

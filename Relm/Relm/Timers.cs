@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Relm.Time;
 
 namespace Relm
@@ -27,6 +26,11 @@ namespace Relm
             {
                 if (timer.Key == key) timer.Value.IsComplete = true;
             }
+        }
+
+        public static void Clear()
+        {
+            TimerManager.Clear();
         }
     }
 }

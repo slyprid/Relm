@@ -41,8 +41,8 @@ namespace Relm.UI.Controls
             {
                 var region = TextureAtlas[(int)SliderPieces.Slider];
                 var percent = (float)Value / (float)MaximumValue;
-                var xOffset = Width * percent;
-                return new Rectangle((int)Position.X - (region.Width / 2) + (int)xOffset, (int)Position.Y + 1, region.Width, region.Height);
+                var xOffset = (Width * Scale.X) * percent;
+                return new Rectangle((int)Position.X - (int)((region.Width) / 2) + (int)xOffset, (int)Position.Y + 1, (int)(region.Width), (int)(region.Height));
             }
         }
 
@@ -76,7 +76,7 @@ namespace Relm.UI.Controls
                 if (state.IsButtonDown(MouseButton.Left))
                 {
                     var region = TextureAtlas[(int)SliderPieces.Slider];
-                    var max = (int)Position.X + Width - (int)(region.Width / 2f);
+                    var max = (int)Position.X + (Width * Scale.X) - (int)(region.Width / 2f);
                     var min = (int)Position.X - (int)(region.Width / 2f);
                     var range = (max - min);
                     var position = MouseState.X;
@@ -108,7 +108,7 @@ namespace Relm.UI.Controls
                     text = $"{Text} - {Value}";
                 }
                 var textSize = font.MeasureString(text);
-                var textPosition = Position + new Vector2((Width / 2) - (textSize.X / 2), (Height / 2) - (textSize.Y / 2));
+                var textPosition = Position + new Vector2(((Width * Scale.X) / 2) - (textSize.X / 2), ((Height * Scale.Y) / 2) - (textSize.Y / 2));
                 if (HasTextShadow)
                 {
                     spriteBatch.DrawString(font, text, textPosition + TextShadowOffset, Color.Black);
