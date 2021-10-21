@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.TextureAtlases;
+using Relm.Extensions;
 using Relm.UI.Configuration;
 using Relm.UI.States;
 
@@ -49,7 +50,7 @@ namespace Relm.UI.Controls
             // Left Slider
             var piece = TextureAtlas[ProgressBarPiece.LeftFillRounded.ToString()];
             var bounds = new Rectangle(X, Y, (int)(piece.Width * Scale.X), (int)(piece.Height * Scale.Y));
-            if(Value > MinimumValue) spriteBatch.Draw(piece, bounds, FillColor);
+            if(Value > MinimumValue) spriteBatch.Draw(piece, bounds, FillColor.WithOpacity(Opacity));
 
             // Fill
             piece = TextureAtlas[ProgressBarPiece.LeftFill.ToString()];
@@ -59,17 +60,17 @@ namespace Relm.UI.Controls
             var srcBounds = piece.Bounds;
             srcBounds.X += sliderPiece.Width;
             srcBounds.Width -= (sliderPiece.Width * 2);
-            spriteBatch.Draw(piece.Texture, bounds, srcBounds, FillColor);
+            spriteBatch.Draw(piece.Texture, bounds, srcBounds, FillColor.WithOpacity(Opacity));
 
             // Right Slider
             piece = TextureAtlas[ProgressBarPiece.RightFillRounded.ToString()];
             bounds = new Rectangle((int)(X + rightMost - piece.Width), Y, (int)(piece.Width * Scale.X), (int)(piece.Height * Scale.Y));
-            if(bounds.X > X + sliderPiece.Width) spriteBatch.Draw(piece, bounds, FillColor);
+            if(bounds.X > X + sliderPiece.Width) spriteBatch.Draw(piece, bounds, FillColor.WithOpacity(Opacity));
             
             // Left Overlay
             piece = TextureAtlas[ProgressBarPiece.LeftOverlay.ToString()];
             bounds = new Rectangle(X, Y, (int)(piece.Width * Scale.X), (int)(piece.Height * Scale.Y));
-            spriteBatch.Draw(piece, bounds, Color.White);
+            spriteBatch.Draw(piece, bounds, Color.White.WithOpacity(Opacity));
 
             // Center Overlay
             piece = TextureAtlas[ProgressBarPiece.CenterOverlay.ToString()];
@@ -78,13 +79,13 @@ namespace Relm.UI.Controls
             for (var x = startX; x < endX; x += piece.Width)
             {
                 bounds = new Rectangle(x, Y, (int)(piece.Width * Scale.X), (int)(piece.Height * Scale.Y));
-                spriteBatch.Draw(piece, bounds, Color.White);
+                spriteBatch.Draw(piece, bounds, Color.White.WithOpacity(Opacity));
             }
 
             // Right Overlay
             piece = TextureAtlas[ProgressBarPiece.RightOverlay.ToString()];
             bounds = new Rectangle(X + (Width - piece.Width), Y, (int)(piece.Width * Scale.X), (int)(piece.Height * Scale.Y));
-            spriteBatch.Draw(piece, bounds, Color.White);
+            spriteBatch.Draw(piece, bounds, Color.White.WithOpacity(Opacity));
         }
 
         #region Fluent Functions

@@ -9,6 +9,7 @@ using Relm.Graphics;
 using Relm.Helpers;
 using Relm.UI;
 using Relm.Time;
+using Relm.UI.Controls;
 
 namespace Relm
 {
@@ -30,6 +31,7 @@ namespace Relm
         public static DEVMODE1 CurrentDisplayMode { get; set; }
         public SpriteBatch SpriteBatch => _spriteBatch;
         public static OrthographicCamera Camera => _camera;
+        public static MessageBox MessageBox { get; set; }
 
         public RelmGame(string title = "", int virtualWidth = 1024, int virtualHeight = 768, int actualWidth = 1024, int actualHeight = 768)
         {
@@ -104,6 +106,7 @@ namespace Relm
         {
             Input.Update();
             base.Update(gameTime);
+            MessageBox?.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
@@ -111,6 +114,8 @@ namespace Relm
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             base.Draw(gameTime);
+
+            MessageBox?.Draw(gameTime, SpriteBatch);
         }
 
         public new static void Exit()

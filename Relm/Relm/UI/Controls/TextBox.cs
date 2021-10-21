@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Input;
 using MonoGame.Extended.Input.InputListeners;
 using MonoGame.Extended.TextureAtlases;
+using Relm.Extensions;
 using Relm.UI.Configuration;
 using Relm.UI.States;
 
@@ -45,6 +46,7 @@ namespace Relm.UI.Controls
         public override void Update(GameTime gameTime)
         {
             if (Font == null) throw new Exception("Font not set on Text Box");
+            if (!IsEnabled) return;
 
             base.Update(gameTime);
 
@@ -87,16 +89,16 @@ namespace Relm.UI.Controls
 
             var leftPiece = TextureAtlas[(int)TextBoxPiece.Left];
             var bounds = new Rectangle(X, Y, leftPiece.Width, leftPiece.Height);
-            spriteBatch.Draw(leftPiece, bounds, Color.White);
+            spriteBatch.Draw(leftPiece, bounds, Color.White.WithOpacity(Opacity));
 
             var rightPiece = TextureAtlas[(int)TextBoxPiece.Right];
             bounds = new Rectangle(X + (Width - rightPiece.Width), Y, rightPiece.Width, rightPiece.Height);
-            spriteBatch.Draw(rightPiece, bounds, Color.White);
+            spriteBatch.Draw(rightPiece, bounds, Color.White.WithOpacity(Opacity));
 
             var centerPiece = TextureAtlas[(int)TextBoxPiece.Center];
             var maxWidth = Width - leftPiece.Width - rightPiece.Width;
             bounds = new Rectangle(X + leftPiece.Width, Y, maxWidth, centerPiece.Height);
-            spriteBatch.Draw(centerPiece, bounds, Color.White);
+            spriteBatch.Draw(centerPiece, bounds, Color.White.WithOpacity(Opacity));
 
             if (Font != null)
             {
@@ -114,7 +116,7 @@ namespace Relm.UI.Controls
                             txtSize = Font.MeasureString(text);
                         }
                     }
-                    spriteBatch.DrawString(Font, text, Position + new Vector2(leftPiece.Width + TextPadding, yOffset), TextColor);
+                    spriteBatch.DrawString(Font, text, Position + new Vector2(leftPiece.Width + TextPadding, yOffset), TextColor.WithOpacity(Opacity));
                 }
                 else if (!string.IsNullOrEmpty(Text))
                 {
@@ -129,7 +131,7 @@ namespace Relm.UI.Controls
                             txtSize = Font.MeasureString(Text);
                         }
                     }
-                    spriteBatch.DrawString(Font, Text, Position + new Vector2(leftPiece.Width + TextPadding, yOffset), TextColor);
+                    spriteBatch.DrawString(Font, Text, Position + new Vector2(leftPiece.Width + TextPadding, yOffset), TextColor.WithOpacity(Opacity));
                 }
             }
         }

@@ -23,6 +23,8 @@ namespace Relm.UI.Controls
         public int XOffset { get; set; }
         public ListBoxItemState State { get; set; }
         public Action<ListBoxItem> ItemSelected { get; set; }
+        public float Opacity { get; set; }
+        public bool IsEnabled { get; set; }
 
         public int X => (int)Position.X;
         public int Y => (int)Position.Y;
@@ -32,10 +34,12 @@ namespace Relm.UI.Controls
         public ListBoxItem()
         {
             Scale = Vector2.One;
+            IsEnabled = true;
         }
 
         public virtual void Update(GameTime gameTime)
         {
+            if (!IsEnabled) return;
             MouseState = Input.GetMouseState();
             
             if(State != ListBoxItemState.Selected) State = ListBoxItemState.Normal;
@@ -58,17 +62,17 @@ namespace Relm.UI.Controls
             if (State == ListBoxItemState.Hover)
             {
                 var pixel = spriteBatch.GetWhitePixel();
-                spriteBatch.Draw(pixel, Bounds, new Color(0, 122, 204).WithOpacity(0.5f));
+                spriteBatch.Draw(pixel, Bounds, new Color(0, 122, 204).WithOpacity(0.5f).WithOpacity(Opacity));
             }
             else if (State == ListBoxItemState.Selected)
             {
                 var pixel = spriteBatch.GetWhitePixel();
-                spriteBatch.Draw(pixel, Bounds, new Color(0, 122, 204));
+                spriteBatch.Draw(pixel, Bounds, new Color(0, 122, 204).WithOpacity(Opacity));
             }
 
             if (Content is string && Font != null)
             {
-                spriteBatch.DrawString(Font, Content.ToString(), Position, Color);
+                spriteBatch.DrawString(Font, Content.ToString(), Position, Color.WithOpacity(Opacity));
             }
         }
 

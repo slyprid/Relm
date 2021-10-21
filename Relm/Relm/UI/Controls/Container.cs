@@ -38,6 +38,7 @@ namespace Relm.UI.Controls
 
         public override void Update(GameTime gameTime)
         {
+            if (!IsEnabled) return;
             _controls.Update(gameTime);
             base.Update(gameTime);
         }

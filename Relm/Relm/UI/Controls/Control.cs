@@ -16,7 +16,9 @@ namespace Relm.UI.Controls
         public Vector2 Scale { get; set; }
         public GameScreen ParentScreen { get; set; }
         public bool IsVisible { get; set; }
+        public bool IsEnabled { get; set; }
         public bool IsInitialized { get; set; }
+        public float Opacity { get; set; }
 
         public virtual int Width => (int)Size.X;
         public virtual int Height => (int)Size.Y;
@@ -29,6 +31,7 @@ namespace Relm.UI.Controls
 
         public virtual void Update(GameTime gameTime)
         {
+            if (!IsEnabled) return;
             MouseState = Input.GetMouseState();
         }
 
@@ -36,6 +39,8 @@ namespace Relm.UI.Controls
         {
             Scale = Vector2.One;
             IsVisible = true;
+            Opacity = 1f;
+            IsEnabled = true;
         }
 
         #region Fluent Functions

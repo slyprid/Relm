@@ -19,7 +19,7 @@ namespace Relm.UI.Controls
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             if (Texture == null) Texture = spriteBatch.GetWhitePixel();
-            spriteBatch.Draw(Texture, Bounds, Color);
+            spriteBatch.Draw(Texture, Bounds, Color.WithOpacity(Opacity));
         }
 
         #region Fluent Methods

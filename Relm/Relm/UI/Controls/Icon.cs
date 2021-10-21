@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.TextureAtlases;
+using Relm.Extensions;
 
 namespace Relm.UI.Controls
 {
@@ -21,7 +22,7 @@ namespace Relm.UI.Controls
         
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(_textureAtlas[Key], Bounds, Color);
+            spriteBatch.Draw(_textureAtlas[Key], Bounds, Color.WithOpacity(Opacity));
         }
 
         #region Fluent Methods

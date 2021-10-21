@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Sprites;
 using MonoGame.Extended.TextureAtlases;
+using Relm.Extensions;
 
 namespace Relm.UI.Controls
 {
@@ -27,6 +28,7 @@ namespace Relm.UI.Controls
 
         public override void Update(GameTime gameTime)
         {
+            if (!IsEnabled) return;
             if (_sprite == null) CreateSprite();
 
             var deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -44,6 +46,7 @@ namespace Relm.UI.Controls
             if (!IsVisible) return;
             if (_sprite == null) CreateSprite();
 
+            _sprite.Alpha = Opacity;
             spriteBatch.Draw(_sprite, Position, 0f, Scale);
         }
 

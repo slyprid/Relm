@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.TextureAtlases;
+using Relm.Extensions;
 using Relm.UI.Configuration;
 using Relm.UI.States;
 
@@ -67,6 +68,7 @@ namespace Relm.UI.Controls
 
         public override void Update(GameTime gameTime)
         {
+            if (!IsEnabled) return;
             _isBaseConfigured = true;
 
             if (!_isChildrenConfigured) Configure();
@@ -98,6 +100,7 @@ namespace Relm.UI.Controls
             for (var i = _topIndex; i < _topIndex + _visibleItemCount; i++)
             {
                 var item = Items[i];
+                item.Opacity = Opacity;
                 item.Draw(gameTime, spriteBatch);
             }
 
@@ -109,22 +112,22 @@ namespace Relm.UI.Controls
             // Top Left
             var piece = TextureAtlas[PanelPiece.TopLeft.ToString()];
             var bounds = new Rectangle(X, Y, (int)(piece.Width * Scale.X), (int)(piece.Height * Scale.Y));
-            spriteBatch.Draw(piece, bounds, Color.White);
+            spriteBatch.Draw(piece, bounds, Color.White.WithOpacity(Opacity));
 
             // Top Right
             piece = TextureAtlas[PanelPiece.TopRight.ToString()];
             bounds = new Rectangle(X + Width - piece.Width, Y, (int)(piece.Width * Scale.X), (int)(piece.Height * Scale.Y));
-            spriteBatch.Draw(piece, bounds, Color.White);
+            spriteBatch.Draw(piece, bounds, Color.White.WithOpacity(Opacity));
 
             // Bottom Left
             piece = TextureAtlas[PanelPiece.BottomLeft.ToString()];
             bounds = new Rectangle(X, Y + Height - piece.Height, (int)(piece.Width * Scale.X), (int)(piece.Height * Scale.Y));
-            spriteBatch.Draw(piece, bounds, Color.White);
+            spriteBatch.Draw(piece, bounds, Color.White.WithOpacity(Opacity));
 
             // Bottom Right
             piece = TextureAtlas[PanelPiece.BottomRight.ToString()];
             bounds = new Rectangle(X + Width - piece.Width, Y + Height - piece.Height, (int)(piece.Width * Scale.X), (int)(piece.Height * Scale.Y));
-            spriteBatch.Draw(piece, bounds, Color.White);
+            spriteBatch.Draw(piece, bounds, Color.White.WithOpacity(Opacity));
 
 
             // Top Center
@@ -134,7 +137,7 @@ namespace Relm.UI.Controls
             for (var x = startX; x < endX; x += piece.Width)
             {
                 bounds = new Rectangle(x, Y, (int)(piece.Width * Scale.X), (int)(piece.Height * Scale.Y));
-                spriteBatch.Draw(piece, bounds, Color.White);
+                spriteBatch.Draw(piece, bounds, Color.White.WithOpacity(Opacity));
             }
 
             // Bottom Center
@@ -144,7 +147,7 @@ namespace Relm.UI.Controls
             for (var x = startX; x < endX; x += piece.Width)
             {
                 bounds = new Rectangle(x, Y + Height - piece.Height, (int)(piece.Width * Scale.X), (int)(piece.Height * Scale.Y));
-                spriteBatch.Draw(piece, bounds, Color.White);
+                spriteBatch.Draw(piece, bounds, Color.White.WithOpacity(Opacity));
             }
 
             // Left Center
@@ -154,7 +157,7 @@ namespace Relm.UI.Controls
             for (var y = startY; y < endY; y += piece.Height)
             {
                 bounds = new Rectangle(X, y, (int)(piece.Width * Scale.X), (int)(piece.Height * Scale.Y));
-                spriteBatch.Draw(piece, bounds, Color.White);
+                spriteBatch.Draw(piece, bounds, Color.White.WithOpacity(Opacity));
             }
 
             // Right Center
@@ -164,13 +167,13 @@ namespace Relm.UI.Controls
             for (var y = startY; y < endY; y += piece.Height)
             {
                 bounds = new Rectangle(X + Width - piece.Width, y, (int)(piece.Width * Scale.X), (int)(piece.Height * Scale.Y));
-                spriteBatch.Draw(piece, bounds, Color.White);
+                spriteBatch.Draw(piece, bounds, Color.White.WithOpacity(Opacity));
             }
 
             // Center
             piece = TextureAtlas[PanelPiece.Center.ToString()];
             bounds = new Rectangle(X + piece.Width, Y + piece.Width, (int)((Width - (piece.Width * 2)) * Scale.X), (int)((Height - (piece.Height * 2)) * Scale.Y));
-            spriteBatch.Draw(piece, bounds, Color.White);
+            spriteBatch.Draw(piece, bounds, Color.White.WithOpacity(Opacity));
         }
 
         private int CalculateDimensions()

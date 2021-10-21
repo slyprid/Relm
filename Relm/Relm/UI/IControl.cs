@@ -13,7 +13,9 @@ namespace Relm.UI
         Vector2 Scale { get; set; }
         GameScreen ParentScreen { get; set; }
         bool IsVisible { get; set; }
+        bool IsEnabled { get; set; }
         bool IsInitialized { get; set; }
+        float Opacity { get; set; }
 
         void Configure();
 

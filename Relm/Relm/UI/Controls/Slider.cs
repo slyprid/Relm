@@ -69,6 +69,7 @@ namespace Relm.UI.Controls
 
         public override void Update(GameTime gameTime)
         {
+            if (!IsEnabled) return;
             var state = Input.GetMouseState();
 
             if (Bounds.ExtendWidthBoth(16).Intersects(new Rectangle(MouseState.X, MouseState.Y, 1, 1)))
@@ -111,13 +112,13 @@ namespace Relm.UI.Controls
                 var textPosition = Position + new Vector2(((Width * Scale.X) / 2) - (textSize.X / 2), ((Height * Scale.Y) / 2) - (textSize.Y / 2));
                 if (HasTextShadow)
                 {
-                    spriteBatch.DrawString(font, text, textPosition + TextShadowOffset, Color.Black);
+                    spriteBatch.DrawString(font, text, textPosition + TextShadowOffset, Color.Black.WithOpacity(Opacity));
                 }
-                spriteBatch.DrawString(font, text, textPosition, TextColor);
+                spriteBatch.DrawString(font, text, textPosition, TextColor.WithOpacity(Opacity));
             }
 
             region = TextureAtlas[(int)SliderPieces.Slider];
-            spriteBatch.Draw(region, SliderBounds, Color.White);
+            spriteBatch.Draw(region, SliderBounds, Color.White.WithOpacity(Opacity));
         }
 
         #region Fluent Methods

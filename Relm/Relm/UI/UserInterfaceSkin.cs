@@ -11,6 +11,7 @@ namespace Relm.UI
         public Dictionary<Type, IConfig> ControlConfigurations { get; internal set; }
         public Texture2D Texture { get; set; }
         public FontSet FontSet { get; set; }
+        public FontSet FontSet2 { get; set; }
 
         protected UserInterfaceSkin()
         {

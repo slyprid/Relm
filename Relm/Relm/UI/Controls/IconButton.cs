@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Input;
 using MonoGame.Extended.TextureAtlases;
+using Relm.Extensions;
 using Relm.UI.Configuration;
 using Relm.UI.States;
 
@@ -38,6 +39,7 @@ namespace Relm.UI.Controls
 
         public override void Update(GameTime gameTime)
         {
+            if (!IsEnabled) return;
             State = ButtonState.Normal;
             
             if (Bounds.Intersects(new Rectangle(MouseState.X, MouseState.Y, 1, 1)))
@@ -64,19 +66,19 @@ namespace Relm.UI.Controls
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             var region = TextureAtlas[(int)State];
-            spriteBatch.Draw(region, Bounds, Color.White);
+            spriteBatch.Draw(region, Bounds, Color.White.WithOpacity(Opacity));
 
             if (IsToggled)
             {
                 region = TextureAtlas[(int)ButtonState.Toggled];
-                spriteBatch.Draw(region, Bounds, Color.White);
+                spriteBatch.Draw(region, Bounds, Color.White.WithOpacity(Opacity));
             }
 
             if (_iconAtlas != null)
             {
                 var icon = _iconAtlas[_iconIndex];
                 var iconRect = new Rectangle((int)(X + (IconOffset.X * Scale.X)), (int)(Y + (IconOffset.Y * Scale.Y)), (int)(IconSize.X * Scale.X), (int)(IconSize.Y * Scale.Y));
-                spriteBatch.Draw(icon, iconRect, Color.White);
+                spriteBatch.Draw(icon, iconRect, Color.White.WithOpacity(Opacity));
             }
         }
 

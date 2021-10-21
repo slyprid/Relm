@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Input;
 using MonoGame.Extended.Input.InputListeners;
+using Relm.Extensions;
 
 namespace Relm.UI.Controls
 {
@@ -44,6 +45,7 @@ namespace Relm.UI.Controls
 
         public override void Update(GameTime gameTime)
         {
+            if (!IsEnabled) return;
             _onUpdate?.Invoke(this);
 
             base.Update(gameTime);
@@ -52,7 +54,7 @@ namespace Relm.UI.Controls
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             if (string.IsNullOrEmpty(Text)) return;
-            spriteBatch.DrawString(Font, Text, Position, Color);
+            spriteBatch.DrawString(Font, Text, Position, Color.WithOpacity(Opacity));
         }
 
         #region Fluent Methods

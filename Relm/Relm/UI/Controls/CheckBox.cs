@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Input;
 using MonoGame.Extended.TextureAtlases;
+using Relm.Extensions;
 using Relm.UI.Configuration;
 using Relm.UI.States;
 
@@ -40,6 +41,7 @@ namespace Relm.UI.Controls
 
         public override void Update(GameTime gameTime)
         {
+            if (!IsEnabled) return;
             base.Update(gameTime);
             
             if (Bounds.Intersects(new Rectangle(MouseState.X, MouseState.Y, 1, 1)))
@@ -63,12 +65,12 @@ namespace Relm.UI.Controls
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             var region = TextureAtlas[(int)CheckBoxState.Unchecked];
-            spriteBatch.Draw(region, Bounds, Color.White);
+            spriteBatch.Draw(region, Bounds, Color.White.WithOpacity(Opacity));
             
             if (State == CheckBoxState.Checked)
             {
                 region = TextureAtlas[(int) CheckBoxState.Checked];
-                spriteBatch.Draw(region, Bounds, Color.White);
+                spriteBatch.Draw(region, Bounds, Color.White.WithOpacity(Opacity));
             }
 
             region = TextureAtlas[(int)CheckBoxState.Unchecked];
@@ -76,7 +78,7 @@ namespace Relm.UI.Controls
             {
                 var txtSize = Font.MeasureString(Text);
                 var yOffset = ((Height * Scale.Y) / 2) - (txtSize.Y / 2);
-                spriteBatch.DrawString(Font, Text, Position + new Vector2((region.Width * Scale.X) + TextPadding, yOffset), TextColor);
+                spriteBatch.DrawString(Font, Text, Position + new Vector2((region.Width * Scale.X) + TextPadding, yOffset), TextColor.WithOpacity(Opacity));
             }
         }
         

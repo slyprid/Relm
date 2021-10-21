@@ -5,6 +5,7 @@ using Relm.UI.Configuration;
 using Relm.UI.States;
 using System;
 using MonoGame.Extended.Input;
+using Relm.Extensions;
 
 namespace Relm.UI.Controls
 {
@@ -53,6 +54,8 @@ namespace Relm.UI.Controls
 
         public override void Update(GameTime gameTime)
         {
+            if (!IsEnabled) return;
+
             if (Orientation == ScrollBarOrientation.Horizontal) UpdateHorizontal();
             else UpdateVertical();
 
@@ -209,20 +212,20 @@ namespace Relm.UI.Controls
 
             // Draw Bar
             var bounds = new Rectangle((int)Position.X + leftButtonPiece.Width, (int)Position.Y, Width - (leftButtonPiece.Width + rightButtonPiece.Width), barPiece.Height);
-            spriteBatch.Draw(barPiece, bounds, Color.White);
+            spriteBatch.Draw(barPiece, bounds, Color.White.WithOpacity(Opacity));
 
             // Draw Buttons
             bounds = new Rectangle((int) Position.X, (int)Position.Y, leftButtonPiece.Width, leftButtonPiece.Height);
-            spriteBatch.Draw(leftButtonPiece, bounds, Color.White);
+            spriteBatch.Draw(leftButtonPiece, bounds, Color.White.WithOpacity(Opacity));
 
             bounds = new Rectangle((int)Position.X + (Width - rightButtonPiece.Width), (int)Position.Y, rightButtonPiece.Width, rightButtonPiece.Height);
-            spriteBatch.Draw(rightButtonPiece, bounds, Color.White);
+            spriteBatch.Draw(rightButtonPiece, bounds, Color.White.WithOpacity(Opacity));
 
             // Draw Slider
             var valuePos = (int)((Width - (leftButtonPiece.Width + rightButtonPiece.Width + sliderPiece.Width)) * ((float) Value / (float) MaximumValue));
             var xPos = (int) Position.X + leftButtonPiece.Width + valuePos;
             bounds = new Rectangle(xPos, (int) Position.Y, sliderPiece.Width, sliderPiece.Height);
-            spriteBatch.Draw(sliderPiece, bounds, Color.White);
+            spriteBatch.Draw(sliderPiece, bounds, Color.White.WithOpacity(Opacity));
         }
 
         private void DrawVertical(GameTime gameTime, SpriteBatch spriteBatch)
@@ -245,16 +248,16 @@ namespace Relm.UI.Controls
 
             // Draw Buttons
             bounds = new Rectangle((int)Position.X, (int)Position.Y, upButtonPiece.Width, upButtonPiece.Height);
-            spriteBatch.Draw(upButtonPiece, bounds, Color.White);
+            spriteBatch.Draw(upButtonPiece, bounds, Color.White.WithOpacity(Opacity));
 
             bounds = new Rectangle((int)Position.X, (int)Position.Y + (Height - downButtonPiece.Height), downButtonPiece.Width, downButtonPiece.Height);
-            spriteBatch.Draw(downButtonPiece, bounds, Color.White);
+            spriteBatch.Draw(downButtonPiece, bounds, Color.White.WithOpacity(Opacity));
 
             // Draw Slider
             var valuePos = (int)((Height - (upButtonPiece.Height + downButtonPiece.Height + sliderPiece.Height)) * ((float)Value / (float)MaximumValue));
             var yPos = (int)Position.Y + upButtonPiece.Height + valuePos;
             bounds = new Rectangle((int)Position.X, yPos, sliderPiece.Width, sliderPiece.Height);
-            spriteBatch.Draw(sliderPiece, bounds, Color.White);
+            spriteBatch.Draw(sliderPiece, bounds, Color.White.WithOpacity(Opacity));
         }
         
         #region Fluent Functions

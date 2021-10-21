@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Input;
 using MonoGame.Extended.TextureAtlases;
+using Relm.Extensions;
 using Relm.UI.Configuration;
 using ButtonState = Relm.UI.States.ButtonState;
 
@@ -45,6 +46,7 @@ namespace Relm.UI.Controls
 
         public override void Update(GameTime gameTime)
         {
+            if (!IsEnabled) return;
             State = ButtonState.Normal;
 
             if (Bounds.Intersects(new Rectangle(MouseState.X, MouseState.Y, 1, 1)))
@@ -71,18 +73,18 @@ namespace Relm.UI.Controls
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             var region = TextureAtlas[(int) State];
-            spriteBatch.Draw(region, Bounds, Color.White);
+            spriteBatch.Draw(region, Bounds, Color.White.WithOpacity(Opacity));
 
             if (IsToggled)
             {
                 region = TextureAtlas[(int)ButtonState.Toggled];
-                spriteBatch.Draw(region, Bounds, Color.White);
+                spriteBatch.Draw(region, Bounds, Color.White.WithOpacity(Opacity));
             }
 
             if (Icon != null)
             {
                 var iconRect = new Rectangle((int) (X + IconOffset.X), (int) (Y + IconOffset.Y), (int) IconSize.X, (int) IconSize.Y);
-                spriteBatch.Draw(Icon, iconRect, Color.White);
+                spriteBatch.Draw(Icon, iconRect, Color.White.WithOpacity(Opacity));
             }
 
             if (!string.IsNullOrEmpty(Text))
@@ -93,9 +95,9 @@ namespace Relm.UI.Controls
                 var textPosition = Position + new Vector2((Width / 2) - (textSize.X / 2), (Height / 2) - (textSize.Y / 2));
                 if (HasTextShadow)
                 {
-                    spriteBatch.DrawString(font, Text, textPosition + TextShadowOffset, Color.Black);
+                    spriteBatch.DrawString(font, Text, textPosition + TextShadowOffset, Color.Black.WithOpacity(Opacity));
                 }
-                spriteBatch.DrawString(font, Text, textPosition, TextColor);
+                spriteBatch.DrawString(font, Text, textPosition, TextColor.WithOpacity(Opacity));
             }
         }
 
