@@ -7,6 +7,7 @@ using MonoGame.Extended.ViewportAdapters;
 using Relm.Components;
 using Relm.Graphics;
 using Relm.Helpers;
+using Relm.Math;
 using Relm.UI;
 using Relm.Time;
 using Relm.UI.Controls;
@@ -59,6 +60,8 @@ namespace Relm
             {
                 Window.Title = title;
             }
+
+            Random.Initialize();
 
             LoadComponents();
         }
