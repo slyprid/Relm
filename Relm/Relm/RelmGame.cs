@@ -81,6 +81,9 @@ namespace Relm
             Timers.TimerManager = new TimerManager();
             Components.Add(Timers.TimerManager);
 
+            Scenarios.ScenarioManager = new ScenarioManager();
+            Components.Add(Scenarios.ScenarioManager);
+
             Input.Register(this, Components);
         }
 
