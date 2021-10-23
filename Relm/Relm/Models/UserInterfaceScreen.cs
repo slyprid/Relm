@@ -14,6 +14,7 @@ namespace Relm.UI
 
         public UserInterfaceManager UserInterfaceManager { get; internal set; }
         public ControlManager Controls { get; set; }
+        public object CarryOver { get; set; }
 
         protected UserInterfaceScreen(Game game)
             : base(game)

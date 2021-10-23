@@ -53,7 +53,7 @@ namespace Relm.UI
             _controls.Add(id, control);
             return control;
         }
-        
+
         public void Remove(string id)
         {
             _controls.Remove(id);

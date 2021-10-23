@@ -19,6 +19,7 @@ namespace Relm.UI.Controls
         public bool IsEnabled { get; set; }
         public bool IsInitialized { get; set; }
         public float Opacity { get; set; }
+        public bool IsInputRegistered { get; set; }
 
         public virtual int Width => (int)Size.X;
         public virtual int Height => (int)Size.Y;

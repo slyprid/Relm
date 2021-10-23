@@ -36,6 +36,16 @@ namespace Relm
             UserInterfaceManager.LoadScreen(screen, transition);
         }
 
+        public static void LoadScreen(UserInterfaceScreen screen, object carryOver)
+        {
+            UserInterfaceManager.LoadScreen(screen, carryOver);
+        }
+
+        public static void LoadScreen(UserInterfaceScreen screen, Transition transition, object carryOver)
+        {
+            UserInterfaceManager.LoadScreen(screen, transition, carryOver);
+        }
+
         public static void Add(UserInterfaceScreen screen)
         {
             ScreenList.Add(screen.Name, screen);
@@ -49,6 +59,16 @@ namespace Relm
         public static void Change(string name, Transition transition)
         {
             LoadScreen(ScreenList[name], transition);
+        }
+
+        public static void Change(string name, object carryOver)
+        {
+            LoadScreen(ScreenList[name], carryOver);
+        }
+
+        public static void Change(string name, Transition transition, object carryOver)
+        {
+            LoadScreen(ScreenList[name], transition, carryOver);
         }
 
         public static UserInterfaceScreen Get(string name)

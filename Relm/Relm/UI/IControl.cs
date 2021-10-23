@@ -16,6 +16,7 @@ namespace Relm.UI
         bool IsEnabled { get; set; }
         bool IsInitialized { get; set; }
         float Opacity { get; set; }
+        bool IsInputRegistered { get; set; }
 
         void Configure();
 

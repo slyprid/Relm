@@ -41,6 +41,31 @@ namespace Relm.UI
             _activeScreen = screen;
         }
 
+        public void LoadScreen(UserInterfaceScreen screen, Transition transition, object carryOver)
+        {
+            if (_activeTransition != null)
+                return;
+            screen.CarryOver = carryOver;
+            _activeTransition = transition;
+            _activeTransition.StateChanged += (EventHandler)((sender, args) => this.LoadScreen(screen));
+            _activeTransition.Completed += (EventHandler)((sender, args) =>
+            {
+                _activeTransition.Dispose();
+                _activeTransition = (Transition)null;
+            });
+        }
+
+        public void LoadScreen(UserInterfaceScreen screen, object carryOver)
+        {
+            screen.CarryOver = carryOver;
+            _activeScreen?.UnloadContent();
+            _activeScreen?.Dispose();
+            screen.UserInterfaceManager = this;
+            screen.Initialize();
+            screen.LoadContent();
+            _activeScreen = screen;
+        }
+
         public override void Initialize()
         {
             base.Initialize();

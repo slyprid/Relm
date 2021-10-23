@@ -13,6 +13,8 @@ namespace Relm.UI.Controls
         : Control
     {
         private Action<Button> _onClick;
+        private Action<Button> _onHover;
+        private Action<Button> _onMouseLeave;
         private bool _locked;
 
         public TextureAtlas TextureAtlas { get; set; }
@@ -47,11 +49,11 @@ namespace Relm.UI.Controls
         public override void Update(GameTime gameTime)
         {
             if (!IsEnabled) return;
-            State = ButtonState.Normal;
-
+            
             if (Bounds.Intersects(new Rectangle(MouseState.X, MouseState.Y, 1, 1)))
             {
                 State = ButtonState.Hover;
+                _onHover?.Invoke(this);
                 if (Input.WasMouseJustDown(MouseButton.Left))
                 {
                     if (!_locked)
@@ -65,6 +67,11 @@ namespace Relm.UI.Controls
                 {
                     _locked = false;
                 }
+            }
+            else if (State == ButtonState.Hover && !Bounds.Intersects(new Rectangle(MouseState.X, MouseState.Y, 1, 1)))
+            {
+                State = ButtonState.Normal;
+                _onMouseLeave?.Invoke(this);
             }
 
             base.Update(gameTime);
@@ -151,6 +158,18 @@ namespace Relm.UI.Controls
         public Button OnClick(Action<Button> action)
         {
             _onClick = action;
+            return this;
+        }
+
+        public Button OnHover(Action<Button> action)
+        {
+            _onHover = action;
+            return this;
+        }
+
+        public Button OnMouseLeave(Action<Button> action)
+        {
+            _onMouseLeave = action;
             return this;
         }
 

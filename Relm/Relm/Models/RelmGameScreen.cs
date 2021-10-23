@@ -8,6 +8,7 @@ namespace Relm.Models
     {
         public abstract string Name { get; }
         public Microsoft.Xna.Framework.Graphics.SpriteBatch SpriteBatch => ((RelmGame)Game).SpriteBatch;
+        public object CarryOver { get; set; }
 
         protected RelmGameScreen(Game game) 
             : base(game)

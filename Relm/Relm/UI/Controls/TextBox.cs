@@ -38,9 +38,13 @@ namespace Relm.UI.Controls
         {
             var config = (TextBoxConfig)UserInterface.Skin.ControlConfigurations[typeof(TextBox)];
             TextureAtlas = new TextureAtlas(Guid.NewGuid().ToString(), UserInterface.Skin.Texture, config.Regions);
-            Size = new Vector2(config.Width, config.Height);
+            if(Size == Vector2.Zero) Size = new Vector2(config.Width, config.Height);
 
-            Input.OnKeyTyped(OnKeyTyped, ParentScreen);
+            if (!IsInputRegistered)
+            {
+                Input.OnKeyTyped(OnKeyTyped, ParentScreen);
+                IsInputRegistered = true;
+            }
         }
 
         public override void Update(GameTime gameTime)
@@ -176,6 +180,13 @@ namespace Relm.UI.Controls
         public TextBox Using(string fontName)
         {
             Font = ContentLibrary.Fonts[fontName];
+            return this;
+        }
+
+        public TextBox Using(string fontName, Color color)
+        {
+            Font = ContentLibrary.Fonts[fontName];
+            TextColor = color;
             return this;
         }
 
