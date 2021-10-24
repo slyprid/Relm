@@ -48,5 +48,14 @@ namespace Relm
         {
             Events.Add(scenarioEvent);
         }
+
+        public void LoadEvent(string eventName)
+        {
+            var scenarioEvent = Events.Single(x => x.Name == eventName);
+            if (!ActiveEvents.Contains(scenarioEvent))
+            {
+                ActiveEvents.Add(scenarioEvent);
+            }
+        }
     }
 }

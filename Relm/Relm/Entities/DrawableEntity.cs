@@ -8,6 +8,7 @@ namespace Relm.Entities
     {
         public Vector2 Size { get; set; }
         public Vector2 Position { get; set; }
+        public Vector2 Scale { get; set; }
         public float Opacity { get; set; }
         public int Width => (int) Size.X;
         public int Height => (int) Size.Y;

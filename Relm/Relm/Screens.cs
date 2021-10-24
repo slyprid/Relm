@@ -34,6 +34,12 @@ namespace Relm
             return ActiveScreen == screen;
         }
 
+        public static bool IsActiveScreen(string screenName)
+        {
+            var screen = ScreenList[screenName];
+            return IsActiveScreen(screen);
+        }
+
         public static void Pause()
         {
             IsPaused = true;

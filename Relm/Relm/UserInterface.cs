@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using MonoGame.Extended.Screens;
 using MonoGame.Extended.Screens.Transitions;
 using Relm.UI;
 
@@ -85,6 +86,11 @@ namespace Relm
             Skin.Texture = ContentLibrary.Textures[skinName];
             Skin.FontSet = ContentLibrary.FontSets[fontSetName];
             Skin.FontSet2 = ContentLibrary.FontSets[fontSetName2];
+        }
+
+        public static void Clear()
+        {
+            UserInterfaceManager.Clear();
         }
     }
 }

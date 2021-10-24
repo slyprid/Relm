@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended;
 
 namespace Relm.Entities
 {
@@ -9,6 +8,7 @@ namespace Relm.Entities
     {
         Vector2 Size { get; set; }
         Vector2 Position { get; set; }
+        Vector2 Scale { get; set; }
 
         int Width { get; }
         int Height { get; }

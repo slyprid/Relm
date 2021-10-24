@@ -95,5 +95,10 @@ namespace Relm.UI
             _activeScreen?.Draw(gameTime);
             _activeTransition?.Draw(gameTime);
         }
+
+        public void Clear()
+        {
+            _activeScreen = null;
+        }
     }
 }
