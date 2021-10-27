@@ -18,7 +18,7 @@ namespace Relm.Collisions
 
         public CollisionManager()
         {
-            ShowCollisionBounds = true;
+            ShowCollisionBounds = false;
             Colliders = new List<ICollider>();
             Actors = new List<ICollisionActor>();
         }
