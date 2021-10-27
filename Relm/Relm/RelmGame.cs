@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using MonoGame.Extended.Screens;
 using MonoGame.Extended.ViewportAdapters;
+using Relm.Collisions;
 using Relm.Components;
 using Relm.Graphics;
 using Relm.Helpers;
@@ -33,6 +34,8 @@ namespace Relm
         public SpriteBatch SpriteBatch => _spriteBatch;
         public static OrthographicCamera Camera => _camera;
         public static MessageBox MessageBox { get; set; }
+        public static CollisionManager Collisions { get; set; }
+        public static FpsComponent FPS { get; set; }
 
         public RelmGame(string title = "", int virtualWidth = 1024, int virtualHeight = 768, int actualWidth = 1024, int actualHeight = 768)
         {
@@ -83,6 +86,14 @@ namespace Relm
 
             Scenarios.ScenarioManager = new ScenarioManager();
             Components.Add(Scenarios.ScenarioManager);
+
+            Collisions = new CollisionManager();
+            Collisions.Game = this;
+            Components.Add(Collisions);
+
+            FPS = new FpsComponent();
+            FPS.Game = this;
+            Components.Add(FPS);
 
             Input.Register(this, Components);
         }
