@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using MonoGame.Extended.Screens;
 using MonoGame.Extended.ViewportAdapters;
+using Penumbra;
 using Relm.Collisions;
 using Relm.Components;
 using Relm.Graphics;
@@ -36,7 +37,8 @@ namespace Relm
         public static MessageBox MessageBox { get; set; }
         public static CollisionManager Collisions { get; set; }
         public static FpsComponent FPS { get; set; }
-
+        public static PenumbraComponent Penumbra { get; set; }
+        
         public RelmGame(string title = "", int virtualWidth = 1024, int virtualHeight = 768, int actualWidth = 1024, int actualHeight = 768)
         {
             _instance = this;
@@ -94,6 +96,10 @@ namespace Relm
             FPS = new FpsComponent();
             FPS.Game = this;
             Components.Add(FPS);
+
+            Penumbra = new PenumbraComponent(this);
+            Penumbra.Enabled = false;
+            Penumbra.Visible = false;
 
             Input.Register(this, Components);
         }
