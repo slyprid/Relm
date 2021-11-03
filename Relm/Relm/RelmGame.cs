@@ -38,7 +38,7 @@ namespace Relm
         public static CollisionManager Collisions { get; set; }
         public static FpsComponent FPS { get; set; }
         public static PenumbraComponent Penumbra { get; set; }
-
+        
         public RelmGame(string title = "", int virtualWidth = 1024, int virtualHeight = 768, int actualWidth = 1024, int actualHeight = 768)
         {
             _instance = this;
@@ -100,7 +100,6 @@ namespace Relm
             Penumbra = new PenumbraComponent(this);
             Penumbra.Enabled = false;
             Penumbra.Visible = false;
-            //Components.Add(Penumbra);
 
             Input.Register(this, Components);
         }

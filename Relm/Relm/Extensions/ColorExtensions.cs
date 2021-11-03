@@ -7,7 +7,7 @@ namespace Relm.Extensions
     {
         public static Color WithOpacity(this Color color, float opacity)
         {
-            return new Color(color.R, color.G, color.B, opacity);
+            return WithOpacity(color, (byte)(opacity * 255));
         }
 
         public static Color WithOpacity(this Color color, byte opacity)
