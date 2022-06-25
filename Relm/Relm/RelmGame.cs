@@ -1,7 +1,11 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Relm.Graphics;
+using Relm.Managers;
 
 namespace Relm
 {
@@ -10,6 +14,8 @@ namespace Relm
     {
         private readonly GraphicsDeviceManager _graphics;
         private ScalingViewportAdapter _viewportAdapter;
+        private readonly List<Manager> _managers;
+        private InputManager _inputManager;
 
         protected SpriteBatch SpriteBatch;
 
@@ -25,6 +31,8 @@ namespace Relm
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+
+            _managers = new List<Manager>();
         }
 
         protected override void Initialize()
@@ -35,6 +43,13 @@ namespace Relm
 
             base.Initialize();
             _viewportAdapter = new ScalingViewportAdapter(GraphicsDevice, VirtualWidth, VirtualHeight);
+
+            RegisterManagers();
+        }
+
+        private void RegisterManagers()
+        {
+            _inputManager = RegisterManager<InputManager>();
         }
 
         protected override void LoadContent()
@@ -44,8 +59,7 @@ namespace Relm
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+            UpdateManagers(gameTime);
 
             base.Update(gameTime);
         }
@@ -56,5 +70,51 @@ namespace Relm
 
             base.Draw(gameTime);
         }
+
+        #region Manager Handling
+
+        public T RegisterManager<T>()
+            where T : Manager, new()
+        {
+            var manager = Activator.CreateInstance<T>();
+            _managers.Add(manager);
+            return manager;
+        }
+
+        private void UpdateManagers(GameTime gameTime)
+        {
+            _managers.ForEach(x => x.Update(gameTime));
+        }
+
+        #endregion
+
+        #region Input
+
+        public void MapActionToKeyPressed(Keys key, Action action)
+        {
+            _inputManager.MapActionToKeyPressed(key, action);
+        }
+
+        public void MapActionToKeyReleased(Keys key, Action action)
+        {
+            _inputManager.MapActionToKeyReleased(key, action);
+        }
+
+        public void MapActionToKeyTyped(Keys key, Action action)
+        {
+            _inputManager.MapActionToKeyTyped(key, action);
+        }
+
+        public void ClearRegisteredKeyboardActions()
+        {
+            _inputManager.ClearRegisteredKeyboardActions();
+        }
+
+        public void ChangeKeyboardSettings(bool repeatPress = true, int initialDelay = 500, int repeatDelay = 50)
+        {
+            _inputManager.ChangeKeyboardSettings(repeatPress, initialDelay, repeatDelay);
+        }
+
+        #endregion
     }
 }
