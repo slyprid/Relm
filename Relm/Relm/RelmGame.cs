@@ -95,6 +95,11 @@ namespace Relm
             _inputManager.MapActionToKeyPressed(key, action);
         }
 
+        public void MapActionToKeyDown(Keys key, Action action)
+        {
+            _inputManager.MapActionToKeyDown(key, action);
+        }
+
         public void MapActionToKeyReleased(Keys key, Action action)
         {
             _inputManager.MapActionToKeyReleased(key, action);

@@ -14,6 +14,7 @@ namespace Relm.Managers
         private readonly Dictionary<Keys, List<Action>> _keyboardOnKeyPressedActions;
         private readonly Dictionary<Keys, List<Action>> _keyboardOnKeyReleasedActions;
         private readonly Dictionary<Keys, List<Action>> _keyboardOnKeyTypedActions;
+        private readonly Dictionary<Keys, List<Action>> _keyboardOnKeyDownActions;
 
         public InputManager()
         {
@@ -22,10 +23,12 @@ namespace Relm.Managers
             _keyboardManager.KeyPressed += OnKeyPressed;
             _keyboardManager.KeyReleased += OnKeyReleased;
             _keyboardManager.KeyTyped += OnKeyTyped;
+            _keyboardManager.KeyDown += OnKeyDown;
 
             _keyboardOnKeyPressedActions = new Dictionary<Keys, List<Action>>();
             _keyboardOnKeyReleasedActions = new Dictionary<Keys, List<Action>>();
             _keyboardOnKeyTypedActions = new Dictionary<Keys, List<Action>>();
+            _keyboardOnKeyDownActions = new Dictionary<Keys, List<Action>>();
         }
         
         public override void Update(GameTime gameTime)
@@ -35,6 +38,11 @@ namespace Relm.Managers
 
         #region Keyboard Manager
 
+        /// <summary>
+        /// Checks if key is pressed based on initial delay and repeating delays
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="action"></param>
         public void MapActionToKeyPressed(Keys key, Action action)
         {
             if (!_keyboardOnKeyPressedActions.ContainsKey(key))
@@ -44,6 +52,23 @@ namespace Relm.Managers
             else
             {
                 _keyboardOnKeyPressedActions[key].Add(action);
+            }
+        }
+
+        /// <summary>
+        /// Checks if key is down
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="action"></param>
+        public void MapActionToKeyDown(Keys key, Action action)
+        {
+            if (!_keyboardOnKeyDownActions.ContainsKey(key))
+            {
+                _keyboardOnKeyDownActions.Add(key, new List<Action> { action });
+            }
+            else
+            {
+                _keyboardOnKeyDownActions[key].Add(action);
             }
         }
 
@@ -76,6 +101,7 @@ namespace Relm.Managers
             _keyboardOnKeyPressedActions.Clear();
             _keyboardOnKeyReleasedActions.Clear();
             _keyboardOnKeyTypedActions.Clear();
+            _keyboardOnKeyDownActions.Clear();
         }
 
         public void ChangeKeyboardSettings(bool repeatPress = true, int initialDelay = 500, int repeatDelay = 50)
@@ -88,6 +114,14 @@ namespace Relm.Managers
             if (_keyboardOnKeyPressedActions.ContainsKey(e.Key))
             {
                 _keyboardOnKeyPressedActions[e.Key].ForEach(action => action.Invoke());
+            }
+        }
+
+        private void OnKeyDown(object sender, KeyboardEventArgs e)
+        {
+            if (_keyboardOnKeyDownActions.ContainsKey(e.Key))
+            {
+                _keyboardOnKeyDownActions[e.Key].ForEach(action => action.Invoke());
             }
         }
 

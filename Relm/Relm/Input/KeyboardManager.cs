@@ -17,6 +17,7 @@ namespace Relm.Input
         public event EventHandler<KeyboardEventArgs> KeyTyped;
         public event EventHandler<KeyboardEventArgs> KeyPressed;
         public event EventHandler<KeyboardEventArgs> KeyReleased;
+        public event EventHandler<KeyboardEventArgs> KeyDown;
 
         public bool RepeatPress => _settings.RepeatPress;
         public int InitialDelay => _settings.InitialDelay;
@@ -36,12 +37,26 @@ namespace Relm.Input
         {
             var currentState = Keyboard.GetState();
 
+            RaiseKeyDownEvents(gameTime, currentState);
             RaisePressedEvents(gameTime, currentState);
             RaiseReleasedEvents(currentState);
 
             if (RepeatPress) RaiseRepeatEvents(gameTime, currentState);
 
             _previousState = currentState;
+        }
+
+        private void RaiseKeyDownEvents(GameTime gameTime, KeyboardState currentState)
+        {
+            if (!currentState.IsKeyDown(Keys.LeftAlt) && !currentState.IsKeyDown(Keys.RightAlt))
+            {
+                var pressedKeys = _keysValues
+                    .Cast<Keys>()
+                    .Where(currentState.IsKeyDown);
+
+                foreach (var key in pressedKeys)
+                    KeyDown?.Invoke(this, new KeyboardEventArgs(key, currentState));
+            }
         }
 
         private void RaisePressedEvents(GameTime gameTime, KeyboardState currentState)
