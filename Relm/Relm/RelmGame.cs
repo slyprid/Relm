@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Relm.Extensions;
 using Relm.Graphics;
 using Relm.Input;
 using Relm.Managers;
@@ -67,7 +68,7 @@ namespace Relm
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            ClearScreen();
 
             base.Draw(gameTime);
         }
@@ -197,6 +198,28 @@ namespace Relm
         public void MapActionToMouseDragEnd(MouseButton button, Action<EventArgs> action)
         {
             _inputManager.MapActionToMouseDragEnd(button, action);
+        }
+
+        #endregion
+
+        #region Utility Methods / Functions
+
+        public void ClearScreen()
+        {
+            GraphicsDevice.Clear(Color.Black);
+
+            var whitePixel = SpriteBatch.GetWhitePixel();
+
+            SpriteBatch.Begin();
+
+            for (var y = 0; y < ScreenHeight; y++)
+            {
+                var p = ((float)y / (float)ScreenHeight);
+                var color = Color.Lerp(Color.FromNonPremultiplied(10, 2, 23, 255), Color.FromNonPremultiplied(189, 7, 154, 255), p);
+                SpriteBatch.Draw(whitePixel, new Rectangle(0, y, ScreenWidth, y), color);
+            }
+
+            SpriteBatch.End();
         }
 
         #endregion
