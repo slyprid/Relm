@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net.Sockets;
+using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -8,6 +11,7 @@ using Relm.Extensions;
 using Relm.Graphics;
 using Relm.Input;
 using Relm.Managers;
+using Relm.Scenes;
 
 namespace Relm
 {
@@ -18,8 +22,9 @@ namespace Relm
         private ScalingViewportAdapter _viewportAdapter;
         private readonly List<Manager> _managers;
         private InputManager _inputManager;
+        private SceneManager _sceneManager;
 
-        protected SpriteBatch SpriteBatch;
+        public SpriteBatch SpriteBatch { get; private set; }
 
         public int VirtualWidth { get; set; } = 1920;
         public int VirtualHeight { get; set; } = 1080;
@@ -47,11 +52,29 @@ namespace Relm
             _viewportAdapter = new ScalingViewportAdapter(GraphicsDevice, VirtualWidth, VirtualHeight);
 
             RegisterManagers();
+            LoadScenes();
         }
 
         private void RegisterManagers()
         {
             _inputManager = RegisterManager<InputManager>(_viewportAdapter);
+            _sceneManager = RegisterManager<SceneManager>();
+        }
+
+        private void LoadScenes()
+        {
+            var scenes = from t in AppDomain.CurrentDomain.GetAssemblies().SelectMany(x => x.GetTypes())
+                where t.IsClass 
+                      && !t.IsAbstract 
+                      && t.Name.Contains(nameof(Scene))
+                      && t.BaseType != typeof(Manager)
+                select t;
+
+            foreach (var sceneType in scenes)
+            {
+                var scene = _sceneManager.LoadScene(sceneType);
+                scene.Game = this;
+            }
         }
 
         protected override void LoadContent()
@@ -69,6 +92,8 @@ namespace Relm
         protected override void Draw(GameTime gameTime)
         {
             ClearScreen();
+
+            _sceneManager.Draw(gameTime);
 
             base.Draw(gameTime);
         }
@@ -198,6 +223,15 @@ namespace Relm
         public void MapActionToMouseDragEnd(MouseButton button, Action<EventArgs> action)
         {
             _inputManager.MapActionToMouseDragEnd(button, action);
+        }
+
+        #endregion
+
+        #region Scene Management
+
+        public void ChangeScene(string sceneName)
+        {
+            _sceneManager.ChangeScene(sceneName);
         }
 
         #endregion
