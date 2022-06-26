@@ -1,0 +1,8 @@
+﻿Portions of Monogame.Extended are used and modified throughout the codebase.
+(https://www.monogameextended.net/)
+(https://github.com/craftworkgames/MonoGame.Extended)
+
+- KeyboardManager (Modified KeyboardListener)
+- GamePadManager (Modified GamePadListender)
+- KeyboardEventArgs
+- GamePadEventArgs

@@ -23,11 +23,8 @@ namespace Relm.Input
         public int InitialDelay => _settings.InitialDelay;
         public int RepeatDelay => _settings.RepeatDelay;
 
-        public KeyboardManager()
-        {
-            _settings = new KeyboardSettings();
-        }
-
+        public KeyboardManager() : this(new KeyboardSettings()) { }
+        
         public KeyboardManager(KeyboardSettings settings)
         {
             _settings = settings;

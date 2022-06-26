@@ -90,22 +90,22 @@ namespace Relm
 
         #region Input
 
-        public void MapActionToKeyPressed(Keys key, Action action)
+        public void MapActionToKeyPressed(Keys key, Action<EventArgs> action)
         {
             _inputManager.MapActionToKeyPressed(key, action);
         }
 
-        public void MapActionToKeyDown(Keys key, Action action)
+        public void MapActionToKeyDown(Keys key, Action<EventArgs> action)
         {
             _inputManager.MapActionToKeyDown(key, action);
         }
 
-        public void MapActionToKeyReleased(Keys key, Action action)
+        public void MapActionToKeyReleased(Keys key, Action<EventArgs> action)
         {
             _inputManager.MapActionToKeyReleased(key, action);
         }
 
-        public void MapActionToKeyTyped(Keys key, Action action)
+        public void MapActionToKeyTyped(Keys key, Action<EventArgs> action)
         {
             _inputManager.MapActionToKeyTyped(key, action);
         }
@@ -118,6 +118,31 @@ namespace Relm
         public void ChangeKeyboardSettings(bool repeatPress = true, int initialDelay = 500, int repeatDelay = 50)
         {
             _inputManager.ChangeKeyboardSettings(repeatPress, initialDelay, repeatDelay);
+        }
+
+        public void MapActionToGamepadButtonDown(Buttons button, Action<EventArgs> action)
+        {
+            _inputManager.MapActionToGamepadButtonDown(button, action);
+        }
+        
+        public void MapActionToGamepadButtonUp(Buttons button, Action<EventArgs> action)
+        {
+            _inputManager.MapActionToGamepadButtonUp(button, action);
+        }
+
+        public void MapActionToGamepadButtonRepeated(Buttons button, Action<EventArgs> action)
+        {
+            _inputManager.MapActionToGamepadButtonRepeated(button, action);
+        }
+
+        public void MapActionToGamepadThumbstickMoved(Buttons button, Action<EventArgs> action)
+        {
+            _inputManager.MapActionToGamepadThumbstickMoved(button, action);
+        }
+
+        public void MapActionToGamepadTriggerMoved(Buttons button, Action<EventArgs> action)
+        {
+            _inputManager.MapActionToGamepadTriggerMoved(button, action);
         }
 
         #endregion
