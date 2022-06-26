@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Relm.Graphics;
 using Relm.Input;
 
 namespace Relm.Managers
@@ -11,6 +12,7 @@ namespace Relm.Managers
     {
         private readonly KeyboardManager _keyboardManager;
         private readonly GamePadManager _gamepadManager;
+        private readonly MouseManager _mouseManager;
 
         private readonly Dictionary<Keys, List<Action<EventArgs>>> _keyboardOnKeyPressedActions;
         private readonly Dictionary<Keys, List<Action<EventArgs>>> _keyboardOnKeyReleasedActions;
@@ -23,7 +25,17 @@ namespace Relm.Managers
         private readonly Dictionary<Buttons, List<Action<EventArgs>>> _gamepadOnThumbstickMovedActions;
         private readonly Dictionary<Buttons, List<Action<EventArgs>>> _gamepadOnTriggerMovedActions;
 
-        public InputManager()
+        private readonly Dictionary<MouseButton, List<Action<EventArgs>>> _mouseOnButtonDownActions;
+        private readonly Dictionary<MouseButton, List<Action<EventArgs>>> _mouseOnButtonUpActions;
+        private readonly Dictionary<MouseButton, List<Action<EventArgs>>> _mouseOnButtonClickedActions;
+        private readonly Dictionary<MouseButton, List<Action<EventArgs>>> _mouseOnButtonDoubleClickedActions;
+        private readonly Dictionary<MouseButton, List<Action<EventArgs>>> _mouseOnMovedActions;
+        private readonly Dictionary<MouseButton, List<Action<EventArgs>>> _mouseOnWheelMovedActions;
+        private readonly Dictionary<MouseButton, List<Action<EventArgs>>> _mouseOnDragStartActions;
+        private readonly Dictionary<MouseButton, List<Action<EventArgs>>> _mouseOnDragActions;
+        private readonly Dictionary<MouseButton, List<Action<EventArgs>>> _mouseOnDragEndActions;
+
+        public InputManager(ViewportAdapter viewportAdapter)
         {
             _keyboardManager = new KeyboardManager();
 
@@ -50,12 +62,35 @@ namespace Relm.Managers
             _gamepadOnButtonRepeatedActions = new Dictionary<Buttons, List<Action<EventArgs>>>();
             _gamepadOnThumbstickMovedActions = new Dictionary<Buttons, List<Action<EventArgs>>>();
             _gamepadOnTriggerMovedActions = new Dictionary<Buttons, List<Action<EventArgs>>>();
+
+            _mouseManager = new MouseManager(viewportAdapter);
+
+            _mouseManager.MouseDown += OnMouseButtonDown;
+            _mouseManager.MouseUp += OnMouseButtonUp;
+            _mouseManager.MouseClicked += OnMouseClicked;
+            _mouseManager.MouseDoubleClicked += OnMouseDoubleClicked;
+            _mouseManager.MouseMoved += OnMouseMoved;
+            _mouseManager.MouseWheelMoved += OnMouseWheelMoved;
+            _mouseManager.MouseDragStart += OnMouseDragStart;
+            _mouseManager.MouseDrag += OnMouseDrag;
+            _mouseManager.MouseDragEnd += OnMouseDragEnd;
+
+            _mouseOnButtonDownActions = new Dictionary<MouseButton, List<Action<EventArgs>>>();
+            _mouseOnButtonUpActions = new Dictionary<MouseButton, List<Action<EventArgs>>>();
+            _mouseOnButtonClickedActions = new Dictionary<MouseButton, List<Action<EventArgs>>>();
+            _mouseOnButtonDoubleClickedActions = new Dictionary<MouseButton, List<Action<EventArgs>>>();
+            _mouseOnMovedActions = new Dictionary<MouseButton, List<Action<EventArgs>>>();
+            _mouseOnWheelMovedActions = new Dictionary<MouseButton, List<Action<EventArgs>>>();
+            _mouseOnDragStartActions = new Dictionary<MouseButton, List<Action<EventArgs>>>();
+            _mouseOnDragActions = new Dictionary<MouseButton, List<Action<EventArgs>>>();
+            _mouseOnDragEndActions = new Dictionary<MouseButton, List<Action<EventArgs>>>();
         }
         
         public override void Update(GameTime gameTime)
         {
             _keyboardManager.Update(gameTime);
             _gamepadManager.Update(gameTime);
+            _mouseManager.Update(gameTime);
         }
 
         #region Keyboard Manager
@@ -266,6 +301,191 @@ namespace Relm.Managers
                 _gamepadOnTriggerMovedActions[e.Button].ForEach(action => action.Invoke(e));
             }
         }
+
+        #endregion
+
+        #region Mouse Manager
+
+        public void MapActionToMouseButtonDown(MouseButton button, Action<EventArgs> action)
+        {
+            if (!_mouseOnButtonDownActions.ContainsKey(button))
+            {
+                _mouseOnButtonDownActions.Add(button, new List<Action<EventArgs>> { action });
+            }
+            else
+            {
+                _mouseOnButtonDownActions[button].Add(action);
+            }
+        }
+
+        private void OnMouseButtonDown(object sender, MouseEventArgs e)
+        {
+            if (_mouseOnButtonDownActions.ContainsKey(e.Button))
+            {
+                _mouseOnButtonDownActions[e.Button].ForEach(action => action.Invoke(e));
+            }
+        }
+
+        public void MapActionToMouseButtonUp(MouseButton button, Action<EventArgs> action)
+        {
+            if (!_mouseOnButtonUpActions.ContainsKey(button))
+            {
+                _mouseOnButtonUpActions.Add(button, new List<Action<EventArgs>> { action });
+            }
+            else
+            {
+                _mouseOnButtonUpActions[button].Add(action);
+            }
+        }
+
+        private void OnMouseButtonUp(object sender, MouseEventArgs e)
+        {
+            if (_mouseOnButtonUpActions.ContainsKey(e.Button))
+            {
+                _mouseOnButtonUpActions[e.Button].ForEach(action => action.Invoke(e));
+            }
+        }
+
+        public void MapActionToMouseButtonClicked(MouseButton button, Action<EventArgs> action)
+        {
+            if (!_mouseOnButtonClickedActions.ContainsKey(button))
+            {
+                _mouseOnButtonClickedActions.Add(button, new List<Action<EventArgs>> { action });
+            }
+            else
+            {
+                _mouseOnButtonClickedActions[button].Add(action);
+            }
+        }
+
+        private void OnMouseClicked(object sender, MouseEventArgs e)
+        {
+            if (_mouseOnButtonClickedActions.ContainsKey(e.Button))
+            {
+                _mouseOnButtonClickedActions[e.Button].ForEach(action => action.Invoke(e));
+            }
+        }
+
+        public void MapActionToMouseButtonDoubleClicked(MouseButton button, Action<EventArgs> action)
+        {
+            if (!_mouseOnButtonDoubleClickedActions.ContainsKey(button))
+            {
+                _mouseOnButtonDoubleClickedActions.Add(button, new List<Action<EventArgs>> { action });
+            }
+            else
+            {
+                _mouseOnButtonDoubleClickedActions[button].Add(action);
+            }
+        }
+
+        private void OnMouseDoubleClicked(object sender, MouseEventArgs e)
+        {
+            if (_mouseOnButtonDoubleClickedActions.ContainsKey(e.Button))
+            {
+                _mouseOnButtonDoubleClickedActions[e.Button].ForEach(action => action.Invoke(e));
+            }
+        }
+
+        public void MapActionToMouseMoved(MouseButton button, Action<EventArgs> action)
+        {
+            if (!_mouseOnMovedActions.ContainsKey(button))
+            {
+                _mouseOnMovedActions.Add(button, new List<Action<EventArgs>> { action });
+            }
+            else
+            {
+                _mouseOnMovedActions[button].Add(action);
+            }
+        }
+
+        private void OnMouseMoved(object sender, MouseEventArgs e)
+        {
+            if (_mouseOnMovedActions.ContainsKey(e.Button))
+            {
+                _mouseOnMovedActions[e.Button].ForEach(action => action.Invoke(e));
+            }
+        }
+
+        public void MapActionToMouseWheelMoved(MouseButton button, Action<EventArgs> action)
+        {
+            if (!_mouseOnWheelMovedActions.ContainsKey(button))
+            {
+                _mouseOnWheelMovedActions.Add(button, new List<Action<EventArgs>> { action });
+            }
+            else
+            {
+                _mouseOnWheelMovedActions[button].Add(action);
+            }
+        }
+
+        private void OnMouseWheelMoved(object sender, MouseEventArgs e)
+        {
+            if (_mouseOnWheelMovedActions.ContainsKey(e.Button))
+            {
+                _mouseOnWheelMovedActions[e.Button].ForEach(action => action.Invoke(e));
+            }
+        }
+
+        public void MapActionToMouseDragStart(MouseButton button, Action<EventArgs> action)
+        {
+            if (!_mouseOnDragStartActions.ContainsKey(button))
+            {
+                _mouseOnDragStartActions.Add(button, new List<Action<EventArgs>> { action });
+            }
+            else
+            {
+                _mouseOnDragStartActions[button].Add(action);
+            }
+        }
+
+        private void OnMouseDragStart(object sender, MouseEventArgs e)
+        {
+            if (_mouseOnDragStartActions.ContainsKey(e.Button))
+            {
+                _mouseOnDragStartActions[e.Button].ForEach(action => action.Invoke(e));
+            }
+        }
+
+        public void MapActionToMouseDrag(MouseButton button, Action<EventArgs> action)
+        {
+            if (!_mouseOnDragActions.ContainsKey(button))
+            {
+                _mouseOnDragActions.Add(button, new List<Action<EventArgs>> { action });
+            }
+            else
+            {
+                _mouseOnDragActions[button].Add(action);
+            }
+        }
+
+        private void OnMouseDrag(object sender, MouseEventArgs e)
+        {
+            if (_mouseOnDragActions.ContainsKey(e.Button))
+            {
+                _mouseOnDragActions[e.Button].ForEach(action => action.Invoke(e));
+            }
+        }
+
+        public void MapActionToMouseDragEnd(MouseButton button, Action<EventArgs> action)
+        {
+            if (!_mouseOnDragEndActions.ContainsKey(button))
+            {
+                _mouseOnDragEndActions.Add(button, new List<Action<EventArgs>> { action });
+            }
+            else
+            {
+                _mouseOnDragEndActions[button].Add(action);
+            }
+        }
+
+        private void OnMouseDragEnd(object sender, MouseEventArgs e)
+        {
+            if (_mouseOnDragEndActions.ContainsKey(e.Button))
+            {
+                _mouseOnDragEndActions[e.Button].ForEach(action => action.Invoke(e));
+            }
+        }
+
 
         #endregion
     }

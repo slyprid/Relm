@@ -2,7 +2,12 @@
 (https://www.monogameextended.net/)
 (https://github.com/craftworkgames/MonoGame.Extended)
 
+- ViewportAdapter
+- ScaledViewportAdapter
 - KeyboardManager (Modified KeyboardListener)
-- GamePadManager (Modified GamePadListender)
+- GamePadManager (Modified GamePadListener)
+- MouseManager (Modified MouseListener)
 - KeyboardEventArgs
 - GamePadEventArgs
+- MouseEventArgs
+- MouseButtons

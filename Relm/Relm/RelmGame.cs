@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Relm.Graphics;
+using Relm.Input;
 using Relm.Managers;
 
 namespace Relm
@@ -49,7 +50,7 @@ namespace Relm
 
         private void RegisterManagers()
         {
-            _inputManager = RegisterManager<InputManager>();
+            _inputManager = RegisterManager<InputManager>(_viewportAdapter);
         }
 
         protected override void LoadContent()
@@ -77,6 +78,14 @@ namespace Relm
             where T : Manager, new()
         {
             var manager = Activator.CreateInstance<T>();
+            _managers.Add(manager);
+            return manager;
+        }
+
+        public T RegisterManager<T>(params object[] args)
+            where T : Manager
+        {
+            var manager = (T)Activator.CreateInstance(typeof(T), args);
             _managers.Add(manager);
             return manager;
         }
@@ -143,6 +152,51 @@ namespace Relm
         public void MapActionToGamepadTriggerMoved(Buttons button, Action<EventArgs> action)
         {
             _inputManager.MapActionToGamepadTriggerMoved(button, action);
+        }
+
+        public void MapActionToMouseDown(MouseButton button, Action<EventArgs> action)
+        {
+            _inputManager.MapActionToMouseButtonDown(button, action);
+        }
+
+        public void MapActionToMouseUp(MouseButton button, Action<EventArgs> action)
+        {
+            _inputManager.MapActionToMouseButtonUp(button, action);
+        }
+
+        public void MapActionToMouseClicked(MouseButton button, Action<EventArgs> action)
+        {
+            _inputManager.MapActionToMouseButtonClicked(button, action);
+        }
+
+        public void MapActionToMouseDoubleClicked(MouseButton button, Action<EventArgs> action)
+        {
+            _inputManager.MapActionToMouseButtonDoubleClicked(button, action);
+        }
+
+        public void MapActionToMouseMoved(MouseButton button, Action<EventArgs> action)
+        {
+            _inputManager.MapActionToMouseMoved(button, action);
+        }
+
+        public void MapActionToMouseWheelMoved(MouseButton button, Action<EventArgs> action)
+        {
+            _inputManager.MapActionToMouseWheelMoved(button, action);
+        }
+
+        public void MapActionToMouseDragStart(MouseButton button, Action<EventArgs> action)
+        {
+            _inputManager.MapActionToMouseDragStart(button, action);
+        }
+
+        public void MapActionToMouseDrag(MouseButton button, Action<EventArgs> action)
+        {
+            _inputManager.MapActionToMouseDrag(button, action);
+        }
+
+        public void MapActionToMouseDragEnd(MouseButton button, Action<EventArgs> action)
+        {
+            _inputManager.MapActionToMouseDragEnd(button, action);
         }
 
         #endregion

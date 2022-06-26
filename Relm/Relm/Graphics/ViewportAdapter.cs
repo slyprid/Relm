@@ -35,7 +35,7 @@ namespace Relm.Graphics
 
         public Vector2 VectorToScreen(Vector2 input)
         {
-            var scaleMatrix = -GetScaleMatrix();
+            var scaleMatrix = GetScaleMatrix();
             var invertedMatrix = Matrix.Invert(scaleMatrix);
             return Vector2.Transform(input, invertedMatrix);
         }
