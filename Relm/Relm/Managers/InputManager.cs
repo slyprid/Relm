@@ -302,6 +302,15 @@ namespace Relm.Managers
             }
         }
 
+        public void ClearRegisteredGamepadActions()
+        {
+            _gamepadOnButtonDownActions.Clear();
+            _gamepadOnButtonUpActions.Clear();
+            _gamepadOnButtonRepeatedActions.Clear();
+            _gamepadOnThumbstickMovedActions.Clear();
+            _gamepadOnTriggerMovedActions.Clear();
+        }
+
         #endregion
 
         #region Mouse Manager
@@ -486,6 +495,18 @@ namespace Relm.Managers
             }
         }
 
+        public void ClearRegisteredMouseActions()
+        {
+            _mouseOnButtonDownActions.Clear();
+            _mouseOnButtonUpActions.Clear();
+            _mouseOnButtonClickedActions.Clear();
+            _mouseOnButtonDoubleClickedActions.Clear();
+            _mouseOnMovedActions.Clear();
+            _mouseOnWheelMovedActions.Clear();
+            _mouseOnDragStartActions.Clear();
+            _mouseOnDragActions.Clear();
+            _mouseOnDragEndActions.Clear();
+        }
 
         #endregion
     }

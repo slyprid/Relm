@@ -137,6 +137,13 @@ namespace Relm
 
         #region Input
 
+        public void ClearMappedInput()
+        {
+            _inputManager.ClearRegisteredKeyboardActions();
+            _inputManager.ClearRegisteredGamepadActions();
+            _inputManager.ClearRegisteredMouseActions();
+        }
+
         public void MapActionToKeyPressed(Keys key, Action<EventArgs> action)
         {
             _inputManager.MapActionToKeyPressed(key, action);
