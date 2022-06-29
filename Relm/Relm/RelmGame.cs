@@ -25,6 +25,7 @@ namespace Relm
         private SceneManager _sceneManager;
 
         public SpriteBatch SpriteBatch { get; private set; }
+        public SpriteFont DefaultFont { get; set; }
 
         public int VirtualWidth { get; set; } = 1920;
         public int VirtualHeight { get; set; } = 1080;
@@ -74,12 +75,23 @@ namespace Relm
             {
                 var scene = _sceneManager.LoadScene(sceneType);
                 scene.Game = this;
+                scene.OnSceneLoad();
             }
         }
 
         protected override void LoadContent()
         {
             SpriteBatch = new SpriteBatch(GraphicsDevice);
+
+
+            try
+            {
+                DefaultFont = Content.Load<SpriteFont>("defaultFont");
+            }
+            catch
+            {
+                throw new Exception("Unable to find default font in content. ~/Content/defaultFont.xnb");
+            }
         }
 
         protected override void Update(GameTime gameTime)

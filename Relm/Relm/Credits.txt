@@ -11,3 +11,4 @@
 - GamePadEventArgs
 - MouseEventArgs
 - MouseButtons
+- KeyedCollection
