@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Relm.Entities;
@@ -11,6 +13,7 @@ namespace Relm.Sprites
         : Entity
     {
         public Vector2 Position { get; set; }
+        public Vector2 ParentPosition { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
         public Vector2 Size => new Vector2(Width, Height);
@@ -18,10 +21,13 @@ namespace Relm.Sprites
         public TextureAtlas TextureAtlas { get; set; }
         public Color Tint { get; set; }
         public string AtlasRegionName { get; set; }
+        public List<Sprite> Children { get; set; }
 
         public Sprite()
         {
             Tint = Color.White;
+            Children = new List<Sprite>();
+            ParentPosition = new Vector2(float.MinValue, float.MinValue);
         }
 
         public Sprite(Texture2D texture)
@@ -42,24 +48,84 @@ namespace Relm.Sprites
             Height = firstRegion.Height;
         }
 
+        public Sprite(Texture2D texture, string name)
+            : this(texture)
+        {
+            Name = name;
+        }
+
+        public Sprite(TextureAtlas textureAtlas, string name)
+            : this(textureAtlas)
+        {
+            Name = name;
+        }
+
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+            Children.ForEach(x => x.ParentPosition = Position);
+            Children.ForEach(x => x.Update(gameTime));
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            var position = Position;
+            if (ParentPosition != new Vector2(float.MinValue, float.MinValue))
+            {
+                position += ParentPosition;
+            }
+
             if (Texture != null)
             {
-                spriteBatch.Draw(Texture, Position, Tint);
+                spriteBatch.Draw(Texture, position, Tint);
             }
             else
             {
-                var region = TextureAtlas.GetRegion(AtlasRegionName);
-                Width = region.Width;
-                Height = region.Height;
-                spriteBatch.Draw(region, Position, Tint);
+                // Checks to see if this is a container sprite
+                if (!string.IsNullOrEmpty(AtlasRegionName))
+                {
+                    var region = TextureAtlas.GetRegion(AtlasRegionName);
+                    Width = region.Width;
+                    Height = region.Height;
+                    spriteBatch.Draw(region, position, Tint);
+                }
             }
+
+            Children.ForEach(x => x.Draw(gameTime, spriteBatch));
         }
+
+        public T AddChild<T>(params object[] args)
+            where T : Sprite
+        {
+            var child = (T)Activator.CreateInstance(typeof(T), args);
+            Children.Add(child);
+            return child;
+        }
+
+        #region Fluent Functions
+
+        public virtual Sprite WithAtlasRegionName(string value)
+        {
+            AtlasRegionName = value;
+            return this;
+        }
+
+        public virtual Sprite WithPosition(Vector2 position)
+        {
+            Position = position;
+            return this;
+        }
+
+        public virtual Sprite WithPosition(int x, int y)
+        {
+            return WithPosition(new Vector2(x, y));
+        }
+
+        public virtual Sprite WithPosition(float x, float y)
+        {
+            return WithPosition(new Vector2(x, y));
+        }
+
+        #endregion
     }
 }

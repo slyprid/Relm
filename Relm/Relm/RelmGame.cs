@@ -269,7 +269,7 @@ namespace Relm
             {
                 var p = ((float)y / (float)ScreenHeight);
                 var color = Color.Lerp(Color.FromNonPremultiplied(10, 2, 23, 255), Color.FromNonPremultiplied(189, 7, 154, 255), p);
-                SpriteBatch.Draw(whitePixel, new Rectangle(0, y, ScreenWidth, y), color);
+                SpriteBatch.Draw(whitePixel, new Rectangle(0, y, ScreenWidth, 1), color);
             }
 
             SpriteBatch.End();

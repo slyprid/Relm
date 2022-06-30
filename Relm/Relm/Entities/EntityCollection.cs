@@ -8,6 +8,8 @@ namespace Relm.Entities
     {
         public Dictionary<string, Entity> Entities { get; }
 
+        public List<Entity> Values => Entities.Values.ToList();
+
         public EntityCollection()
         {
             Entities = new Dictionary<string, Entity>();

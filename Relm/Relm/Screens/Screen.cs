@@ -1,9 +1,15 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Relm.Content;
 using Relm.Entities;
 using Relm.Graphics;
 using Relm.Scenes;
+using Relm.Sprites;
+using Relm.Textures;
+using Relm.UserInterface;
 
 namespace Relm.Screens
 {
@@ -19,6 +25,8 @@ namespace Relm.Screens
         public RelmGame Input => Scene.Input;
         public bool HasFocus { get; set; }
         public EntityCollection Entities { get; set; }
+        public TextureAtlas UserInterfaceSkin { get; set; }
+        public List<Sprite> Controls => Entities.Values.OfType<IControl>().Cast<Sprite>().ToList<Sprite>();
 
         protected Screen()
         {
@@ -31,5 +39,32 @@ namespace Relm.Screens
 
         public virtual void Update(GameTime gameTime) { }
         public virtual void Draw(GameTime gameTime) { }
+
+        #region Entity Functions / Methods
+
+        public T AddEntity<T>(params object[] args)
+            where T : Entity
+        {
+            return (T)Entities.Add<T>();
+        }
+
+        #endregion
+
+        #region User Interface Functions / Methods
+
+        public T AddControl<T>(params object[] args)
+            where T : Sprite
+        {
+            var entityArgs = new object[args.Length + 1];
+            entityArgs[0] = UserInterfaceSkin;
+            for (var i = 0; i < args.Length; i++)
+            {
+                entityArgs[i + 1] = args[i];
+            }
+            var control = (T)Entities.Add<T>(entityArgs);
+            return (T)control;
+        }
+
+        #endregion
     }
 }
