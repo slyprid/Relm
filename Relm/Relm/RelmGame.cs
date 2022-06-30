@@ -12,6 +12,7 @@ using Relm.Graphics;
 using Relm.Input;
 using Relm.Managers;
 using Relm.Scenes;
+using Relm.UserInterface;
 
 namespace Relm
 {
@@ -51,6 +52,7 @@ namespace Relm
 
             base.Initialize();
             _viewportAdapter = new ScalingViewportAdapter(GraphicsDevice, VirtualWidth, VirtualHeight);
+            Layout.ViewportAdapter = _viewportAdapter;
 
             RegisterManagers();
             LoadScenes();

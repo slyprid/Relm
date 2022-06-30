@@ -7,6 +7,8 @@ namespace Relm.UserInterface
     public class UserInterfaceSkin
         : TextureAtlas
     {
+        public SpriteFont Font { get; set; }
+
         public static int FrameRegionWidth = 32;
         public static int FrameRegionHeight = 32;
         public static int BorderOffsetX = 8;
@@ -83,6 +85,12 @@ namespace Relm.UserInterface
             CreateRegion(nameof(UserInterfaceRegions.MouseWheel), 128, 256, MouseWidth, MouseHeight);
             CreateRegion(nameof(UserInterfaceRegions.KeyboardButton), 192, 256, KeyboardKeyWidth, KeyboardKeyHeight);
             CreateRegion(nameof(UserInterfaceRegions.Spacebar), 256, 256, KeyboardKeyWidth * 2, KeyboardKeyHeight);
+        }
+
+        public UserInterfaceSkin WithFont(SpriteFont font)
+        {
+            Font = font;
+            return this;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Relm.Collections
 {
@@ -33,7 +34,17 @@ namespace Relm.Collections
 
         public void Add(TValue item)
         {
-            _dictionary.Add(_getKey(item), item);
+            var key = _getKey(item);
+            object nullKey = Guid.NewGuid().ToString();
+            if (key != null && _dictionary.ContainsKey(key)) return;
+            if (key == null)
+            {
+                _dictionary.Add((TKey)nullKey, item);
+            }
+            else
+            {
+                _dictionary.Add(key, item);
+            }
         }
 
         public void Clear()

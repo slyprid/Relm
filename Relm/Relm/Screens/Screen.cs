@@ -45,7 +45,7 @@ namespace Relm.Screens
         public T AddEntity<T>(params object[] args)
             where T : Entity
         {
-            return (T)Entities.Add<T>();
+            return (T)Entities.Add<T>(args);
         }
 
         #endregion

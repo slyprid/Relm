@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Relm.Entities;
 using Relm.Textures;
 using Relm.Extensions;
+using Relm.UserInterface;
 
 namespace Relm.Sprites
 {
@@ -124,6 +125,59 @@ namespace Relm.Sprites
         public virtual Sprite WithPosition(float x, float y)
         {
             return WithPosition(new Vector2(x, y));
+        }
+
+        public virtual Sprite WithPosition(ScreenPosition position)
+        {
+            switch (position)
+            {
+                case ScreenPosition.TopLeft:
+                    Position = Layout.TopLeft;
+                    break;
+                case ScreenPosition.TopCenter:
+                    Position = Layout.TopCenter;
+                    break;
+                case ScreenPosition.TopRight:
+                    Position = Layout.TopRight;
+                    break;
+                case ScreenPosition.CenterLeft:
+                    Position = Layout.CenterLeft;
+                    break;
+                case ScreenPosition.CenterRight:
+                    Position = Layout.CenterRight;
+                    break;
+                case ScreenPosition.BottomLeft:
+                    Position = Layout.BottomLeft;
+                    break;
+                case ScreenPosition.BottomCenter:
+                    Position = Layout.BottomCenter;
+                    break;
+                case ScreenPosition.BottomRight:
+                    Position = Layout.BottomRight;
+                    break;
+                default:
+                case ScreenPosition.Centered:
+                    Position = Layout.Centered(Width, Height);
+                    break;
+            }
+
+            return this;
+        }
+
+        public virtual Sprite WithPositionOffset(Vector2 offset)
+        {
+            Position += offset;
+            return this;
+        }
+
+        public virtual Sprite WithPositionOffset(int x, int y)
+        {
+            return WithPositionOffset(new Vector2(x, y));
+        }
+
+        public virtual Sprite WithPositionOffset(float x, float y)
+        {
+            return WithPositionOffset(new Vector2(x, y));
         }
 
         #endregion
