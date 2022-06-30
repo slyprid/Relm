@@ -12,3 +12,6 @@
 - MouseEventArgs
 - MouseButtons
 - KeyedCollection
+- TextureAtlas (Removed NinePatches)
+- TextureRegion2D
+- TextureAtlasExtensions (Removed NinePatches)
