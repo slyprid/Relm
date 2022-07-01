@@ -23,12 +23,14 @@ namespace Relm.Sprites
         public Color Tint { get; set; }
         public string AtlasRegionName { get; set; }
         public List<Sprite> Children { get; set; }
+        public Vector2 Scale { get; set; }
 
         public Sprite()
         {
             Tint = Color.White;
             Children = new List<Sprite>();
             ParentPosition = new Vector2(float.MinValue, float.MinValue);
+            Scale = Vector2.One;
         }
 
         public Sprite(Texture2D texture)
@@ -78,7 +80,8 @@ namespace Relm.Sprites
 
             if (Texture != null)
             {
-                spriteBatch.Draw(Texture, position, Tint);
+                var destRect = new Rectangle((int)Position.X, (int)Position.Y, (int)(Width * Scale.X), (int)(Height * Scale.Y));
+                spriteBatch.Draw(Texture, destRect, null, Tint, 0f, Vector2.Zero, SpriteEffects.None, 0f);
             }
             else
             {
@@ -88,7 +91,7 @@ namespace Relm.Sprites
                     var region = TextureAtlas.GetRegion(AtlasRegionName);
                     Width = region.Width;
                     Height = region.Height;
-                    spriteBatch.Draw(region, position, Tint);
+                    spriteBatch.Draw(region, position, Tint, 0f, Vector2.Zero, Scale, SpriteEffects.None, 0f, null);
                 }
             }
 
@@ -178,6 +181,19 @@ namespace Relm.Sprites
         public virtual Sprite WithPositionOffset(float x, float y)
         {
             return WithPositionOffset(new Vector2(x, y));
+        }
+
+        public virtual Sprite WithScale(Vector2 scale)
+        {
+            Scale = scale;
+            Children.ForEach(x => x.Scale = scale);
+            return this;
+        }
+
+        public virtual T As<T>()
+            where T : Sprite
+        {
+            return (T)this;
         }
 
         #endregion

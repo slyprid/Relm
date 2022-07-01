@@ -15,3 +15,11 @@
 - TextureAtlas (Removed NinePatches)
 - TextureRegion2D
 - TextureAtlasExtensions (Removed NinePatches)
+- Tween
+- Tween<T>
+- TweenMember
+- TweenMember<T>
+- Tweener
+- TweenPropertyMember
+- TweenFieldMember
+- EasingFunctions
