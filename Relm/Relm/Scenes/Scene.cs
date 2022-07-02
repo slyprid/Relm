@@ -91,6 +91,18 @@ namespace Relm.Scenes
             _screensVisible.Remove(screenName);
         }
 
+        public void ChangeScreen(string targetScreenName)
+        {
+            var screenNamesVisible = new List<string>();
+            _screensVisible.ForEach(x => screenNamesVisible.Add(x));
+            foreach (var screenName in screenNamesVisible)
+            {
+                PopScreen(screenName);
+            }
+
+            PushScreen(targetScreenName);
+        }
+
         public void UnfocusScreens()
         {
             foreach (var screen in _screensVisible.Select(screenName => Screens[screenName]))
