@@ -9,7 +9,7 @@ using Relm.Textures;
 namespace Relm.UserInterface
 {
     public class Cursor
-        : Sprite, IControl
+        : BaseControl
     {
         private Sprite _sprite;
         private Tweener _tweener;
@@ -18,6 +18,7 @@ namespace Relm.UserInterface
         public int PositionIndex { get; set; }
 
         public Cursor(TextureAtlas skin)
+            : base(skin)
         {
             TextureAtlas = skin;
             Positions = new List<Vector2>();
@@ -27,12 +28,9 @@ namespace Relm.UserInterface
 
         private void Initialize()
         {
-            var w = UserInterfaceSkin.FrameRegionWidth;
-            var h = UserInterfaceSkin.FrameRegionHeight;
-
             Children.Clear();
 
-            _sprite = AddChild<Sprite>(TextureAtlas)
+            _sprite = AddChild<ChildControl>(TextureAtlas)
                 .WithAtlasRegionName(nameof(UserInterfaceRegions.Cursor))
                 .WithPosition(0, 0);
 

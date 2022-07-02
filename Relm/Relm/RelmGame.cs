@@ -261,6 +261,13 @@ namespace Relm
 
         public void ClearScreen()
         {
+            var startColor = Color.FromNonPremultiplied(10, 2, 23, 255);
+            var endColor = Color.FromNonPremultiplied(189, 7, 154, 255);
+            ClearScreen(startColor, endColor);
+        }
+
+        public void ClearScreen(Color startColor, Color endColor)
+        {
             GraphicsDevice.Clear(Color.Black);
 
             var whitePixel = SpriteBatch.GetWhitePixel();
@@ -270,11 +277,16 @@ namespace Relm
             for (var y = 0; y < ScreenHeight; y++)
             {
                 var p = ((float)y / (float)ScreenHeight);
-                var color = Color.Lerp(Color.FromNonPremultiplied(10, 2, 23, 255), Color.FromNonPremultiplied(189, 7, 154, 255), p);
+                var color = Color.Lerp(startColor, endColor, p);
                 SpriteBatch.Draw(whitePixel, new Rectangle(0, y, ScreenWidth, 1), color);
             }
 
             SpriteBatch.End();
+        }
+
+        public void ClearScreen(Color color)
+        {
+            GraphicsDevice.Clear(color);
         }
 
         #endregion

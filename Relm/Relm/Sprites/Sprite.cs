@@ -14,7 +14,7 @@ namespace Relm.Sprites
         : Entity
     {
         public Vector2 Position { get; set; }
-        public Vector2 ParentPosition { get; set; }
+        public virtual Vector2 ParentPosition { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
         public Vector2 Size => new Vector2(Width, Height);
@@ -98,7 +98,7 @@ namespace Relm.Sprites
             Children.ForEach(x => x.Draw(gameTime, spriteBatch));
         }
 
-        public T AddChild<T>(params object[] args)
+        public virtual T AddChild<T>(params object[] args)
             where T : Sprite
         {
             var child = (T)Activator.CreateInstance(typeof(T), args);
@@ -138,25 +138,25 @@ namespace Relm.Sprites
                     Position = Layout.TopLeft;
                     break;
                 case ScreenPosition.TopCenter:
-                    Position = Layout.TopCenter;
+                    Position = Layout.TopCenter - new Vector2(Width / 2f, 0f);
                     break;
                 case ScreenPosition.TopRight:
-                    Position = Layout.TopRight;
+                    Position = Layout.TopRight - new Vector2(Width, 0f);
                     break;
                 case ScreenPosition.CenterLeft:
-                    Position = Layout.CenterLeft;
+                    Position = Layout.CenterLeft - new Vector2(0f, Height / 2f);
                     break;
                 case ScreenPosition.CenterRight:
-                    Position = Layout.CenterRight;
+                    Position = Layout.CenterRight - new Vector2(Width, Height / 2f);
                     break;
                 case ScreenPosition.BottomLeft:
-                    Position = Layout.BottomLeft;
+                    Position = Layout.BottomLeft - new Vector2(0f, Height * 2);
                     break;
                 case ScreenPosition.BottomCenter:
-                    Position = Layout.BottomCenter;
+                    Position = Layout.BottomCenter - new Vector2(Width / 2f, Height * 2);
                     break;
                 case ScreenPosition.BottomRight:
-                    Position = Layout.BottomRight;
+                    Position = Layout.BottomRight - new Vector2(Width, Height * 2);
                     break;
                 default:
                 case ScreenPosition.Centered:

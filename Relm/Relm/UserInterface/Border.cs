@@ -9,12 +9,13 @@ using Relm.Textures;
 namespace Relm.UserInterface
 {
     public class Border
-        : Sprite, IControl
+        : BaseControl
     {
         public Color StartBackgroundColor { get; set; }
         public Color EndBackgroundColor { get; set; }
 
         public Border(TextureAtlas skin)
+            : base(skin)
         {
             TextureAtlas = skin;
             Width = 96;
@@ -33,7 +34,7 @@ namespace Relm.UserInterface
             Children.Clear();
 
             // Top Left
-            AddChild<Sprite>(TextureAtlas)
+            AddChild<BorderPiece>(TextureAtlas)
                 .WithAtlasRegionName(nameof(UserInterfaceRegions.FrameTopLeft))
                 .WithPosition(0, 0);
 
@@ -41,13 +42,13 @@ namespace Relm.UserInterface
             for (xo = 0; xo <= Width - (w * 2); xo += w)
             {
                 // Top
-                AddChild<Sprite>(TextureAtlas)
+                AddChild<BorderPiece>(TextureAtlas)
                     .WithAtlasRegionName(nameof(UserInterfaceRegions.FrameTop))
                     .WithPosition(w + xo, 0);
             }
 
             // Top Right
-            AddChild<Sprite>(TextureAtlas)
+            AddChild<BorderPiece>(TextureAtlas)
                 .WithAtlasRegionName(nameof(UserInterfaceRegions.FrameTopRight))
                 .WithPosition(w + xo, 0);
 
@@ -55,31 +56,31 @@ namespace Relm.UserInterface
             for (yo = 0; yo <= Height - (h * 2); yo += h)
             {
                 // Left
-                AddChild<Sprite>(TextureAtlas)
+                AddChild<BorderPiece>(TextureAtlas)
                     .WithAtlasRegionName(nameof(UserInterfaceRegions.FrameLeft))
                     .WithPosition(0, h + yo);
 
                 // Right
-                AddChild<Sprite>(TextureAtlas)
+                AddChild<BorderPiece>(TextureAtlas)
                     .WithAtlasRegionName(nameof(UserInterfaceRegions.FrameRight))
                     .WithPosition(w + xo, h + yo);
             }
 
             // Bottom Left
-            AddChild<Sprite>(TextureAtlas)
+            AddChild<BorderPiece>(TextureAtlas)
                 .WithAtlasRegionName(nameof(UserInterfaceRegions.FrameBottomLeft))
                 .WithPosition(0, h + yo);
 
             for (xo = 0; xo <= Width - (w * 2); xo += w)
             {
                 // Bottom 
-                AddChild<Sprite>(TextureAtlas)
+                AddChild<BorderPiece>(TextureAtlas)
                     .WithAtlasRegionName(nameof(UserInterfaceRegions.FrameBottom))
                     .WithPosition(w + xo, h + yo);
             }
 
             // Bottom Right
-            AddChild<Sprite>(TextureAtlas)
+            AddChild<BorderPiece>(TextureAtlas)
                 .WithAtlasRegionName(nameof(UserInterfaceRegions.FrameBottomRight))
                 .WithPosition(w + xo, h + yo);
         }

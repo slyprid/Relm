@@ -6,7 +6,7 @@ using Relm.Sprites;
 namespace Relm.UserInterface
 {
     public class Label
-        : Sprite, IControl
+        : BaseControl
     {
         private readonly UserInterfaceSkin _skin;
         private SpriteFont _font;
@@ -23,6 +23,7 @@ namespace Relm.UserInterface
         public Vector2 ShadowOffset { get; set; }
 
         public Label(UserInterfaceSkin skin)
+            : base(skin)
         {
             _skin = skin;
             Color = Color.White;
@@ -32,8 +33,14 @@ namespace Relm.UserInterface
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(Font, Text, Position + ShadowOffset, ShadowColor);
-            spriteBatch.DrawString(Font, Text, Position, Color);
+            var position = Position;
+            if (ParentPosition != new Vector2(float.MinValue, float.MinValue))
+            {
+                position += ParentPosition;
+            }
+
+            spriteBatch.DrawString(Font, Text, position + ShadowOffset, ShadowColor);
+            spriteBatch.DrawString(Font, Text, position, Color);
         }
 
         #region Fluent Functions
@@ -84,7 +91,15 @@ namespace Relm.UserInterface
                 default:
                 case ScreenPosition.Centered:
                     var textSize = Font.MeasureString(Text);
-                    Position = Layout.Centered((int)textSize.X, (int)textSize.Y);
+                    if (ParentControl != null)
+                    {
+                        Position = new Vector2(ParentControl.Width / 2f, ParentControl.Height / 2f)  - new Vector2(textSize.X / 2f, textSize.Y / 4f);
+                    }
+                    else
+                    {
+                        Position = Layout.Centered((int)textSize.X, (int)textSize.Y);
+                    }
+                    
                     break;
             }
 
