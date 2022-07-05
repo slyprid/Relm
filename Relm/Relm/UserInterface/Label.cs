@@ -33,11 +33,7 @@ namespace Relm.UserInterface
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            var position = Position;
-            if (ParentPosition != new Vector2(float.MinValue, float.MinValue))
-            {
-                position += ParentPosition;
-            }
+            var position = CalculatePosition(this);
 
             spriteBatch.DrawString(Font, Text, position + ShadowOffset, ShadowColor);
             spriteBatch.DrawString(Font, Text, position, Color);
@@ -91,9 +87,9 @@ namespace Relm.UserInterface
                 default:
                 case ScreenPosition.Centered:
                     var textSize = Font.MeasureString(Text);
-                    if (ParentControl != null)
+                    if (Parent != null)
                     {
-                        Position = new Vector2(ParentControl.Width / 2f, ParentControl.Height / 2f)  - new Vector2(textSize.X / 2f, textSize.Y / 4f);
+                        Position = new Vector2(Parent.Width / 2f, Parent.Height / 2f)  - new Vector2(textSize.X / 2f, textSize.Y / 4f);
                     }
                     else
                     {

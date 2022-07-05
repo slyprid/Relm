@@ -39,7 +39,7 @@ namespace Relm.UserInterface
                 .WithPosition(0, 0);
 
             int xo;
-            for (xo = 0; xo <= Width - (w * 2); xo += w)
+            for (xo = 0; xo <= Width - (w * 3); xo += w)
             {
                 // Top
                 AddChild<BorderPiece>(TextureAtlas)
@@ -53,7 +53,7 @@ namespace Relm.UserInterface
                 .WithPosition(w + xo, 0);
 
             int yo;
-            for (yo = 0; yo <= Height - (h * 2); yo += h)
+            for (yo = 0; yo <= Height - (h * 3); yo += h)
             {
                 // Left
                 AddChild<BorderPiece>(TextureAtlas)
@@ -71,7 +71,7 @@ namespace Relm.UserInterface
                 .WithAtlasRegionName(nameof(UserInterfaceRegions.FrameBottomLeft))
                 .WithPosition(0, h + yo);
 
-            for (xo = 0; xo <= Width - (w * 2); xo += w)
+            for (xo = 0; xo <= Width - (w * 3); xo += w)
             {
                 // Bottom 
                 AddChild<BorderPiece>(TextureAtlas)
@@ -87,15 +87,16 @@ namespace Relm.UserInterface
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            var position = CalculatePosition(this);
             var whitePixel = spriteBatch.GetWhitePixel();
 
-            var width = Width + UserInterfaceSkin.BorderOffsetX;
-            var height = Height + UserInterfaceSkin.BorderOffsetY;
+            var width = Width - (UserInterfaceSkin.BorderOffsetX * 2);
+            var height = Height - (UserInterfaceSkin.BorderOffsetY * 2);
             for (var y = 0; y < height; y++)
             {
                 var p = ((float)y / (float)height);
                 var color = Color.Lerp(StartBackgroundColor, EndBackgroundColor, p);
-                spriteBatch.Draw(whitePixel, new Rectangle((int)Position.X + UserInterfaceSkin.BorderOffsetX, (int)Position.Y + UserInterfaceSkin.BorderOffsetY + y, width, 1), color);
+                spriteBatch.Draw(whitePixel, new Rectangle((int)position.X + UserInterfaceSkin.BorderOffsetX, (int)position.Y + UserInterfaceSkin.BorderOffsetY + y, width, 1), color);
             }
 
             base.Draw(gameTime, spriteBatch);
@@ -106,7 +107,6 @@ namespace Relm.UserInterface
         public new Border WithPosition(Vector2 position)
         {
             Position = position;
-            Children.ForEach(x => x.ParentPosition = Position);
             return this;
         }
 
@@ -125,7 +125,6 @@ namespace Relm.UserInterface
             Width = (int)size.X;
             Height = (int)size.Y;
             Initialize();
-            Children.ForEach(x => x.ParentPosition = Position);
             return this;
         }
 

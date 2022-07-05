@@ -8,9 +8,6 @@ namespace Relm.UserInterface
     public abstract class BaseControl
         : Sprite, IControl
     {
-        public BaseControl ParentControl { get; set; }
-        public override Vector2 ParentPosition => ParentControl?.Position ?? new Vector2(float.MinValue, float.MinValue);
-
         protected BaseControl(TextureAtlas skin)
         {
             TextureAtlas = skin;
@@ -20,7 +17,7 @@ namespace Relm.UserInterface
             where T : BaseControl
         {
             var child = (T)Activator.CreateInstance(typeof(T), args);
-            child.ParentControl = this;
+            child.Parent = this;
             Children.Add(child);
             return child;
         }

@@ -14,11 +14,23 @@ namespace Relm.UserInterface
         public static int BorderOffsetX = 8;
         public static int BorderOffsetY = 8;
 
-        public static int CursorWidth = 32;
-        public static int CursorHeight = 32;
+        public static int SmallCursorWidth = 32;
+        public static int SmallCursorHeight = 32;
+
+        public static int BigCursorWidth = 64;
+        public static int BigCursorHeight = 64;
 
         public static int AdvanceButtonWidth = 32;
         public static int AdvanceButtonHeight = 32;
+
+        public static int HorizontalBreakWidth = 32;
+        public static int HorizontalBreakHeight = 32;
+
+        public static int VerticalScrollBarWidth = 32;
+        public static int VerticalScrollBarHeight = 32;
+
+        public static int VerticalScrollSliderWidth = 32;
+        public static int VerticalScrollSliderHeight = 32;
 
         public static int ControllerButtonWidth = 64;
         public static int ControllerButtonHeight = 64;
@@ -42,11 +54,23 @@ namespace Relm.UserInterface
             CreateRegion(nameof(UserInterfaceRegions.FrameBottom), 32, 64, FrameRegionWidth, FrameRegionHeight);
             CreateRegion(nameof(UserInterfaceRegions.FrameBottomRight), 64, 64, FrameRegionWidth, FrameRegionHeight);
 
-            CreateRegion(nameof(UserInterfaceRegions.Cursor), 96, 0, CursorWidth, CursorHeight);
+            CreateRegion(nameof(UserInterfaceRegions.SmallCursor), 96, 0, SmallCursorWidth, SmallCursorHeight);
+            CreateRegion(nameof(UserInterfaceRegions.BigCursor), 96, 32, BigCursorWidth, BigCursorHeight);
             CreateRegion(nameof(UserInterfaceRegions.AdvanceLeft), 128, 0, AdvanceButtonWidth, AdvanceButtonHeight);
             CreateRegion(nameof(UserInterfaceRegions.AdvanceRight), 160, 0, AdvanceButtonWidth, AdvanceButtonHeight);
             CreateRegion(nameof(UserInterfaceRegions.AdvanceUp), 192, 0, AdvanceButtonWidth, AdvanceButtonHeight);
             CreateRegion(nameof(UserInterfaceRegions.AdvanceDown), 224, 0, AdvanceButtonWidth, AdvanceButtonHeight);
+
+            CreateRegion(nameof(UserInterfaceRegions.HorizontalBreakLeft), 256, 0, HorizontalBreakWidth, HorizontalBreakHeight);
+            CreateRegion(nameof(UserInterfaceRegions.HorizontalBreakCenter), 288, 0, HorizontalBreakWidth, HorizontalBreakHeight);
+            CreateRegion(nameof(UserInterfaceRegions.HorizontalBreakRight), 320, 0, HorizontalBreakWidth, HorizontalBreakHeight);
+
+            CreateRegion(nameof(UserInterfaceRegions.VerticalScrollBarTop), 352, 0, VerticalScrollBarWidth, VerticalScrollBarHeight);
+            CreateRegion(nameof(UserInterfaceRegions.VerticalScrollBarMiddle), 352, 32, VerticalScrollBarWidth, VerticalScrollBarHeight);
+            CreateRegion(nameof(UserInterfaceRegions.VerticalScrollBarBottom), 352, 64, VerticalScrollBarWidth, VerticalScrollBarHeight);
+            CreateRegion(nameof(UserInterfaceRegions.VerticalSliderTop), 384, 0, VerticalScrollSliderWidth, VerticalScrollSliderHeight);
+            CreateRegion(nameof(UserInterfaceRegions.VerticalSliderMiddle), 384, 32, VerticalScrollSliderWidth, VerticalScrollSliderHeight);
+            CreateRegion(nameof(UserInterfaceRegions.VerticalSliderBottom), 384, 64, VerticalScrollSliderWidth, VerticalScrollSliderHeight);
 
             CreateRegion(nameof(UserInterfaceRegions.XboxAButton), 0, 128, ControllerButtonWidth, ControllerButtonHeight);
             CreateRegion(nameof(UserInterfaceRegions.XboxBButton), 64, 128, ControllerButtonWidth, ControllerButtonHeight);

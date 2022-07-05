@@ -16,12 +16,14 @@ namespace Relm.UserInterface
         
         public List<Vector2> Positions { get; set; }
         public int PositionIndex { get; set; }
+        public CursorSize CursorSize { get; set; }
 
         public Cursor(TextureAtlas skin)
             : base(skin)
         {
             TextureAtlas = skin;
             Positions = new List<Vector2>();
+            CursorSize = CursorSize.Small;
 
             Initialize();
         }
@@ -30,8 +32,10 @@ namespace Relm.UserInterface
         {
             Children.Clear();
 
+            var cursorSize = CursorSize == CursorSize.Small ? nameof(UserInterfaceRegions.SmallCursor) : nameof(UserInterfaceRegions.BigCursor);
+
             _sprite = AddChild<ChildControl>(TextureAtlas)
-                .WithAtlasRegionName(nameof(UserInterfaceRegions.Cursor))
+                .WithAtlasRegionName(cursorSize)
                 .WithPosition(0, 0);
 
             _tweener = new Tweener();
@@ -91,6 +95,14 @@ namespace Relm.UserInterface
         public Cursor RegisterPosition(int x, int y)
         {
             Positions.Add(new Vector2(x, y));
+            InitializeTweener();
+            return this;
+        }
+
+        public Cursor SetCursorSize(CursorSize size)
+        {
+            CursorSize = size;
+            Initialize();
             InitializeTweener();
             return this;
         }

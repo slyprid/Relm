@@ -14,7 +14,7 @@ namespace Relm.Sprites
         : Entity
     {
         public Vector2 Position { get; set; }
-        public virtual Vector2 ParentPosition { get; set; }
+        public virtual Sprite Parent { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
         public Vector2 Size => new Vector2(Width, Height);
@@ -25,11 +25,12 @@ namespace Relm.Sprites
         public List<Sprite> Children { get; set; }
         public Vector2 Scale { get; set; }
 
+        public Rectangle Bounds => new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
+
         public Sprite()
         {
             Tint = Color.White;
             Children = new List<Sprite>();
-            ParentPosition = new Vector2(float.MinValue, float.MinValue);
             Scale = Vector2.One;
         }
 
@@ -66,17 +67,13 @@ namespace Relm.Sprites
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            Children.ForEach(x => x.ParentPosition = Position);
             Children.ForEach(x => x.Update(gameTime));
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            var position = Position;
-            if (ParentPosition != new Vector2(float.MinValue, float.MinValue))
-            {
-                position += ParentPosition;
-            }
+            var position = CalculatePosition(this);
+            
 
             if (Texture != null)
             {
@@ -98,10 +95,23 @@ namespace Relm.Sprites
             Children.ForEach(x => x.Draw(gameTime, spriteBatch));
         }
 
+        protected Vector2 CalculatePosition(Sprite sprite)
+        {
+            var ret = sprite.Position;
+
+            if (sprite.Parent != null)
+            {
+                ret += CalculatePosition(sprite.Parent);
+            }
+
+            return ret;
+        }
+
         public virtual T AddChild<T>(params object[] args)
             where T : Sprite
         {
             var child = (T)Activator.CreateInstance(typeof(T), args);
+            child.Parent = this;
             Children.Add(child);
             return child;
         }
@@ -114,10 +124,22 @@ namespace Relm.Sprites
             return this;
         }
 
+        public virtual T WithAtlasRegionName<T>(string value)
+            where T : Sprite
+        {
+            return (T)WithAtlasRegionName(value);
+        }
+
         public virtual Sprite WithPosition(Vector2 position)
         {
             Position = position;
             return this;
+        }
+
+        public virtual T WithPosition<T>(Vector2 position)
+            where T : Sprite
+        {
+            return (T)WithPosition(position);
         }
 
         public virtual Sprite WithPosition(int x, int y)
@@ -125,9 +147,21 @@ namespace Relm.Sprites
             return WithPosition(new Vector2(x, y));
         }
 
+        public virtual T WithPosition<T>(int x, int y)
+            where T : Sprite
+        {
+            return (T)WithPosition(new Vector2(x, y));
+        }
+
         public virtual Sprite WithPosition(float x, float y)
         {
             return WithPosition(new Vector2(x, y));
+        }
+
+        public virtual T WithPosition<T>(float x, float y)
+            where T : Sprite
+        {
+            return (T)WithPosition(new Vector2(x, y));
         }
 
         public virtual Sprite WithPosition(ScreenPosition position)
@@ -167,10 +201,22 @@ namespace Relm.Sprites
             return this;
         }
 
+        public virtual T WithPosition<T>(ScreenPosition position)
+            where T : Sprite
+        {
+            return (T)WithPosition(position);
+        }
+
         public virtual Sprite WithPositionOffset(Vector2 offset)
         {
             Position += offset;
             return this;
+        }
+
+        public virtual T WithPositionOffset<T>(Vector2 offset)
+            where T : Sprite
+        {
+            return (T)WithPositionOffset(offset);
         }
 
         public virtual Sprite WithPositionOffset(int x, int y)
@@ -178,9 +224,21 @@ namespace Relm.Sprites
             return WithPositionOffset(new Vector2(x, y));
         }
 
+        public virtual T WithPositionOffset<T>(int x, int y)
+            where T : Sprite
+        {
+            return (T)WithPositionOffset(new Vector2(x, y));
+        }
+
         public virtual Sprite WithPositionOffset(float x, float y)
         {
             return WithPositionOffset(new Vector2(x, y));
+        }
+
+        public virtual T WithPositionOffset<T>(float x, float y)
+            where T : Sprite
+        {
+            return (T)WithPositionOffset(new Vector2(x, y));
         }
 
         public virtual Sprite WithScale(Vector2 scale)
@@ -188,6 +246,24 @@ namespace Relm.Sprites
             Scale = scale;
             Children.ForEach(x => x.Scale = scale);
             return this;
+        }
+
+        public virtual T WithScale<T>(Vector2 scale)
+            where T : Sprite
+        {
+            return (T)WithScale(scale);
+        }
+
+        public virtual Sprite WithName(string name)
+        {
+            Name = name;
+            return this;
+        }
+
+        public virtual T WithName<T>(string name)
+            where T : Sprite
+        {
+            return (T)WithName(name);
         }
 
         public virtual T As<T>()
