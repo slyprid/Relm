@@ -13,19 +13,49 @@ namespace Relm.Sprites
     public class Sprite
         : Entity
     {
+        private int _width;
+        private int _height;
+
         public Vector2 Position { get; set; }
         public virtual Sprite Parent { get; set; }
-        public int Width { get; set; }
-        public int Height { get; set; }
-        public Vector2 Size => new Vector2(Width, Height);
         public Texture2D Texture { get; set; }
         public TextureAtlas TextureAtlas { get; set; }
         public Color Tint { get; set; }
         public string AtlasRegionName { get; set; }
         public List<Sprite> Children { get; set; }
         public Vector2 Scale { get; set; }
+        public Action<GameTime, SpriteBatch> DrawOn { get; set; }
 
         public Rectangle Bounds => new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
+        public Vector2 Size => new Vector2(Width, Height);
+
+        /// <summary>
+        /// Returns width of sprite
+        /// If set to -1, will return width of parent
+        /// </summary>
+        public int Width
+        {
+            get
+            {
+                if(_width == -1) return Parent?.Width ?? 0;
+                return _width;
+            }
+            set => _width = value;
+        }
+
+        /// <summary>
+        /// Returns height of sprite
+        /// If set to -1, will return height of parent
+        /// </summary>
+        public int Height
+        {
+            get
+            {
+                if (_height == -1) return Parent?.Height ?? 0;
+                return _height;
+            }
+            set => _height = value;
+        }
 
         public Sprite()
         {
@@ -114,6 +144,12 @@ namespace Relm.Sprites
             child.Parent = this;
             Children.Add(child);
             return child;
+        }
+
+        public T GetChild<T>(string name)
+            where T : Sprite
+        {
+            return Children.Find(x => x.Name == name).As<T>();
         }
 
         #region Fluent Functions
@@ -270,6 +306,12 @@ namespace Relm.Sprites
             where T : Sprite
         {
             return (T)this;
+        }
+
+        public virtual Sprite WithDrawOn(Action<GameTime, SpriteBatch> drawOn)
+        {
+            DrawOn = drawOn;
+            return this;
         }
 
         #endregion

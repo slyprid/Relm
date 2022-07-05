@@ -220,7 +220,7 @@ namespace Relm.Input
             var prevstate = getButtonState(_lastTriggerState);
             if (curstate > TriggerDeltaThreshold)
             {
-                if (Math.Abs(prevstate - curstate) >= TriggerDeltaThreshold)
+                if (System.Math.Abs(prevstate - curstate) >= TriggerDeltaThreshold)
                 {
                     TriggerMoved?.Invoke(this, MakeArgs(button, curstate));
                     _lastTriggerState = _currentState;

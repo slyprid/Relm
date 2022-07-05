@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Relm.Extensions;
@@ -11,12 +12,14 @@ namespace Relm.UserInterface
         : BaseControl
     {
         private string _scrollBarName;
+        private string _borderName;
 
         public List<ListBoxItem> Items { get; set; }
         public Color StartBackgroundColor { get; set; }
         public Color EndBackgroundColor { get; set; }
         public int LeftRightPadding { get; set; }
         public int TopBottomPadding { get; set; }
+        public int TopIndex { get; set; }
 
         public ListBox(TextureAtlas skin) 
             : base(skin)
@@ -27,6 +30,7 @@ namespace Relm.UserInterface
             LeftRightPadding = 24;
             TopBottomPadding = 32;
             _scrollBarName = Guid.NewGuid().ToString();
+            _borderName = Guid.NewGuid().ToString();
 
             Initialize();
         }
@@ -36,6 +40,7 @@ namespace Relm.UserInterface
             Children.Clear();
 
             AddChild<Border>(TextureAtlas)
+                .WithName<Border>(_borderName)
                 .WithSize(Size)
                 .WithBackgroundColor(StartBackgroundColor, EndBackgroundColor);
 
@@ -47,14 +52,46 @@ namespace Relm.UserInterface
 
         public void Increment(int value = 1)
         {
-            var scrollBar = Children.Find(x => x.Name == _scrollBarName).As<VerticalScrollBar>();
+            var scrollBar = GetChild<VerticalScrollBar>(_scrollBarName);
             scrollBar.Increment(value);
         }
 
         public void Decrement(int value = 1)
         {
-            var scrollBar = Children.Find(x => x.Name == _scrollBarName).As<VerticalScrollBar>();
+            var scrollBar = GetChild<VerticalScrollBar>(_scrollBarName);
             scrollBar.Decrement(value);
+        }
+
+        public void AddItem(ListBoxItem item)
+        {
+            var border = GetChild<Border>(_borderName);
+            border.WithDrawOn(DrawItems);
+            item.Parent = this;
+            item.Index = Items.Count;
+            item.WithPositionOffset(0f, item.Height * item.Index);
+            Items.Add(item);
+        }
+
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            base.Draw(gameTime, spriteBatch);
+        }
+
+        public void DrawItems(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            if (Items.Count == 0) return;
+
+            //Items.ForEach(x => x.Draw(gameTime, spriteBatch));
+
+            var itemHeight = Items.First().Height;
+            var bottomIndex = (Height / itemHeight) + TopIndex;
+
+            for (var i = TopIndex; i < bottomIndex; i++)
+            {
+                var item = Items[i];
+                item.Draw(gameTime, spriteBatch);
+            }
+
         }
 
         #region Fluent Functions

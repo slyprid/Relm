@@ -99,6 +99,8 @@ namespace Relm.UserInterface
                 spriteBatch.Draw(whitePixel, new Rectangle((int)position.X + UserInterfaceSkin.BorderOffsetX, (int)position.Y + UserInterfaceSkin.BorderOffsetY + y, width, 1), color);
             }
 
+            DrawOn?.Invoke(gameTime, spriteBatch);
+
             base.Draw(gameTime, spriteBatch);
         }
 

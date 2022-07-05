@@ -23,24 +23,24 @@ namespace Relm.Animations
         public static float QuinticOut(float value) => Power.Out(value, 5);
         public static float QuinticInOut(float value) => Power.InOut(value, 5);
 
-        public static float SineIn(float value) => (float)Math.Sin(value * MathHelper.PiOver2 - MathHelper.PiOver2) + 1;
-        public static float SineOut(float value) => (float)Math.Sin(value * MathHelper.PiOver2);
-        public static float SineInOut(float value) => (float)(Math.Sin(value * MathHelper.Pi - MathHelper.PiOver2) + 1) / 2;
+        public static float SineIn(float value) => (float)System.Math.Sin(value * MathHelper.PiOver2 - MathHelper.PiOver2) + 1;
+        public static float SineOut(float value) => (float)System.Math.Sin(value * MathHelper.PiOver2);
+        public static float SineInOut(float value) => (float)(System.Math.Sin(value * MathHelper.Pi - MathHelper.PiOver2) + 1) / 2;
 
-        public static float ExponentialIn(float value) => (float)Math.Pow(2, 10 * (value - 1));
+        public static float ExponentialIn(float value) => (float)System.Math.Pow(2, 10 * (value - 1));
         public static float ExponentialOut(float value) => Out(value, ExponentialIn);
         public static float ExponentialInOut(float value) => InOut(value, ExponentialIn);
 
-        public static float CircleIn(float value) => (float)-(Math.Sqrt(1 - value * value) - 1);
-        public static float CircleOut(float value) => (float)Math.Sqrt(1 - (value - 1) * (value - 1));
-        public static float CircleInOut(float value) => (float)(value <= .5 ? (Math.Sqrt(1 - value * value * 4) - 1) / -2 : (Math.Sqrt(1 - (value * 2 - 2) * (value * 2 - 2)) + 1) / 2);
+        public static float CircleIn(float value) => (float)-(System.Math.Sqrt(1 - value * value) - 1);
+        public static float CircleOut(float value) => (float)System.Math.Sqrt(1 - (value - 1) * (value - 1));
+        public static float CircleInOut(float value) => (float)(value <= .5 ? (System.Math.Sqrt(1 - value * value * 4) - 1) / -2 : (System.Math.Sqrt(1 - (value * 2 - 2) * (value * 2 - 2)) + 1) / 2);
 
         public static float ElasticIn(float value)
         {
             const int oscillations = 1;
             const float springiness = 3f;
-            var e = (Math.Exp(springiness * value) - 1) / (Math.Exp(springiness) - 1);
-            return (float)(e * Math.Sin((MathHelper.PiOver2 + MathHelper.TwoPi * oscillations) * value));
+            var e = (System.Math.Exp(springiness * value) - 1) / (System.Math.Exp(springiness) - 1);
+            return (float)(e * System.Math.Sin((MathHelper.PiOver2 + MathHelper.TwoPi * oscillations) * value));
         }
 
         public static float ElasticOut(float value) => Out(value, ElasticIn);
@@ -49,7 +49,7 @@ namespace Relm.Animations
         public static float BackIn(float value)
         {
             const float amplitude = 1f;
-            return (float)(Math.Pow(value, 3) - value * amplitude * Math.Sin(value * MathHelper.Pi));
+            return (float)(System.Math.Pow(value, 3) - value * amplitude * System.Math.Sin(value * MathHelper.Pi));
         }
 
         public static float BackOut(float value) => Out(value, BackIn);
@@ -61,7 +61,7 @@ namespace Relm.Animations
         public static float BounceIn(float value)
         {
             const float bounceConst1 = 2.75f;
-            var bounceConst2 = (float)Math.Pow(bounceConst1, 2);
+            var bounceConst2 = (float)System.Math.Pow(bounceConst1, 2);
 
             value = 1 - value; //flip x-axis
 
@@ -69,13 +69,13 @@ namespace Relm.Animations
                 return 1f - bounceConst2 * value * value;
 
             if (value < 2 / bounceConst1)
-                return 1 - (float)(bounceConst2 * Math.Pow(value - 1.5f / bounceConst1, 2) + .75);
+                return 1 - (float)(bounceConst2 * System.Math.Pow(value - 1.5f / bounceConst1, 2) + .75);
 
             if (value < 2.5 / bounceConst1)
-                return 1 - (float)(bounceConst2 * Math.Pow(value - 2.25f / bounceConst1, 2) + .9375);
+                return 1 - (float)(bounceConst2 * System.Math.Pow(value - 2.25f / bounceConst1, 2) + .9375);
 
             //small bounce
-            return 1f - (float)(bounceConst2 * Math.Pow(value - 2.625f / bounceConst1, 2) + .984375);
+            return 1f - (float)(bounceConst2 * System.Math.Pow(value - 2.625f / bounceConst1, 2) + .984375);
         }
 
 
@@ -96,13 +96,13 @@ namespace Relm.Animations
         {
             public static float In(double value, int power)
             {
-                return (float)Math.Pow(value, power);
+                return (float)System.Math.Pow(value, power);
             }
 
             public static float Out(double value, int power)
             {
                 var sign = power % 2 == 0 ? -1 : 1;
-                return (float)(sign * (Math.Pow(value - 1, power) + sign));
+                return (float)(sign * (System.Math.Pow(value - 1, power) + sign));
             }
 
             public static float InOut(double s, int power)
@@ -113,7 +113,7 @@ namespace Relm.Animations
                     return In(s, power) / 2;
 
                 var sign = power % 2 == 0 ? -1 : 1;
-                return (float)(sign / 2.0 * (Math.Pow(s - 2, power) + sign * 2));
+                return (float)(sign / 2.0 * (System.Math.Pow(s - 2, power) + sign * 2));
             }
         }
     }
