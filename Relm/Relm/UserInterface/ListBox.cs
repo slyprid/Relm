@@ -11,8 +11,9 @@ namespace Relm.UserInterface
     public class ListBox
         : BaseControl
     {
-        private string _scrollBarName;
-        private string _borderName;
+        private UserInterfaceSkin _skin;
+        private readonly string _scrollBarName;
+        private readonly string _borderName;
 
         public List<ListBoxItem> Items { get; set; }
         public Color StartBackgroundColor { get; set; }
@@ -20,10 +21,14 @@ namespace Relm.UserInterface
         public int LeftRightPadding { get; set; }
         public int TopBottomPadding { get; set; }
         public int TopIndex { get; set; }
+        public int Minimum { get; set; }
+        public int Maximum { get; set; }
 
-        public ListBox(TextureAtlas skin) 
+        public ListBox(UserInterfaceSkin skin) 
             : base(skin)
         {
+            _skin = skin;
+
             Items = new List<ListBoxItem>();
             StartBackgroundColor = Color.Transparent;
             EndBackgroundColor = Color.Transparent;
@@ -31,6 +36,8 @@ namespace Relm.UserInterface
             TopBottomPadding = 32;
             _scrollBarName = Guid.NewGuid().ToString();
             _borderName = Guid.NewGuid().ToString();
+            Minimum = 0;
+            Maximum = 0;
 
             Initialize();
         }
@@ -69,7 +76,10 @@ namespace Relm.UserInterface
             item.Parent = this;
             item.Index = Items.Count;
             item.WithPositionOffset(0f, item.Height * item.Index);
+            item.Initialize();
             Items.Add(item);
+            Maximum = Items.Count;
+            GetChild<VerticalScrollBar>(_scrollBarName).Maximum = Maximum;
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)

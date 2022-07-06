@@ -89,7 +89,7 @@ namespace Relm.UserInterface
                     var textSize = Font.MeasureString(Text);
                     if (Parent != null)
                     {
-                        Position = new Vector2(Parent.Width / 2f, Parent.Height / 2f)  - new Vector2(textSize.X / 2f, textSize.Y / 4f);
+                        Position = new Vector2(Parent.Width / 2f, Parent.Height / 2f)  - new Vector2(textSize.X / 2f, textSize.Y / 2f);
                     }
                     else
                     {

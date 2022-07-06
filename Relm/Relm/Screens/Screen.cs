@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -8,7 +7,6 @@ using Relm.Entities;
 using Relm.Graphics;
 using Relm.Scenes;
 using Relm.Sprites;
-using Relm.Textures;
 using Relm.UserInterface;
 
 namespace Relm.Screens
@@ -25,7 +23,7 @@ namespace Relm.Screens
         public RelmGame Input => Scene.Input;
         public bool HasFocus { get; set; }
         public EntityCollection Entities { get; set; }
-        public TextureAtlas UserInterfaceSkin { get; set; }
+        public UserInterfaceSkin UserInterfaceSkin { get; set; }
         public List<Sprite> Controls => Entities.Values.OfType<IControl>().Cast<Sprite>().ToList<Sprite>();
 
         protected Screen()

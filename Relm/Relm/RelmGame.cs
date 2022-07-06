@@ -19,6 +19,8 @@ namespace Relm
     public class RelmGame 
         : Game
     {
+        public static RelmGame Instance;
+
         private readonly GraphicsDeviceManager _graphics;
         private ScalingViewportAdapter _viewportAdapter;
         private readonly List<Manager> _managers;
@@ -37,6 +39,7 @@ namespace Relm
 
         public RelmGame()
         {
+            Instance = this;
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;

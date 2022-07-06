@@ -91,7 +91,7 @@ namespace Relm.UserInterface
             var whitePixel = spriteBatch.GetWhitePixel();
 
             var width = Width - (UserInterfaceSkin.BorderOffsetX * 2);
-            var height = Height - (UserInterfaceSkin.BorderOffsetY * 2);
+            var height = Height - (UserInterfaceSkin.BorderOffsetY * 3);
             for (var y = 0; y < height; y++)
             {
                 var p = ((float)y / (float)height);

@@ -25,23 +25,45 @@ namespace Relm.UserInterface
             Children.Clear();
 
             // Left
-            AddChild<BorderPiece>(TextureAtlas)
+            AddChild<ChildControl>(TextureAtlas)
                 .WithAtlasRegionName(nameof(UserInterfaceRegions.HorizontalBreakLeft))
                 .WithPosition(0, 0);
 
             int xo;
-            for (xo = 0; xo <= Width - (w * 2); xo += w)
+            for (xo = 0; xo <= Width - (w * 3); xo += w)
             {
                 // Center
-                AddChild<BorderPiece>(TextureAtlas)
+                AddChild<ChildControl>(TextureAtlas)
                     .WithAtlasRegionName(nameof(UserInterfaceRegions.HorizontalBreakCenter))
                     .WithPosition(w + xo, 0);
             }
 
             // Right
-            AddChild<BorderPiece>(TextureAtlas)
+            AddChild<ChildControl>(TextureAtlas)
                 .WithAtlasRegionName(nameof(UserInterfaceRegions.HorizontalBreakRight))
                 .WithPosition(w + xo, 0);
         }
+
+        #region Fluent Functions
+
+        public HorizontalBreak WithSize(Vector2 size)
+        {
+            Width = (int)size.X;
+            Height = (int)size.Y;
+            Initialize();
+            return this;
+        }
+
+        public HorizontalBreak WithSize(int w, int h)
+        {
+            return WithSize(new Vector2(w, h));
+        }
+
+        public HorizontalBreak WithSize(float w, float h)
+        {
+            return WithSize(new Vector2(w, h));
+        }
+
+        #endregion
     }
 }

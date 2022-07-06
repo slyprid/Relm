@@ -8,6 +8,8 @@ namespace Relm.UserInterface
     public abstract class BaseControl
         : Sprite, IControl
     {
+        public TextureAtlas Skin => TextureAtlas;
+
         protected BaseControl(TextureAtlas skin)
         {
             TextureAtlas = skin;

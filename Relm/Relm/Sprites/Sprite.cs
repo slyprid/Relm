@@ -26,7 +26,7 @@ namespace Relm.Sprites
         public Vector2 Scale { get; set; }
         public Action<GameTime, SpriteBatch> DrawOn { get; set; }
 
-        public Rectangle Bounds => new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
+        public virtual Rectangle Bounds => new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
         public Vector2 Size => new Vector2(Width, Height);
 
         /// <summary>
@@ -93,6 +93,8 @@ namespace Relm.Sprites
         {
             Name = name;
         }
+
+        public virtual void Initialize() { }
 
         public override void Update(GameTime gameTime)
         {

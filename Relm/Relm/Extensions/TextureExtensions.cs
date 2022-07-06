@@ -32,5 +32,27 @@ namespace Relm.Extensions
 
             return _whitePixel;
         }
+
+        public static Texture2D Fade(this Texture2D input)
+        {
+            var pixels = new Color[input.Width * input.Height];
+            input.GetData(pixels);
+
+            var alpha = 0f;
+            var alphaIncrement = (0.90f / input.Width);
+            for (var x = 0; x < input.Width; x++)
+            {
+                for (var y = 0; y < input.Height; y++)
+                {
+                    var idx = y * input.Width + x;
+                    var pixel = pixels[idx];
+                    pixels[idx] = new Color(pixel, alpha);
+                }
+                alpha += alphaIncrement;
+            }
+
+            input.SetData(pixels);
+            return input;
+        }
     }
 }
