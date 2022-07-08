@@ -2,6 +2,7 @@
 {
     public enum UserInterfaceRegions
     {
+        None = 0,
         FrameTopLeft,
         FrameTop,
         FrameTopRight,

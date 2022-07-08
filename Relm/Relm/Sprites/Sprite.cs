@@ -316,6 +316,30 @@ namespace Relm.Sprites
             return this;
         }
 
+        public virtual Sprite WithX(int value)
+        {
+            Position = new Vector2(value, Position.Y);
+            return this;
+        }
+
+        public virtual Sprite WithY(int value)
+        {
+            Position = new Vector2(Position.X, value);
+            return this;
+        }
+
+        public virtual Sprite WithX(float value)
+        {
+            Position = new Vector2(value, Position.Y);
+            return this;
+        }
+
+        public virtual Sprite WithY(float value)
+        {
+            Position = new Vector2(Position.X, value);
+            return this;
+        }
+
         #endregion
     }
 }

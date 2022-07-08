@@ -57,6 +57,7 @@ namespace Relm.Input
         public bool VibrationEnabled { get; set; }
         public int RepeatInitialDelay { get; }
         public int RepeatDelay { get; }
+        public bool IsConnected { get; private set; }
 
         public float VibrationStrengthLeft
         {
@@ -91,10 +92,12 @@ namespace Relm.Input
 
         public void Update(GameTime gameTime)
         {
+            IsConnected = false;
             _gameTime = gameTime;
             _currentState = GamePad.GetState(PlayerIndex);
             CheckVibrate();
             if (!_currentState.IsConnected) return;
+            IsConnected = true;
             CheckAllButtons();
             CheckRepeatButton();
             _previousGameTime = _gameTime;

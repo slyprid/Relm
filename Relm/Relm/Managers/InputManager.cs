@@ -35,6 +35,8 @@ namespace Relm.Managers
         private readonly Dictionary<MouseButton, List<Action<EventArgs>>> _mouseOnDragActions;
         private readonly Dictionary<MouseButton, List<Action<EventArgs>>> _mouseOnDragEndActions;
 
+        public bool IsGamePadConnected => _gamepadManager.IsConnected;
+
         public InputManager(ViewportAdapter viewportAdapter)
         {
             _keyboardManager = new KeyboardManager();

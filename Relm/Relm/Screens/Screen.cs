@@ -46,6 +46,11 @@ namespace Relm.Screens
             return (T)Entities.Add<T>(args);
         }
 
+        public void ClearControls()
+        {
+            Entities.Clear();
+        }
+
         #endregion
 
         #region User Interface Functions / Methods

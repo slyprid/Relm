@@ -8,7 +8,7 @@ namespace Relm.UserInterface
         : TextureAtlas
     {
         public SpriteFont Font { get; set; }
-
+        
         public static int FrameRegionWidth = 32;
         public static int FrameRegionHeight = 32;
         public static int BorderOffsetX = 8;

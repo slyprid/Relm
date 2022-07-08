@@ -37,6 +37,8 @@ namespace Relm
         public int ScreenHeight { get; set; } = 720;
         public ScalingViewportAdapter ViewportAdapter => _viewportAdapter;
 
+        public InputManager Input => _inputManager;
+
         public RelmGame()
         {
             Instance = this;
