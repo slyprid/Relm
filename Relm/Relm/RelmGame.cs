@@ -26,7 +26,7 @@ namespace Relm
         private readonly List<Manager> _managers;
         private InputManager _inputManager;
         private SceneManager _sceneManager;
-
+        
         public SpriteBatch SpriteBatch { get; private set; }
         public SpriteFont DefaultFont { get; set; }
 

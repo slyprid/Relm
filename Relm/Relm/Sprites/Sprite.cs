@@ -18,13 +18,16 @@ namespace Relm.Sprites
 
         public Vector2 Position { get; set; }
         public virtual Sprite Parent { get; set; }
-        public Texture2D Texture { get; set; }
+        public virtual Texture2D Texture { get; set; }
         public TextureAtlas TextureAtlas { get; set; }
         public Color Tint { get; set; }
         public string AtlasRegionName { get; set; }
         public List<Sprite> Children { get; set; }
         public Vector2 Scale { get; set; }
         public Action<GameTime, SpriteBatch> DrawOn { get; set; }
+        public bool IsEnabled { get; set; }
+        public bool IsVisible { get; set; }
+        public float Opacity { get; set; }
 
         public virtual Rectangle Bounds => new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
         public Vector2 Size => new Vector2(Width, Height);
@@ -62,6 +65,9 @@ namespace Relm.Sprites
             Tint = Color.White;
             Children = new List<Sprite>();
             Scale = Vector2.One;
+            IsEnabled = true;
+            IsVisible = true;
+            Opacity = 1f;
         }
 
         public Sprite(Texture2D texture)
@@ -98,19 +104,23 @@ namespace Relm.Sprites
 
         public override void Update(GameTime gameTime)
         {
+            if (!IsEnabled) return;
+
             base.Update(gameTime);
             Children.ForEach(x => x.Update(gameTime));
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            if (!IsVisible) return;
+
             var position = CalculatePosition(this);
             
 
             if (Texture != null)
             {
                 var destRect = new Rectangle((int)Position.X, (int)Position.Y, (int)(Width * Scale.X), (int)(Height * Scale.Y));
-                spriteBatch.Draw(Texture, destRect, null, Tint, 0f, Vector2.Zero, SpriteEffects.None, 0f);
+                spriteBatch.Draw(Texture, destRect, null, Tint.WithOpacity(Opacity), 0f, Vector2.Zero, SpriteEffects.None, 0f);
             }
             else
             {
@@ -120,7 +130,7 @@ namespace Relm.Sprites
                     var region = TextureAtlas.GetRegion(AtlasRegionName);
                     Width = region.Width;
                     Height = region.Height;
-                    spriteBatch.Draw(region, position, Tint, 0f, Vector2.Zero, Scale, SpriteEffects.None, 0f, null);
+                    spriteBatch.Draw(region, position, Tint.WithOpacity(Opacity), 0f, Vector2.Zero, Scale, SpriteEffects.None, 0f, null);
                 }
             }
 
