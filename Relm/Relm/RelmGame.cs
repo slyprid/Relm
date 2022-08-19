@@ -1,299 +1,359 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Sockets;
-using System.Reflection;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Relm.Extensions;
-using Relm.Graphics;
-using Relm.Input;
-using Relm.Managers;
+using Relm.Assets.BitmapFonts;
+using Relm.Collections;
+using Relm.Content;
+using Relm.Core;
+using Relm.Events;
+using Relm.Graphics.Textures;
+using Relm.Graphics.Transitions;
+using Relm.Graphics.Tweening;
 using Relm.Scenes;
-using Relm.UserInterface;
+using Relm.Systems;
+using Relm.Timers;
 
 namespace Relm
 {
-    public class RelmGame 
+	public class RelmGame 
         : Game
-    {
-        public static RelmGame Instance;
+	{
+        internal static RelmGame _instance;
+        internal static long drawCalls;
 
-        private readonly GraphicsDeviceManager _graphics;
-        private ScalingViewportAdapter _viewportAdapter;
-        private readonly List<Manager> _managers;
-        private InputManager _inputManager;
-        private SceneManager _sceneManager;
-        
-        public SpriteBatch SpriteBatch { get; private set; }
-        public SpriteFont DefaultFont { get; set; }
+		internal SceneTransition _sceneTransition;
 
-        public int VirtualWidth { get; set; } = 1920;
-        public int VirtualHeight { get; set; } = 1080;
+		private TimeSpan _frameCounterElapsedTime = TimeSpan.Zero;
+        private int _frameCounter = 0;
+        private string _windowTitle;
+        private Scene _scene;
+        private Scene _nextScene;
+        private ITimer _graphicsDeviceChangeTimer;
+        private FastList<GlobalManager> _globalManagers = new();
+        private CoroutineManager _coroutineManager = new();
+		private TimerManager _timerManager = new();
 
-        public int ScreenWidth { get; set; } = 1280;
-        public int ScreenHeight { get; set; } = 720;
-        public ScalingViewportAdapter ViewportAdapter => _viewportAdapter;
+		public static Emitter<CoreEvents> Emitter;
+        public static bool ExitOnEscapeKeypress = true;
+        public static bool PauseOnFocusLost = true;
+        public static bool DebugRenderEnabled = false;
+        public new static GraphicsDevice GraphicsDevice;
+        public new static RelmContentManager Content;
 
-        public InputManager Input => _inputManager;
+        public static SamplerState DefaultWrappedSamplerState => DefaultSamplerState.Filter == TextureFilter.Point ? SamplerState.PointWrap : SamplerState.LinearWrap;
+        public static SamplerState DefaultSamplerState = new() { Filter = TextureFilter.Point };
+        public new static GameServiceContainer Services => ((Game)_instance).Services;
+        public static RelmGame Instance => _instance;
+		
+		public static Scene Scene
+		{
+			get => _instance._scene;
+			set
+			{
+				Assert.IsNotNull(value, "Scene cannot be null!");
 
-        public RelmGame()
-        {
-            Instance = this;
-            _graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
-            IsMouseVisible = true;
+				if (_instance._scene == null)
+				{
+					_instance._scene = value;
+					_instance.OnSceneChanged();
+					_instance._scene.Begin();
+				}
+				else
+				{
+					_instance._nextScene = value;
+				}
+			}
+		}
+		
+		public RelmGame(int width = 1280, int height = 720, bool isFullScreen = false, string windowTitle = "Relm", string contentDirectory = "Content")
+		{
+            #if DEBUG
+			    _windowTitle = windowTitle;
+            #endif
 
-            _managers = new List<Manager>();
+			_instance = this;
+			Emitter = new Emitter<CoreEvents>(new CoreEventsComparer());
+
+			var graphicsManager = new GraphicsDeviceManager(this)
+			{
+				PreferredBackBufferWidth = width,
+				PreferredBackBufferHeight = height,
+				IsFullScreen = isFullScreen,
+				SynchronizeWithVerticalRetrace = true,
+				PreferHalfPixelOffset = true
+			};
+			graphicsManager.DeviceReset += OnGraphicsDeviceReset;
+			graphicsManager.PreferredDepthStencilFormat = DepthFormat.Depth24Stencil8;
+
+			Screen.Initialize(graphicsManager);
+			Window.ClientSizeChanged += OnGraphicsDeviceReset;
+			Window.OrientationChanged += OnOrientationChanged;
+
+			base.Content.RootDirectory = contentDirectory;
+			Content = new RelmGlobalContentManager(Services, base.Content.RootDirectory);
+			IsMouseVisible = true;
+			IsFixedTimeStep = false;
+
+			// setup systems
+			RegisterGlobalManager(_coroutineManager);
+			RegisterGlobalManager(new TweenManager());
+			RegisterGlobalManager(_timerManager);
+			RegisterGlobalManager(new RenderTarget());
+		}
+
+		void OnOrientationChanged(object sender, EventArgs e)
+		{
+			Emitter.Emit(CoreEvents.OrientationChanged);
+		}
+
+		protected void OnGraphicsDeviceReset(object sender, EventArgs e)
+		{
+			if (_graphicsDeviceChangeTimer != null)
+			{
+				_graphicsDeviceChangeTimer.Reset();
+			}
+			else
+			{
+				_graphicsDeviceChangeTimer = Schedule(0.05f, false, this, t =>
+				{
+					(t.Context as RelmGame)._graphicsDeviceChangeTimer = null;
+					Emitter.Emit(CoreEvents.GraphicsDeviceReset);
+				});
+			}
+		}
+
+
+		#region Passthroughs to Game
+
+		public new static void Exit()
+		{
+			((Game)_instance).Exit();
+		}
+
+		#endregion
+
+
+		#region Game overides
+
+		protected override void Initialize()
+		{
+			base.Initialize();
+
+			GraphicsDevice = base.GraphicsDevice;
+            var name = typeof(BitmapFont).AssemblyQualifiedName;
+            var name2 = typeof(BitmapFontReader).AssemblyQualifiedName;
+			var font = Content.Load<BitmapFont>("relm://Relm.Content.NezDefaultBMFont.xnb");
+			RelmGraphics.Instance = new RelmGraphics(font);
+		}
+
+		protected override void Update(GameTime gameTime)
+		{
+			if (PauseOnFocusLost && !IsActive)
+			{
+				SuppressDraw();
+				return;
+			}
+
+			Time.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+			RelmInput.Update();
+
+			if (ExitOnEscapeKeypress && (RelmInput.IsKeyDown(Keys.Escape) || RelmInput.GamePads[0].IsButtonReleased(Buttons.Back)))
+			{
+				base.Exit();
+				return;
+			}
+
+			if (_scene != null)
+			{
+				for (var i = _globalManagers.Length - 1; i >= 0; i--)
+				{
+					if (_globalManagers.Buffer[i].Enabled)
+						_globalManagers.Buffer[i].Update();
+				}
+
+				if (_sceneTransition == null ||
+					(_sceneTransition != null &&
+					 (!_sceneTransition._loadsNewScene || _sceneTransition._isNewSceneLoaded)))
+				{
+					_scene.Update();
+				}
+
+				if (_nextScene != null)
+				{
+					_scene.End();
+
+					_scene = _nextScene;
+					_nextScene = null;
+					OnSceneChanged();
+
+					_scene.Begin();
+				}
+			}
+
+			EndDebugUpdate();
         }
 
-        protected override void Initialize()
-        {
-            _graphics.PreferredBackBufferWidth = ScreenWidth;
-            _graphics.PreferredBackBufferHeight = ScreenHeight;
-            _graphics.ApplyChanges();
+		protected override void Draw(GameTime gameTime)
+		{
+			if (PauseOnFocusLost && !IsActive)
+				return;
 
-            base.Initialize();
-            _viewportAdapter = new ScalingViewportAdapter(GraphicsDevice, VirtualWidth, VirtualHeight);
-            Layout.ViewportAdapter = _viewportAdapter;
+			StartDebugDraw(gameTime.ElapsedGameTime);
 
-            RegisterManagers();
-            LoadScenes();
-        }
+			if (_sceneTransition != null)
+				_sceneTransition.PreRender(RelmGraphics.Instance.SpriteBatch);
 
-        private void RegisterManagers()
-        {
-            _inputManager = RegisterManager<InputManager>(_viewportAdapter);
-            _sceneManager = RegisterManager<SceneManager>();
-        }
+			if (_sceneTransition != null)
+			{
+				if (_scene != null && _sceneTransition.WantsPreviousSceneRender &&
+					!_sceneTransition.HasPreviousSceneRender)
+				{
+					_scene.Render();
+					_scene.PostRender(_sceneTransition.PreviousSceneRender);
+					StartCoroutine(_sceneTransition.OnBeginTransition());
+				}
+				else if (_scene != null && _sceneTransition._isNewSceneLoaded)
+				{
+					_scene.Render();
+					_scene.PostRender();
+				}
 
-        private void LoadScenes()
-        {
-            var scenes = from t in AppDomain.CurrentDomain.GetAssemblies().SelectMany(x => x.GetTypes())
-                where t.IsClass 
-                      && !t.IsAbstract 
-                      && t.Name.Contains(nameof(Scene))
-                      && t.BaseType != typeof(Manager)
-                select t;
+				_sceneTransition.Render(RelmGraphics.Instance.SpriteBatch);
+			}
+			else if (_scene != null)
+			{
+				_scene.Render();
 
-            foreach (var sceneType in scenes)
-            {
-                var scene = _sceneManager.LoadScene(sceneType);
-                scene.Game = this;
-                scene.OnSceneLoad();
-            }
-        }
+#if DEBUG
+				if (DebugRenderEnabled)
+					Debug.Render();
+#endif
 
-        protected override void LoadContent()
-        {
-            SpriteBatch = new SpriteBatch(GraphicsDevice);
+				_scene.PostRender();
+			}
+
+			EndDebugDraw();
+		}
+
+		protected override void OnExiting(object sender, EventArgs args)
+		{
+			base.OnExiting(sender, args);
+			Emitter.Emit(CoreEvents.Exiting);
+		}
+
+		#endregion
+
+		#region Debug Injection
+
+		[Conditional("DEBUG")]
+		void EndDebugUpdate()
+		{
+            #if DEBUG
+			    DebugConsole.Instance.Update();
+			    drawCalls = 0;
+            #endif
+		}
+
+		[Conditional("DEBUG")]
+		void StartDebugDraw(TimeSpan elapsedGameTime)
+		{
+            #if DEBUG
+			    // fps counter
+			    _frameCounter++;
+			    _frameCounterElapsedTime += elapsedGameTime;
+			    if (_frameCounterElapsedTime >= TimeSpan.FromSeconds(1))
+			    {
+				    var totalMemory = (GC.GetTotalMemory(false) / 1048576f).ToString("F");
+				    Window.Title = string.Format("{0} {1} fps - {2} MB", _windowTitle, _frameCounter, totalMemory);
+				    _frameCounter = 0;
+				    _frameCounterElapsedTime -= TimeSpan.FromSeconds(1);
+			    }
+            #endif
+		}
+
+		[Conditional("DEBUG")]
+		void EndDebugDraw()
+		{
+            #if DEBUG
+			    DebugConsole.Instance.Render();
+            #endif
+		}
+
+		#endregion
+
+		void OnSceneChanged()
+		{
+			Emitter.Emit(CoreEvents.SceneChanged);
+			Time.SceneChanged();
+			GC.Collect();
+		}
+
+		public static T StartSceneTransition<T>(T sceneTransition) where T : SceneTransition
+		{
+			Assert.IsNull(_instance._sceneTransition, "You cannot start a new SceneTransition until the previous one has completed");
+			_instance._sceneTransition = sceneTransition;
+			return sceneTransition;
+		}
 
 
-            try
-            {
-                DefaultFont = Content.Load<SpriteFont>("defaultFont");
-            }
-            catch
-            {
-                throw new Exception("Unable to find default font in content. ~/Content/defaultFont.xnb");
-            }
-        }
+		#region Global Managers
 
-        protected override void Update(GameTime gameTime)
-        {
-            UpdateManagers(gameTime);
+		public static void RegisterGlobalManager(GlobalManager manager)
+		{
+			_instance._globalManagers.Add(manager);
+			manager.Enabled = true;
+		}
 
-            base.Update(gameTime);
-        }
+		public static void UnregisterGlobalManager(GlobalManager manager)
+		{
+			_instance._globalManagers.Remove(manager);
+			manager.Enabled = false;
+		}
 
-        protected override void Draw(GameTime gameTime)
-        {
-            ClearScreen();
+		public static T GetGlobalManager<T>() where T : GlobalManager
+		{
+			for (var i = 0; i < _instance._globalManagers.Length; i++)
+			{
+				if (_instance._globalManagers.Buffer[i] is T)
+					return _instance._globalManagers.Buffer[i] as T;
+			}
 
-            _sceneManager.Draw(gameTime);
+			return null;
+		}
 
-            base.Draw(gameTime);
-        }
+		#endregion
 
-        #region Manager Handling
 
-        public T RegisterManager<T>()
-            where T : Manager, new()
-        {
-            var manager = Activator.CreateInstance<T>();
-            _managers.Add(manager);
-            return manager;
-        }
+		#region Systems access
 
-        public T RegisterManager<T>(params object[] args)
-            where T : Manager
-        {
-            var manager = (T)Activator.CreateInstance(typeof(T), args);
-            _managers.Add(manager);
-            return manager;
-        }
+		public static ICoroutine StartCoroutine(IEnumerator enumerator)
+		{
+			return _instance._coroutineManager.StartCoroutine(enumerator);
+		}
 
-        private void UpdateManagers(GameTime gameTime)
-        {
-            _managers.ForEach(x => x.Update(gameTime));
-        }
+		public static ITimer Schedule(float timeInSeconds, bool repeats, object context, Action<ITimer> onTime)
+		{
+			return _instance._timerManager.Schedule(timeInSeconds, repeats, context, onTime);
+		}
 
-        #endregion
+		public static ITimer Schedule(float timeInSeconds, object context, Action<ITimer> onTime)
+		{
+			return _instance._timerManager.Schedule(timeInSeconds, false, context, onTime);
+		}
 
-        #region Input
+		public static ITimer Schedule(float timeInSeconds, bool repeats, Action<ITimer> onTime)
+		{
+			return _instance._timerManager.Schedule(timeInSeconds, repeats, null, onTime);
+		}
 
-        public void ClearMappedInput()
-        {
-            _inputManager.ClearRegisteredKeyboardActions();
-            _inputManager.ClearRegisteredGamepadActions();
-            _inputManager.ClearRegisteredMouseActions();
-        }
+		public static ITimer Schedule(float timeInSeconds, Action<ITimer> onTime)
+		{
+			return _instance._timerManager.Schedule(timeInSeconds, false, null, onTime);
+		}
 
-        public void MapActionToKeyPressed(Keys key, Action<EventArgs> action)
-        {
-            _inputManager.MapActionToKeyPressed(key, action);
-        }
-
-        public void MapActionToKeyDown(Keys key, Action<EventArgs> action)
-        {
-            _inputManager.MapActionToKeyDown(key, action);
-        }
-
-        public void MapActionToKeyReleased(Keys key, Action<EventArgs> action)
-        {
-            _inputManager.MapActionToKeyReleased(key, action);
-        }
-
-        public void MapActionToKeyTyped(Keys key, Action<EventArgs> action)
-        {
-            _inputManager.MapActionToKeyTyped(key, action);
-        }
-
-        public void ClearRegisteredKeyboardActions()
-        {
-            _inputManager.ClearRegisteredKeyboardActions();
-        }
-
-        public void ChangeKeyboardSettings(bool repeatPress = true, int initialDelay = 500, int repeatDelay = 50)
-        {
-            _inputManager.ChangeKeyboardSettings(repeatPress, initialDelay, repeatDelay);
-        }
-
-        public void MapActionToGamepadButtonDown(Buttons button, Action<EventArgs> action)
-        {
-            _inputManager.MapActionToGamepadButtonDown(button, action);
-        }
-        
-        public void MapActionToGamepadButtonUp(Buttons button, Action<EventArgs> action)
-        {
-            _inputManager.MapActionToGamepadButtonUp(button, action);
-        }
-
-        public void MapActionToGamepadButtonRepeated(Buttons button, Action<EventArgs> action)
-        {
-            _inputManager.MapActionToGamepadButtonRepeated(button, action);
-        }
-
-        public void MapActionToGamepadThumbstickMoved(Buttons button, Action<EventArgs> action)
-        {
-            _inputManager.MapActionToGamepadThumbstickMoved(button, action);
-        }
-
-        public void MapActionToGamepadTriggerMoved(Buttons button, Action<EventArgs> action)
-        {
-            _inputManager.MapActionToGamepadTriggerMoved(button, action);
-        }
-
-        public void MapActionToMouseDown(MouseButton button, Action<EventArgs> action)
-        {
-            _inputManager.MapActionToMouseButtonDown(button, action);
-        }
-
-        public void MapActionToMouseUp(MouseButton button, Action<EventArgs> action)
-        {
-            _inputManager.MapActionToMouseButtonUp(button, action);
-        }
-
-        public void MapActionToMouseClicked(MouseButton button, Action<EventArgs> action)
-        {
-            _inputManager.MapActionToMouseButtonClicked(button, action);
-        }
-
-        public void MapActionToMouseDoubleClicked(MouseButton button, Action<EventArgs> action)
-        {
-            _inputManager.MapActionToMouseButtonDoubleClicked(button, action);
-        }
-
-        public void MapActionToMouseMoved(MouseButton button, Action<EventArgs> action)
-        {
-            _inputManager.MapActionToMouseMoved(button, action);
-        }
-
-        public void MapActionToMouseWheelMoved(MouseButton button, Action<EventArgs> action)
-        {
-            _inputManager.MapActionToMouseWheelMoved(button, action);
-        }
-
-        public void MapActionToMouseDragStart(MouseButton button, Action<EventArgs> action)
-        {
-            _inputManager.MapActionToMouseDragStart(button, action);
-        }
-
-        public void MapActionToMouseDrag(MouseButton button, Action<EventArgs> action)
-        {
-            _inputManager.MapActionToMouseDrag(button, action);
-        }
-
-        public void MapActionToMouseDragEnd(MouseButton button, Action<EventArgs> action)
-        {
-            _inputManager.MapActionToMouseDragEnd(button, action);
-        }
-
-        #endregion
-
-        #region Scene Management
-
-        public void ChangeScene(string sceneName)
-        {
-            _sceneManager.ChangeScene(sceneName);
-        }
-
-        #endregion
-
-        #region Utility Methods / Functions
-
-        public void ClearScreen()
-        {
-            var startColor = Color.FromNonPremultiplied(10, 2, 23, 255);
-            var endColor = Color.FromNonPremultiplied(189, 7, 154, 255);
-            ClearScreen(startColor, endColor);
-        }
-
-        public void ClearScreen(Color startColor, Color endColor)
-        {
-            GraphicsDevice.Clear(Color.Black);
-
-            var whitePixel = SpriteBatch.GetWhitePixel();
-
-            SpriteBatch.Begin();
-
-            for (var y = 0; y < ScreenHeight; y++)
-            {
-                var p = ((float)y / (float)ScreenHeight);
-                var color = Color.Lerp(startColor, endColor, p);
-                SpriteBatch.Draw(whitePixel, new Rectangle(0, y, ScreenWidth, 1), color);
-            }
-
-            SpriteBatch.End();
-        }
-
-        public void ClearScreen(Color color)
-        {
-            GraphicsDevice.Clear(color);
-        }
-
-        #endregion
-    }
+		#endregion
+	}
 }

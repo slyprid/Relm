@@ -1,58 +1,37 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.IO;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Relm.Extensions
 {
     public static class TextureExtensions
     {
-        private static Texture2D _whitePixel;
-
-        public static Texture2D GetWhitePixel(this SpriteBatch spriteBatch)
+        public static Texture2D TextureFromStreamPreMultiplied(this Stream stream)
         {
-            if (_whitePixel != null) return _whitePixel;
+            var texture = Texture2D.FromStream(RelmGame.GraphicsDevice, stream);
 
-            _whitePixel = new Texture2D(spriteBatch.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
-            _whitePixel.SetData(new Color[1]
-            {
-                Color.White
-            });
+            var pixels = new byte[texture.Width * texture.Height * 4];
+            texture.GetData(pixels);
+            PremultiplyAlpha(pixels);
+            texture.SetData(pixels);
 
-            return _whitePixel;
+            return texture;
         }
 
-        public static Texture2D GetWhitePixel(this GraphicsDevice graphicsDevice)
+        static unsafe void PremultiplyAlpha(byte[] pixels)
         {
-            if (_whitePixel != null) return _whitePixel;
-
-            _whitePixel = new Texture2D(graphicsDevice, 1, 1, false, SurfaceFormat.Color);
-            _whitePixel.SetData(new Color[1]
+            fixed (byte* b = &pixels[0])
             {
-                Color.White
-            });
-
-            return _whitePixel;
-        }
-
-        public static Texture2D Fade(this Texture2D input)
-        {
-            var pixels = new Color[input.Width * input.Height];
-            input.GetData(pixels);
-
-            var alpha = 0f;
-            var alphaIncrement = (0.90f / input.Width);
-            for (var x = 0; x < input.Width; x++)
-            {
-                for (var y = 0; y < input.Height; y++)
+                for (var i = 0; i < pixels.Length; i += 4)
                 {
-                    var idx = y * input.Width + x;
-                    var pixel = pixels[idx];
-                    pixels[idx] = new Color(pixel, alpha);
+                    if (b[i + 3] != 255)
+                    {
+                        var alpha = b[i + 3] / 255f;
+                        b[i + 0] = (byte)(b[i + 0] * alpha);
+                        b[i + 1] = (byte)(b[i + 1] * alpha);
+                        b[i + 2] = (byte)(b[i + 2] * alpha);
+                    }
                 }
-                alpha += alphaIncrement;
             }
-
-            input.SetData(pixels);
-            return input;
         }
-    }
+	}
 }

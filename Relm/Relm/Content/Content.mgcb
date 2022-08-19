@@ -3,13 +3,24 @@
 
 /outputDir:bin/$(Platform)
 /intermediateDir:obj/$(Platform)
-/platform:DesktopGL
+/platform:Windows
 /config:
-/profile:Reach
+/profile:HiDef
 /compress:False
 
 #-------------------------------- References --------------------------------#
 
+/reference:..\..\Relm.Content.Pipeline\bin\Debug\net6.0\Relm.Content.Pipeline.dll
 
 #---------------------------------- Content ---------------------------------#
+
+#begin fonts/RelmDefaultFont.fnt
+/importer:OpenAssetImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/RelmDefaultFont.fnt
+
+#begin fonts/RelmDefaultFont.png
+/copy:fonts/RelmDefaultFont.png
 
