@@ -148,6 +148,11 @@ namespace Relm
 			return IsKeyReleased(keyA) || IsKeyReleased(keyB);
 		}
 
+        public static bool IsAnyKeyPressed()
+        {
+            return _currentKbState.GetPressedKeys().Length > 0 && _previousKbState.GetPressedKeys().Length == 0;
+        }
+
 		#endregion
 
 

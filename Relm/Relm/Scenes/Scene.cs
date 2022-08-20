@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Relm.Collections;
 using Relm.Components;
+using Relm.Components.Renderables.Sprites;
 using Relm.Content;
 using Relm.Entities;
 using Relm.Events;
@@ -18,27 +19,19 @@ namespace Relm.Scenes
 {
 	public class Scene
 	{
-        public Camera Camera;
+		#region Fields / Properties
 
-		public Color ClearColor = Color.CornflowerBlue;
-
-		public Color LetterboxColor = Color.Black;
-
-		public SamplerState SamplerState = RelmGame.DefaultSamplerState;
-
-		public readonly RelmContentManager Content;
-
-		public bool EnablePostProcessing = true;
-
-		public readonly EntityList Entities;
-
-		public readonly RenderableComponentList RenderableComponents;
-
-		public Point SceneRenderTargetSize => new Point(_sceneRenderTarget.Bounds.Width, _sceneRenderTarget.Bounds.Height);
-
-		public RenderTarget2D SceneRenderTarget => _sceneRenderTarget;
-
-		public int PixelPerfectScale = 1;
+		public Camera Camera;
+        public Color ClearColor = Color.CornflowerBlue;
+        public Color LetterboxColor = Color.Black;
+        public SamplerState SamplerState = RelmGame.DefaultSamplerState;
+        public readonly RelmContentManager Content;
+        public bool EnablePostProcessing = true;
+        public readonly EntityList Entities;
+        public readonly RenderableComponentList RenderableComponents;
+        public Point SceneRenderTargetSize => new Point(_sceneRenderTarget.Bounds.Width, _sceneRenderTarget.Bounds.Height);
+        public RenderTarget2D SceneRenderTarget => _sceneRenderTarget;
+        public int PixelPerfectScale = 1;
 
 		public IFinalRenderDelegate FinalRenderDelegate
 		{
@@ -50,10 +43,8 @@ namespace Relm.Scenes
 			}
 			get => _finalRenderDelegate;
 		}
-
-		IFinalRenderDelegate _finalRenderDelegate;
-
-
+        IFinalRenderDelegate _finalRenderDelegate;
+		
 		#region SceneResolutionPolicy private fields
 
 		static Point _defaultDesignResolutionSize;
@@ -71,8 +62,7 @@ namespace Relm.Scenes
 		Rectangle _finalRenderDestinationRect;
 
 		#endregion
-
-
+		
 		RenderTarget2D _sceneRenderTarget;
 		RenderTarget2D _destinationRenderTarget;
 		Action<Texture2D> _screenshotRequestCallback;
@@ -83,6 +73,7 @@ namespace Relm.Scenes
 		internal readonly FastList<PostProcessor> _postProcessors = new FastList<PostProcessor>();
 		bool _didSceneBegin;
 
+		#endregion
 
 		public static void SetDefaultDesignResolution(int width, int height, SceneResolutionPolicy sceneResolutionPolicy, int horizontalBleed = 0, int verticalBleed = 0)
 		{
@@ -91,8 +82,7 @@ namespace Relm.Scenes
 			if (_defaultSceneResolutionPolicy == SceneResolutionPolicy.BestFit)
 				_defaultDesignBleedSize = new Point(horizontalBleed, verticalBleed);
 		}
-
-
+		
 		#region Scene creation helpers
 
 		public static Scene CreateWithDefaultRenderer(Color? clearColor = null)
@@ -697,6 +687,18 @@ namespace Relm.Scenes
 		public T FindComponentOfType<T>() where T : Component => Entities.FindComponentOfType<T>();
 
 		public List<T> FindComponentsOfType<T>() where T : Component => Entities.FindComponentsOfType<T>();
+
+		#endregion
+
+		#region Ease of Use
+
+        public Entity CreateSpriteEntity(string entityName, string texturePath)
+        {
+            var texture = Content.LoadTexture(texturePath);
+            var entity = CreateEntity(entityName);
+            entity.AddComponent(new SpriteRenderer(texture));
+            return entity;
+        }
 
 		#endregion
 	}

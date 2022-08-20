@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework;
 using Relm.Components.Physics.Colliders;
 using Relm.Graphics;
 using Relm.Math;
-using Color = System.Drawing.Color;
 
 namespace Relm.Components
 {
@@ -44,7 +43,7 @@ namespace Relm.Components
 			set => SetRenderLayer(value);
 		}
 
-		public Color Color = Color.White;
+		public Microsoft.Xna.Framework.Color Color = Microsoft.Xna.Framework.Color.White;
 
 		public virtual Material Material { get; set; }
 

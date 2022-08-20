@@ -4,6 +4,8 @@ using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework;
 using Relm.Components;
 using Relm.Graphics;
+using Relm.Graphics.Tweening;
+using Relm.Graphics.Tweening.Interfaces;
 using Relm.Math;
 using Relm.Scenes;
 

@@ -298,6 +298,10 @@ namespace Relm
 			return sceneTransition;
 		}
 
+        public static bool IsTransitioning()
+        {
+            return _instance._sceneTransition != null;
+        }
 
 		#region Global Managers
 
