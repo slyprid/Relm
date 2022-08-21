@@ -294,6 +294,15 @@ namespace Relm.Entities
 			return component;
 		}
 
+        public T AddComponent<T>(params object[] args) where T : Component
+        {
+            var component = (T)Activator.CreateInstance(typeof(T), args);
+            component.Entity = this;
+            Components.Add(component);
+            component.Initialize();
+            return component;
+        }
+
 		public T GetComponent<T>() where T : Component => Components.GetComponent<T>(false);
 
 		public bool TryGetComponent<T>(out T component) where T : Component

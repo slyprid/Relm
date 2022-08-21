@@ -46,6 +46,11 @@ namespace Relm
 			}
 		}
 
+        public static GamePadData Player1Controller => GamePads[0];
+        public static GamePadData Player2Controller => GamePads[1];
+        public static GamePadData Player3Controller => GamePads[2];
+        public static GamePadData Player4Controller => GamePads[3];
+
 
 		static RelmInput()
 		{
@@ -238,5 +243,5 @@ namespace Relm
 		}
 
 		#endregion
-	}
+    }
 }

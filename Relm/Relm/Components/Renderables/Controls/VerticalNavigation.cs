@@ -1,19 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using Relm.Entities;
+using Relm.Extensions;
 using Relm.Graphics.Fonts;
+using Relm.Graphics.Tweening;
+using Relm.Graphics.Tweening.Interfaces;
 using Relm.Math;
 using SpriteBatch = Relm.Graphics.SpriteBatch;
 
 namespace Relm.Components.Renderables.Controls
 {
     public class VerticalNavigation
-        : RenderableComponent
+        : RenderableComponent, IUpdateable
     {
         private readonly Dictionary<string, string> _buttonText = new();
-        private readonly Dictionary<string, Action> _actions = new();
+        private readonly List<Action> _actions = new();
+        private readonly List<Vector2> _lineSize = new();
+        private readonly List<Vector2> _cursorPositions = new();
         private IFont _font;
+        private readonly Texture2D _skin;
+        private readonly Rectangle _cursorSrcRect = new(96, 32, 64, 64);
+        private Vector2 _cursorPos = Vector2.Zero;
+        private int _selectedIndex = -1;
+        private readonly Transform _cursorTransform;
+        private ITween<Vector2> _cursorTween;
+
+        public Color SelectedColor { get; set; } = Color.Yellow;
+        public Vector2 ShadowOffset { get; set; } = new(2f);
+        public Color ShadowColor { get; set; } = Color.Black.WithOpacity(0.75f);
 
         public override RectangleF Bounds
         {
@@ -43,43 +61,121 @@ namespace Relm.Components.Renderables.Controls
             }
         }
 
-        public VerticalNavigation()
+        public VerticalNavigation(IFont font, Texture2D skin)
         {
-            _font = RelmGraphics.Instance.BitmapFont;
-            //_bounds = new RectangleF(0f, 0f, Screen.Width, Screen.Height);
-            //_areBoundsDirty = false;
+            _font = font;
+            _skin = skin;
+
+            _cursorTransform = new Transform(new Entity("verticalNavigation-cursor"));
         }
 
-        public override void OnAddedToEntity()
-        {
-            base.OnAddedToEntity();
-        }
-
+        public VerticalNavigation() : this(RelmGraphics.Instance.BitmapFont, null) { }
+        public VerticalNavigation(Texture2D skin) : this(RelmGraphics.Instance.BitmapFont, skin) { }
+        
         public void Update()
         {
-            
-        }
+            if (_selectedIndex == -1 && _cursorPositions.Count > 0)
+            {
+                ChangeSelectedIndex(0);
+            }
 
+            if (RelmInput.IsKeyPressed(Keys.W) 
+                || RelmInput.IsKeyPressed(Keys.Up) 
+                || RelmInput.Player1Controller.DpadUpPressed 
+                || RelmInput.Player1Controller.IsLeftStickUpPressed())
+            {
+                var value = _selectedIndex;
+                value--;
+                if (value < 0) value = _cursorPositions.Count - 1;
+                ChangeSelectedIndex(value);
+            }
+
+            if (RelmInput.IsKeyPressed(Keys.S)
+                || RelmInput.IsKeyPressed(Keys.Down)
+                || RelmInput.Player1Controller.DpadDownPressed
+                || RelmInput.Player1Controller.IsLeftStickDownPressed())
+            {
+                var value = _selectedIndex;
+                value++;
+                if (value >= _cursorPositions.Count) value = 0;
+                ChangeSelectedIndex(value);
+            }
+
+            if (RelmInput.IsKeyPressed(Keys.Enter)
+                || RelmInput.IsKeyPressed(Keys.Space)
+                || RelmInput.Player1Controller.IsButtonPressed(Buttons.A)
+                || RelmInput.Player1Controller.IsButtonPressed(Buttons.Start))
+            {
+                _actions[_selectedIndex].Invoke();
+            }
+
+            _cursorPos = _cursorTransform.Position;
+        }
+        
         public override void Render(SpriteBatch spriteBatch, Camera camera)
         {
             var textOffset = Vector2.Zero;
+            var index = 0;
             foreach (var kvp in _buttonText)
             {
-                spriteBatch.DrawString(_font, kvp.Value, Entity.Transform.Position + _localOffset + textOffset, Color, Entity.Transform.Rotation, Vector2.Zero, Entity.Transform.Scale, SpriteEffects.None, LayerDepth);
+                var color = _selectedIndex == index ? SelectedColor : Color;
+                spriteBatch.DrawString(_font, kvp.Value, Entity.Transform.Position + _localOffset + textOffset + ShadowOffset, ShadowColor, Entity.Transform.Rotation, Vector2.Zero, Entity.Transform.Scale, SpriteEffects.None, LayerDepth);
+                spriteBatch.DrawString(_font, kvp.Value, Entity.Transform.Position + _localOffset + textOffset, color, Entity.Transform.Rotation, Vector2.Zero, Entity.Transform.Scale, SpriteEffects.None, LayerDepth);
                 var textSize = _font.MeasureString(kvp.Value);
                 textOffset += new Vector2(0f, textSize.Y);
+                index++;
+            }
+
+            var destRect = new Rectangle((int)_cursorPos.X, (int)_cursorPos.Y, 64, 64);
+            spriteBatch.Draw(_skin, destRect, _cursorSrcRect, Color.White);
+        }
+
+        #region Utility Methods / Functions
+
+        private void ChangeSelectedIndex(int value)
+        {
+            
+            _selectedIndex = value;
+            _cursorTransform.Position = _cursorPositions[_selectedIndex];
+
+            if (_cursorTween == null)
+            {
+                _cursorTween = _cursorTransform.TweenPositionTo(_cursorPositions[_selectedIndex] + new Vector2(24, 0));
+                _cursorTween
+                    .SetEaseType(EaseType.Linear)
+                    .SetLoops(LoopType.PingPong, -1)
+                    .SetDuration(0.5f)
+                    .Start();
+            }
+            else
+            {
+                _cursorTween.Stop();
+                _cursorTween = _cursorTransform.TweenPositionTo(_cursorPositions[_selectedIndex] + new Vector2(24, 0));
+                _cursorTween
+                    .SetEaseType(EaseType.Linear)
+                    .SetLoops(LoopType.PingPong, -1)
+                    .SetDuration(0.5f)
+                    .Start();
             }
         }
+
+        #endregion
 
         #region Fluent Functions
 
         public VerticalNavigation AddNavigation(string text, Action onClick)
         {
             var key = text;
-            if (_buttonText.ContainsKey(key) || _actions.ContainsKey(key)) Assert.Fail("Attempting to add the same navigation item that exists already.");
+            if (_buttonText.ContainsKey(key)) Assert.Fail("Attempting to add the same navigation item that exists already.");
+
+            var textSize = _font.MeasureString(text);
+            var textOffset = _lineSize.Aggregate(Vector2.Zero, (current, size) => current + new Vector2(0f, size.Y));
+            _lineSize.Add(textSize);
+            var pos = Entity.Transform.Position + _localOffset + textOffset + new Vector2(-96, 0);
+            _cursorPositions.Add(pos);
 
             _buttonText.Add(key, text);
-            _actions.Add(key, onClick);
+            _actions.Add(onClick);
 
             return this;
         }

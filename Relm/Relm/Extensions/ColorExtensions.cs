@@ -186,5 +186,19 @@ namespace Relm.Extensions
 
 			return c;
 		}
+
+        public static Color WithOpacity(this Color color, float opacity)
+        {
+            var ret = color;
+            ret.A = (byte)(255 * opacity);
+            return ret;
+        }
+
+        public static Color WithOpacity(this Color color, byte opacity)
+        {
+            var ret = color;
+            ret.A = opacity;
+            return ret;
+        }
 	}
 }

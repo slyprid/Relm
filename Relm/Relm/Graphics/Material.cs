@@ -26,7 +26,7 @@ namespace Relm.Graphics
 
 	public class Material : IComparable<Material>, IDisposable
 	{
-		public static Material DefaultMaterial = new ();
+		public static Material DefaultMaterial = new (BlendState.NonPremultiplied);
 
 		public static Material DefaultOpaqueMaterial = new (BlendState.Opaque);
 
