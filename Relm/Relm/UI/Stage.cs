@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Relm.Components;
@@ -73,6 +74,12 @@ namespace Relm.UI
 		{
 			return root.AddElement(element);
 		}
+
+        public T AddElement<T>() where T : Element
+        {
+            var element = Activator.CreateInstance<T>();
+            return root.AddElement(element);
+        }
 
 
 		public void Render(SpriteBatch spriteBatch, Camera camera)

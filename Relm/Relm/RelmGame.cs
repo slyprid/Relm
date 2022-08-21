@@ -15,6 +15,7 @@ using Relm.Graphics.Tweening;
 using Relm.Scenes;
 using Relm.Systems;
 using Relm.Timers;
+using Relm.UI;
 
 namespace Relm
 {
@@ -102,7 +103,8 @@ namespace Relm
 			RegisterGlobalManager(new TweenManager());
 			RegisterGlobalManager(_timerManager);
 			RegisterGlobalManager(new RenderTarget());
-		}
+
+        }
 
 		void OnOrientationChanged(object sender, EventArgs e)
 		{

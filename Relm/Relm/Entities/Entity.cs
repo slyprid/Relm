@@ -22,7 +22,7 @@ namespace Relm.Entities
         internal bool _isDestroyed;
 
 		public Scene Scene { get; set; }
-        public string Name { get; set; }
+        public string Name;
         public uint Id { get; }
         public Transform Transform { get; }
         public ComponentList Components { get; }
@@ -284,7 +284,7 @@ namespace Relm.Entities
 			component.Initialize();
 			return component;
 		}
-
+		
 		public T AddComponent<T>() where T : Component, new()
 		{
 			var component = new T();
