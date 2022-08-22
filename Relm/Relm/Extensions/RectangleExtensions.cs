@@ -198,6 +198,15 @@ namespace Relm.Extensions
 			rect.Height = (int)(rect.Height * scale.Y);
 		}
 
+        public static Rectangle Scale(this Rectangle rect, Vector2 scale)
+        {
+            rect.X = (int)(rect.X * scale.X);
+            rect.Y = (int)(rect.Y * scale.Y);
+            rect.Width = (int)(rect.Width * scale.X);
+            rect.Height = (int)(rect.Height * scale.Y);
+            return rect;
+        }
+
 		public static void Translate(ref Rectangle rect, Vector2 vec) => rect.Location += vec.ToPoint();
 
 		public static bool RayIntersects(ref Rectangle rect, ref Ray2D ray, out float distance)

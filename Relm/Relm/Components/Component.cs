@@ -74,7 +74,7 @@ namespace Relm.Components
 			return component;
 		}
 
-		public int CompareTo(Component other) => _updateOrder.CompareTo(other._updateOrder);
+        public int CompareTo(Component other) => _updateOrder.CompareTo(other._updateOrder);
         public override string ToString() => $"[Component: type: {GetType()}, updateOrder: {UpdateOrder}]";
 	}
 }

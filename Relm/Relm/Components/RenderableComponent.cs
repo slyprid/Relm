@@ -163,7 +163,13 @@ namespace Relm.Components
 			return this;
 		}
 
-		#endregion
+        public T As<T>()
+            where T : RenderableComponent
+        {
+            return (T)this;
+        }
+
+        #endregion
 
 		#region public API
 
