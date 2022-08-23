@@ -152,6 +152,21 @@ namespace Relm.Components
 			return this;
 		}
 
+        public RenderableComponent SetLocalOffset(int x, int y)
+        {
+            return SetLocalOffset(new Vector2(x, y));
+        }
+
+		public RenderableComponent SetLocalOffset(float x, float y)
+        {
+            return SetLocalOffset(new Vector2(x, y));
+        }
+
+        public RenderableComponent SetLocalOffset(float value)
+        {
+            return SetLocalOffset(new Vector2(value, value));
+        }
+
 		public RenderableComponent SetLocalOffset(Vector2 offset)
 		{
 			if (_localOffset != offset)
