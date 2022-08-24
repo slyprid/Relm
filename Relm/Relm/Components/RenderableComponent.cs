@@ -178,6 +178,20 @@ namespace Relm.Components
 			return this;
 		}
 
+        public RenderableComponent SetScale(float value)
+        {
+            Entity.Transform.Scale = new Vector2(value);
+            _areBoundsDirty = true;
+            return this;
+        }
+
+        public RenderableComponent SetScale(float x, float y)
+        {
+            Entity.Transform.Scale = new Vector2(x, y);
+            _areBoundsDirty = true;
+            return this;
+        }
+
         public T As<T>()
             where T : RenderableComponent
         {

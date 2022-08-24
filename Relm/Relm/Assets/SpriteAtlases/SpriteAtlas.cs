@@ -17,6 +17,12 @@ namespace Relm.Assets.SpriteAtlases
             return Sprites[index];
         }
 
+        public bool ContainsSprite(string name)
+        {
+            var index = Array.IndexOf(Names, name);
+            return index != -1;
+        }
+
         public SpriteAnimation GetAnimation(string name)
         {
             var index = Array.IndexOf(AnimationNames, name);

@@ -106,8 +106,16 @@ namespace Relm.Components.Renderables.Controls
                 || RelmInput.Player1Controller.IsButtonPressed(Buttons.A)
                 || RelmInput.Player1Controller.IsButtonPressed(Buttons.Start))
             {
-                _actions[_selectedIndex].Invoke();
+                _actions[_selectedIndex]?.Invoke();
             }
+
+            //if (Bounds.Intersects(new RectangleF(RelmInput.MousePosition, Vector2.One)))
+            //{
+            //    if (RelmInput.LeftMouseButtonDown)
+            //    {
+            //        _onClick?.Invoke();
+            //    }
+            //}
 
             _cursorPos = _cursorTransform.Position;
         }
