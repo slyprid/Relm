@@ -18,9 +18,11 @@ namespace Relm.Components.Renderables.Controls
         private int _height;
         private SpriteAtlas _atlas;
         private Sprite _sprite;
+        private Sprite _highlightSprite;
         private Action _onClick;
         private string _text;
         private IFont _font;
+        private bool _isHover;
 
         public Color ShadowColor { get; set; } = Color.Black.WithOpacity(0.75f);
         public Vector2 ShadowOffset { get; set; } = Vector2.Zero * 2;
@@ -55,6 +57,7 @@ namespace Relm.Components.Renderables.Controls
             _width = 128;
             _height = 64;
             _sprite = _atlas.GetSprite("WideButton");
+            _highlightSprite = _atlas.GetSprite("WideButtonHighlight");
             Color = Color.Black;
             _areBoundsDirty = true;
         }
@@ -64,8 +67,10 @@ namespace Relm.Components.Renderables.Controls
 
         public void Update()
         {
+            _isHover = false;
             if (Bounds.Intersects(new RectangleF(RelmInput.MousePosition, Vector2.One)))
             {
+                _isHover = true;
                 if (RelmInput.LeftMouseButtonPressed)
                 {
                     _onClick?.Invoke();
@@ -75,7 +80,8 @@ namespace Relm.Components.Renderables.Controls
 
         public override void Render(SpriteBatch spriteBatch, Camera camera)
         {
-            spriteBatch.Draw(_sprite, Bounds, _sprite.SourceRect, Color.White);
+            var sprite = _isHover ? _highlightSprite : _sprite;
+            spriteBatch.Draw(sprite, Bounds, sprite.SourceRect, Color.White);
 
             var size = _font.MeasureString(_text);
             var textOffset = new Vector2(0f, 10f);

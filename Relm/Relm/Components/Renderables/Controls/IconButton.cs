@@ -16,7 +16,10 @@ namespace Relm.Components.Renderables.Controls
         private int _height;
         private SpriteAtlas _atlas;
         private Sprite _sprite;
+        private Sprite _highlightSprite;
         private Action _onClick;
+        private bool _isHover;
+        private Color _hoverColor = Color.White;
 
         public override RectangleF Bounds
         {
@@ -45,8 +48,10 @@ namespace Relm.Components.Renderables.Controls
 
         public void Update()
         {
+            _isHover = false;
             if (Bounds.Intersects(new RectangleF(RelmInput.MousePosition, Vector2.One)))
             {
+                _isHover = true;
                 if (RelmInput.LeftMouseButtonPressed)
                 {
                     _onClick?.Invoke();
@@ -56,7 +61,19 @@ namespace Relm.Components.Renderables.Controls
 
         public override void Render(SpriteBatch spriteBatch, Camera camera)
         {
-            spriteBatch.Draw(_sprite, Bounds, _sprite.SourceRect, Color.White);
+            var sprite = _sprite;
+            var color = Color.White;
+
+            if (_isHover && _highlightSprite != null)
+            {
+                sprite = _highlightSprite;
+            }
+            if (_isHover)
+            {
+                color = _hoverColor;
+            }
+
+            spriteBatch.Draw(sprite, Bounds, sprite.SourceRect, color);
         }
 
         #region Fluent Functions
@@ -64,6 +81,18 @@ namespace Relm.Components.Renderables.Controls
         public IconButton OnClick(Action onClick)
         {
             _onClick = onClick;
+            return this;
+        }
+
+        public IconButton HasHover(string iconName)
+        {
+            _highlightSprite = _atlas.GetSprite(iconName);
+            return this;
+        }
+
+        public IconButton HasHoverColor(Color color)
+        {
+            _hoverColor = color;
             return this;
         }
 
