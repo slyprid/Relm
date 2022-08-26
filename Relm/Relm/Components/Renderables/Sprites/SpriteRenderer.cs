@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Relm.Extensions;
 using Relm.Graphics.Textures;
 using Relm.Math;
 using SpriteBatch = Relm.Graphics.SpriteBatch;
@@ -185,7 +186,7 @@ namespace Relm.Components.Renderables.Sprites
 
 		public override void Render(SpriteBatch spriteBatch, Camera camera)
 		{
-            spriteBatch.Draw(Sprite, Entity.Transform.Position + LocalOffset, Color,
+            spriteBatch.Draw(Sprite, Entity.Transform.Position + LocalOffset, Color.WithOpacity(Sprite.Opacity),
 				Entity.Transform.Rotation, Origin, Entity.Transform.Scale, SpriteEffects, _layerDepth);
 		}
 	}

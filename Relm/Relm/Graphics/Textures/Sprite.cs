@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Relm.Components;
+using Relm.Entities;
 using Relm.Extensions;
 using Relm.Math;
 
@@ -17,6 +19,7 @@ namespace Relm.Graphics.Textures
 		public readonly Vector2 Center;
 
 		public Vector2 Origin;
+		public float Opacity { get; set; }
 
 
 		public Sprite(Texture2D texture, Rectangle sourceRect, Vector2 origin)
@@ -25,6 +28,7 @@ namespace Relm.Graphics.Textures
 			SourceRect = sourceRect;
 			Center = new Vector2(sourceRect.Width * 0.5f, sourceRect.Height * 0.5f);
 			Origin = origin;
+            Opacity = 1f;
 
 			var inverseTexW = 1.0f / Texture2D.Width;
 			var inverseTexH = 1.0f / Texture2D.Height;
@@ -101,7 +105,13 @@ namespace Relm.Graphics.Textures
 			return sprites;
 		}
 
-		public static implicit operator Texture2D(Sprite tex) => tex.Texture2D;
+        public Sprite SetOpacity(float opacity)
+        {
+            Opacity = opacity;
+            return this;
+        }
+
+        public static implicit operator Texture2D(Sprite tex) => tex.Texture2D;
 
 		public override string ToString() => $"{SourceRect}";
 	}

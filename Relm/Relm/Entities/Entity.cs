@@ -8,6 +8,7 @@ using Relm.Graphics.Tweening;
 using Relm.Graphics.Tweening.Interfaces;
 using Relm.Math;
 using Relm.Scenes;
+using Relm.UI.Base;
 
 namespace Relm.Entities
 {
@@ -197,8 +198,24 @@ namespace Relm.Entities
 
 			return this;
 		}
-		
-		public void Destroy()
+
+        public Entity SetPosition(Vector2 value)
+        {
+            Transform.SetPosition(value);
+            return this;
+        }
+
+        public Entity SetPosition(float x, float y)
+        {
+            return SetPosition(new Vector2(x, y));
+        }
+
+        public Entity SetPosition(int x, int y)
+        {
+            return SetPosition(new Vector2(x, y));
+        }
+
+        public void Destroy()
 		{
 			_isDestroyed = true;
 			Scene.Entities.Remove(this);
