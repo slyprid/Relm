@@ -18,57 +18,23 @@ namespace Relm.Components.Cameras
 
         public enum Measurement
         {
-            /// <summary>
-            /// Size is measured in pixel.
-            /// Does not change with the Camera <see cref="Camera.Bounds"/> and <see cref="Camera.Zoom"/> level.
-            /// </summary>
             FixedPixel,
-            /// <summary>
-            /// Size is measured in % of Camera <see cref="Camera.Bounds"/>.
-            /// Where 1.0f equals the whole Camera Size and 0.5f is half the Camera size.
-            /// Scales automatically with the Camera <see cref="Camera.Bounds"/> and <see cref="Camera.Zoom"/> level.
-            /// </summary>
             ScaledCameraBounds
         }
 
+        private Entity _targetEntity;
+        private Collider _targetCollider;
+        private Vector2 _desiredPositionDelta;
+        private CameraStyle _cameraStyle;
+        private Measurement _deadzoneMeasurement;
+        private RectangleF _worldSpaceDeadzone;
+
         public Camera Camera;
-
-        /// <summary>
-        /// how fast the camera closes the distance to the target position
-        /// </summary>
         public float FollowLerp = 0.1f;
-
-        /// <summary>
-        /// when in <see cref="CameraStyle.CameraWindow"/> mode used as a bounding box around the camera position
-        /// to allow the targetEntity to movement inside it without moving the camera.
-        /// when in <see cref="CameraStyle.LockOn"/> mode only the deadzone x/y values are used as offset.
-        /// This is set to sensible defaults when you call <see cref="Follow"/> but you are
-        /// free to override <see cref="Deadzone"/> to get a custom deadzone directly or via the helper <see cref="SetCenteredDeadzone"/>.
-        /// </summary>
         public RectangleF Deadzone;
-
-        /// <summary>
-        /// offset from the screen center that the camera will focus on
-        /// </summary>
         public Vector2 FocusOffset;
-
-        /// <summary>
-        /// If true, the camera position will not got out of the map rectangle (0,0, mapwidth, mapheight)
-        /// </summary>
         public bool MapLockEnabled;
-
-        /// <summary>
-        /// Contains the width and height of the current map.
-        /// </summary>
         public Vector2 MapSize;
-
-        Entity _targetEntity;
-        Collider _targetCollider;
-        Vector2 _desiredPositionDelta;
-        CameraStyle _cameraStyle;
-        Measurement _deadzoneMeasurement;
-        RectangleF _worldSpaceDeadzone;
-
 
         public FollowCamera(Entity targetEntity, Camera camera, CameraStyle cameraStyle = CameraStyle.LockOn, Measurement deadzoneMeasurement = Measurement.FixedPixel)
         {
@@ -82,6 +48,13 @@ namespace Relm.Components.Cameras
             : this(targetEntity, null, cameraStyle)
         {
         }
+
+        public FollowCamera(Entity targetEntity)
+            : this(targetEntity, null, CameraStyle.LockOn)
+        {
+
+        }
+
 
         public FollowCamera() : this(null, null)
         {

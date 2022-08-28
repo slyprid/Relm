@@ -31,6 +31,8 @@ namespace Relm.Components.Renderables.Tiled
 
         public TiledMapRenderer(TiledMap tiledMap) : this(tiledMap, null, true) { }
 
+        public TiledMapRenderer(TiledMap tiledMap, string collisionLayerName) : this(tiledMap, collisionLayerName, true) { }
+
         public TiledMapRenderer(TiledMap tiledMap, string collisionLayerName = null, bool shouldCreateColliders = true)
         {
             TiledMap = tiledMap;
