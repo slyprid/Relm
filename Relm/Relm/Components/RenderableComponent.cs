@@ -198,6 +198,12 @@ namespace Relm.Components
             return (T)this;
         }
 
+        public RenderableComponent SetIsVisible(bool value)
+        {
+            _isVisible = value;
+            return this;
+        }
+
         #endregion
 
 		#region public API

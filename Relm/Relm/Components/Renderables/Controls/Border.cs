@@ -87,7 +87,7 @@ namespace Relm.Components.Renderables.Controls
             // Top Center
             var width = (pos.X + _width - _topRight.SourceRect.Width) - (pos.X + _topLeft.SourceRect.Width);
             for (x = pos.X + _topLeft.SourceRect.Width;
-                 x < pos.X + _width - (_topRight.SourceRect.Width * 2);
+                 x < pos.X + _width - (_topRight.SourceRect.Width);
                  x += _topCenter.SourceRect.Width)
             {
                 spriteBatch.Draw(_topCenter, new Vector2(x, pos.Y), BorderColor, Entity.Transform.Rotation, Vector2.Zero, Entity.Transform.Scale, SpriteEffects.None, LayerDepth);
@@ -137,7 +137,7 @@ namespace Relm.Components.Renderables.Controls
             // Bottom Center
             width = (pos.X + _width - _bottomRight.SourceRect.Width) - (pos.X + _bottomLeft.SourceRect.Width);
             for (x = pos.X + _bottomLeft.SourceRect.Width;
-                 x < pos.X + _width - (_bottomRight.SourceRect.Width * 2);
+                 x < pos.X + _width - (_bottomRight.SourceRect.Width);
                  x += _bottomCenter.SourceRect.Width)
             {
                 spriteBatch.Draw(_bottomCenter, new Vector2(x, pos.Y + (_height - (_bottomCenter.SourceRect.Height))), BorderColor, Entity.Transform.Rotation, Vector2.Zero, Entity.Transform.Scale, SpriteEffects.None, LayerDepth);
