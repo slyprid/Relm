@@ -106,7 +106,7 @@ namespace Relm.Components.Renderables.Controls
             // Center Left
             var height = (pos.Y + _height - _bottomLeft.SourceRect.Height) - (pos.Y + _bottomLeft.SourceRect.Height);
             for (y = pos.Y + _topLeft.SourceRect.Height;
-                 y < pos.Y + _height - (_bottomLeft.SourceRect.Height * 2);
+                 y < pos.Y + _height - (_bottomLeft.SourceRect.Height);
                  y += _centerLeft.SourceRect.Height)
             {
                 spriteBatch.Draw(_centerLeft, new Vector2(pos.X, y), BorderColor, Entity.Transform.Rotation, Vector2.Zero, Entity.Transform.Scale, SpriteEffects.None, LayerDepth);
@@ -120,7 +120,7 @@ namespace Relm.Components.Renderables.Controls
             // Center Right
             height = (pos.Y + _height - _bottomLeft.SourceRect.Height) - (pos.Y + _bottomLeft.SourceRect.Height);
             for (y = pos.Y + _topLeft.SourceRect.Height;
-                 y < pos.Y + _height - (_bottomLeft.SourceRect.Height * 2);
+                 y < pos.Y + _height - (_bottomLeft.SourceRect.Height);
                  y += _centerRight.SourceRect.Height)
             {
                 spriteBatch.Draw(_centerRight, new Vector2(pos.X + (_width - (_centerRight.SourceRect.Height)), y), BorderColor, Entity.Transform.Rotation, Vector2.Zero, Entity.Transform.Scale, SpriteEffects.None, LayerDepth);
@@ -163,6 +163,13 @@ namespace Relm.Components.Renderables.Controls
         {
             BackgroundStartColor = startColor;
             BackgroundEndColor = endColor;
+            return this;
+        }
+
+        public Border SetBackgroundColor(Color color)
+        {
+            BackgroundStartColor = color;
+            BackgroundEndColor = color;
             return this;
         }
     }

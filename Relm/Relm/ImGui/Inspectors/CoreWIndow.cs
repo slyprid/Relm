@@ -24,7 +24,7 @@ namespace Relm.Gui.Inspectors
 
             ImGui.SetNextWindowPos(new Num.Vector2(Screen.Width - 300, Screen.Height - 240), ImGuiCond.FirstUseEver);
             ImGui.SetNextWindowSize(new Num.Vector2(300, 240), ImGuiCond.FirstUseEver);
-            ImGui.Begin("Nez Core", ref isOpen);
+            ImGui.Begin("Relm Core", ref isOpen);
             DrawSettings();
             ImGui.End();
         }

@@ -295,7 +295,7 @@ namespace Relm
 
 		public static T StartSceneTransition<T>(T sceneTransition) where T : SceneTransition
 		{
-			Assert.IsNull(_instance._sceneTransition, "You cannot start a new SceneTransition until the previous one has completed");
+			//Assert.IsNull(_instance._sceneTransition, "You cannot start a new SceneTransition until the previous one has completed");
 			_instance._sceneTransition = sceneTransition;
 			return sceneTransition;
 		}
