@@ -709,6 +709,14 @@ namespace Relm.Scenes
             return entity;
         }
 
+        public Entity CreateSpriteEntity(string entityName, Texture2D texture, Vector2 origin)
+        {
+            var entity = CreateEntity(entityName);
+            var renderer = entity.AddComponent(new SpriteRenderer(texture));
+            renderer.SetOrigin(origin);
+            return entity;
+        }
+
         #endregion
     }
 }

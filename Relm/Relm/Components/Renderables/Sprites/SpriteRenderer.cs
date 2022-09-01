@@ -186,7 +186,7 @@ namespace Relm.Components.Renderables.Sprites
 
 		public override void Render(SpriteBatch spriteBatch, Camera camera)
 		{
-            spriteBatch.Draw(Sprite, Entity.Transform.Position + LocalOffset, Color.WithOpacity(Sprite.Opacity),
+            spriteBatch.Draw(Sprite, Entity.Transform.Position + LocalOffset, Color,
 				Entity.Transform.Rotation, Origin, Entity.Transform.Scale, SpriteEffects, _layerDepth);
 		}
 	}
