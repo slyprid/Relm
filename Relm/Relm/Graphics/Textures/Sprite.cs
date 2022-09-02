@@ -27,7 +27,7 @@ namespace Relm.Graphics.Textures
 			Texture2D = texture;
 			SourceRect = sourceRect;
 			Center = new Vector2(sourceRect.Width * 0.5f, sourceRect.Height * 0.5f);
-			Origin = origin;
+            Origin = origin;
             Opacity = 1f;
 
 			var inverseTexW = 1.0f / Texture2D.Width;

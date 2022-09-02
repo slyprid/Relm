@@ -87,7 +87,7 @@ namespace Relm.Components.Renderables.Sprites
 			set => SetSprite(value);
 		}
 
-		protected Vector2 _origin;
+		protected Vector2 _origin = Vector2.Zero;
 		protected Sprite _sprite;
 
 
