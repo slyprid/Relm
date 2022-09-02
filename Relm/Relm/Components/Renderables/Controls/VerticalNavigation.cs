@@ -21,6 +21,7 @@ namespace Relm.Components.Renderables.Controls
         private readonly List<Action> _actions = new();
         private readonly List<Vector2> _lineSize = new();
         private readonly List<Vector2> _cursorPositions = new();
+        private readonly List<Rectangle> _itemBounds = new();
         private IFont _font;
         private readonly Texture2D _skin;
         private readonly Rectangle _cursorSrcRect = new(96, 32, 64, 64);
@@ -108,14 +109,35 @@ namespace Relm.Components.Renderables.Controls
             {
                 _actions[_selectedIndex]?.Invoke();
             }
+            
+            if (_itemBounds.Count == 0)
+            {
+                var textOffset = Vector2.Zero;
+                foreach (var kvp in _buttonText)
+                {
+                    var textSize = _font.MeasureString(kvp.Value);
+                    var x = (Entity.Transform.Position + _localOffset + textOffset).X;
+                    var y = (Entity.Transform.Position + _localOffset + textOffset).Y;
+                    _itemBounds.Add(new Rectangle((int)x, (int)y, (int)textSize.X, (int)textSize.Y));
+                    textOffset += new Vector2(0f, textSize.Y);
+                }
+            }
 
-            //if (Bounds.Intersects(new RectangleF(RelmInput.MousePosition, Vector2.One)))
-            //{
-            //    if (RelmInput.LeftMouseButtonDown)
-            //    {
-            //        _onClick?.Invoke();
-            //    }
-            //}
+            var idx = 0;
+            foreach (var bounds in _itemBounds)
+            {
+                if (bounds.Intersects(new RectangleF(RelmInput.MousePosition, Vector2.One)))
+                {
+                    _selectedIndex = idx;
+                    ChangeSelectedIndex(_selectedIndex);
+                    if (RelmInput.LeftMouseButtonReleased)
+                    {
+                        _actions[_selectedIndex]?.Invoke();
+                    }
+                }
+
+                idx++;
+            }
 
             _cursorPos = _cursorTransform.Position;
         }
