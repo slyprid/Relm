@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Mime;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,6 +11,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Media;
 using Relm.Assets.BitmapFonts;
 using Relm.Assets.Loaders;
 using Relm.Assets.SpriteAtlases;
@@ -23,7 +26,7 @@ namespace Relm.Content
     public class RelmContentManager 
         : ContentManager
 	{
-		Dictionary<string, Effect> _loadedEffects = new Dictionary<string, Effect>();
+		Dictionary<string, Effect> _loadedEffects = new();
 
 		List<IDisposable> _disposableAssets;
 
@@ -110,7 +113,25 @@ namespace Relm.Content
 			}
 		}
 
-		public TiledMap LoadTiledMap(string name)
+        public Song LoadSong(string name)
+        {
+            if (string.IsNullOrEmpty(Path.GetExtension(name)))
+                return Load<Song>(name);
+
+            if (LoadedAssets.TryGetValue(name, out var asset))
+            {
+                if (asset is Song song)
+                {
+                    return song;
+                }
+            }
+
+            var path = Path.Combine(AppContext.BaseDirectory, name);
+            var ret = Song.FromUri(name, new Uri(path));
+            return ret;
+        }
+
+        public TiledMap LoadTiledMap(string name)
 		{
 			if (LoadedAssets.TryGetValue(name, out var asset))
 			{
