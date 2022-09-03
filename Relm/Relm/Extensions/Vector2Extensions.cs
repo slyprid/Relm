@@ -175,5 +175,10 @@ namespace Relm.Extensions
 		{
 			Transform(sourceArray, 0, ref matrix, destinationArray, 0, sourceArray.Length);
 		}
+
+        public static Vector2 MinValue(this Vector2 input)
+        {
+            return new Vector2(float.MinValue, float.MinValue);
+        }
 	}
 }
