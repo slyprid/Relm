@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Relm.Collections;
@@ -14,6 +15,7 @@ using Relm.Graphics.PostProcessing;
 using Relm.Graphics.Renderers;
 using Relm.Graphics.Textures;
 using Relm.Math;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace Relm.Scenes
 {
@@ -714,6 +716,26 @@ namespace Relm.Scenes
             var entity = CreateEntity(entityName);
             var renderer = entity.AddComponent(new SpriteRenderer(texture));
             renderer.SetOrigin(origin);
+            return entity;
+        }
+		public Entity CreateAnimatedSpriteEntity(string entityName, string texturePath, int cellWidth, int cellHeight)
+		{
+            var entity = CreateEntity(entityName);
+            var texture = RelmGame.Content.LoadTexture(texturePath);
+            var sprites = Sprite.SpritesFromAtlas(texture, cellWidth, cellHeight);
+            var animator = entity.AddComponent<SpriteAnimator>();
+            animator.AddAnimation("default", sprites.ToArray());
+            animator.Play("default");
+            return entity;
+        }
+
+        public Entity CreateAnimatedSpriteEntity(string entityName, Texture2D texture, int cellWidth, int cellHeight)
+        {
+            var entity = CreateEntity(entityName);
+            var sprites = Sprite.SpritesFromAtlas(texture, cellWidth, cellHeight);
+            var animator = entity.AddComponent<SpriteAnimator>();
+            animator.AddAnimation("default", sprites.ToArray());
+            animator.Play("default");
             return entity;
         }
 

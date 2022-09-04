@@ -52,6 +52,7 @@ namespace Relm.Components.Renderables.Controls
         public Label SetText(string text)
         {
             Text = text;
+            _areBoundsDirty = true;
             return this;
         }
 

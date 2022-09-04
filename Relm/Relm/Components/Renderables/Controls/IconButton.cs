@@ -96,6 +96,15 @@ namespace Relm.Components.Renderables.Controls
             return this;
         }
 
+        public IconButton ChangeIcon(string name)
+        {
+            _sprite = _atlas.GetSprite(name);
+            _width = _sprite.SourceRect.Width;
+            _height = _sprite.SourceRect.Height;
+            _areBoundsDirty = true;
+            return this;
+        }
+
         #endregion
     }
 }
