@@ -8,7 +8,7 @@ using SpriteBatch = Relm.Graphics.SpriteBatch;
 namespace Relm.Components.Renderables.Controls
 {
     public class Label
-        : RenderableComponent
+        : RenderableComponent, IUserInterfaceRenderable
     {
         public IFont Font { get; set; }
         public string Text { get; set; }

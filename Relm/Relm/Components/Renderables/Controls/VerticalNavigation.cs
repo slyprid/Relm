@@ -15,7 +15,7 @@ using SpriteBatch = Relm.Graphics.SpriteBatch;
 namespace Relm.Components.Renderables.Controls
 {
     public class VerticalNavigation
-        : RenderableComponent, IUpdateable
+        : RenderableComponent, IUpdateable, IUserInterfaceRenderable
     {
         private readonly Dictionary<string, string> _buttonText = new();
         private readonly List<Action> _actions = new();

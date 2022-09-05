@@ -14,7 +14,7 @@ using Microsoft.Xna.Framework.Input;
 namespace Relm.Components.Renderables.Controls
 {
     public class TextBox
-     : RenderableComponent, IUpdateable
+     : RenderableComponent, IUpdateable, IUserInterfaceRenderable
     {
         private int _width;
         private int _height;

@@ -10,7 +10,7 @@ using System;
 namespace Relm.Components.Renderables.Controls
 {
     public class IconButton
-        : RenderableComponent, IUpdateable
+        : RenderableComponent, IUpdateable, IUserInterfaceRenderable
     {
         private int _width;
         private int _height;

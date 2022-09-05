@@ -12,7 +12,7 @@ using SpriteBatch = Relm.Graphics.SpriteBatch;
 namespace Relm.Components.Renderables.Controls
 {
     public class TextButton
-        : RenderableComponent, IUpdateable
+        : RenderableComponent, IUpdateable, IUserInterfaceRenderable
     {
         private int _width;
         private int _height;

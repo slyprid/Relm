@@ -9,7 +9,7 @@ using SpriteBatch = Relm.Graphics.SpriteBatch;
 namespace Relm.Components.Renderables.Controls
 {
     public class Border
-        : RenderableComponent, IUpdateable
+        : RenderableComponent, IUpdateable, IUserInterfaceRenderable
     {
         private SpriteAtlas _atlas;
         private Sprite _topLeft;

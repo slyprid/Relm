@@ -69,6 +69,20 @@ namespace Relm.Components
 			return _componentsByRenderLayer[renderLayer];
 		}
 
+        public FastList<IUserInterfaceRenderable> UserInterfaceComponents()
+        {
+            var ret = new FastList<IUserInterfaceRenderable>();
+
+            for(var i = 0; i < _components.Length; i++)
+            {
+                var component = _components[i];
+                if (component.GetType().GetInterface(nameof(IUserInterfaceRenderable)) != null) 
+                    ret.Add((IUserInterfaceRenderable)component);
+            }
+
+            return ret;
+        }
+
 		public void UpdateLists()
 		{
 			if (_componentsNeedSort)
