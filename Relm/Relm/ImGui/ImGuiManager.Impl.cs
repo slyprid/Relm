@@ -390,7 +390,7 @@ namespace Relm.Gui
 			{
 				service = new ImGuiManager();
 				RelmGame.RegisterGlobalManager(service);
-			}
+            }
 			else
 			{
 				service.SetEnabled(!service.Enabled);

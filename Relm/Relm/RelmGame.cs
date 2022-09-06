@@ -32,6 +32,7 @@ namespace Relm
         private string _windowTitle;
         private Scene _scene;
         private Scene _nextScene;
+		private Scene _stashedScene;
         private ITimer _graphicsDeviceChangeTimer;
         private FastList<GlobalManager> _globalManagers = new();
         private CoroutineManager _coroutineManager = new();
@@ -303,6 +304,19 @@ namespace Relm
         public static bool IsTransitioning()
         {
             return _instance._sceneTransition != null;
+        }
+
+        public static void StashScene(Scene scene)
+        {
+            _instance._stashedScene = scene;
+        }
+
+        public static Scene UnstashScene()
+        {
+            var ret = _instance._stashedScene;
+            _instance._scene = ret;
+            _instance._stashedScene = null;
+            return ret;
         }
 
 		#region Global Managers

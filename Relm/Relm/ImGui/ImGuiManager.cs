@@ -28,7 +28,7 @@ namespace Relm.Gui
 		public bool FocusGameWindowOnRightClick = false;
 		public bool DisableKeyboardInputWhenGameWindowUnfocused = true;
 		public bool DisableMouseWheelWhenGameWindowUnfocused = true;
-
+		
 		List<Type> _sceneSubclasses = new List<Type>();
 		System.Reflection.MethodInfo[] _themes;
 

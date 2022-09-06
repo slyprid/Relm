@@ -123,6 +123,8 @@ namespace Relm.Scenes
         public virtual void OnStart() { }
         public virtual void Unload() { }
 
+		public virtual void InitializeAfterTransition() { }
+
 		public virtual void Begin()
 		{
 			if (_renderers.Length == 0)
