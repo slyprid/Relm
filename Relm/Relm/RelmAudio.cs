@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
 
@@ -8,13 +7,17 @@ namespace Relm
     public static class RelmAudio
     {
         private static Song _currentSong;
+        private static string _currentSongName;
         
         public static void PlaySong(string songName, bool isRepeating = false)
         {
+            if (_currentSongName == songName) return;
+
             _currentSong = RelmGame.Content.LoadSong(songName);
             MediaPlayer.Play(_currentSong);
             MediaPlayer.IsRepeating = isRepeating;
             MediaPlayer.MediaStateChanged += MediaPlayerOnMediaStateChanged;
+            _currentSongName = songName;
         }
 
         public static void StopSong()
