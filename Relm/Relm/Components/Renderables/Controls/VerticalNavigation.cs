@@ -33,6 +33,8 @@ namespace Relm.Components.Renderables.Controls
         public Color SelectedColor { get; set; } = Color.Yellow;
         public Vector2 ShadowOffset { get; set; } = new(2f);
         public Color ShadowColor { get; set; } = Color.Black.WithOpacity(0.75f);
+        public Color ActiveColor { get; set; } = Color.Cyan;
+        public int ActiveIndex { get; set; } = -1;
 
         public override RectangleF Bounds
         {
@@ -149,6 +151,7 @@ namespace Relm.Components.Renderables.Controls
             foreach (var kvp in _buttonText)
             {
                 var color = _selectedIndex == index ? SelectedColor : Color;
+                if (ActiveIndex == index) color = ActiveColor;
                 spriteBatch.DrawString(_font, kvp.Value, Entity.Transform.Position + _localOffset + textOffset + ShadowOffset, ShadowColor, Entity.Transform.Rotation, Vector2.Zero, Entity.Transform.Scale, SpriteEffects.None, LayerDepth);
                 spriteBatch.DrawString(_font, kvp.Value, Entity.Transform.Position + _localOffset + textOffset, color, Entity.Transform.Rotation, Vector2.Zero, Entity.Transform.Scale, SpriteEffects.None, LayerDepth);
                 var textSize = _font.MeasureString(kvp.Value);
@@ -213,6 +216,13 @@ namespace Relm.Components.Renderables.Controls
         public VerticalNavigation SetFont(IFont font)
         {
             _font = font;
+            return this;
+        }
+
+        public VerticalNavigation SetActive(string text)
+        {
+            var idx = _buttonText.Values.ToList().IndexOf(text);
+            ActiveIndex = idx;
             return this;
         }
 
