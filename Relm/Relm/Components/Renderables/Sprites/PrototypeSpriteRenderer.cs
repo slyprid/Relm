@@ -1,7 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Relm.Extensions;
-using Relm.Graphics;
 using Relm.Math;
+using SpriteBatch = Relm.Graphics.SpriteBatch;
 
 namespace Relm.Components.Renderables.Sprites
 {
@@ -42,12 +43,18 @@ namespace Relm.Components.Renderables.Sprites
 			_height = height;
 		}
 
-		/// <summary>
-		/// sets the width of the sprite
-		/// </summary>
-		/// <returns>The width.</returns>
-		/// <param name="width">Width.</param>
-		public PrototypeSpriteRenderer SetWidth(float width)
+        public PrototypeSpriteRenderer(Texture2D texture, float width, float height) : base(texture)
+        {
+            _width = width;
+            _height = height;
+        }
+
+        /// <summary>
+        /// sets the width of the sprite
+        /// </summary>
+        /// <returns>The width.</returns>
+        /// <param name="width">Width.</param>
+        public PrototypeSpriteRenderer SetWidth(float width)
 		{
 			_width = width;
 			return this;
@@ -87,8 +94,11 @@ namespace Relm.Components.Renderables.Sprites
 		}
 
 		public override void Render(SpriteBatch spriteBatch, Camera camera)
-		{
-			var pos = (Entity.Transform.Position - (Origin * Entity.Transform.Scale) + LocalOffset);
+        {
+            //var origin = Origin;
+            var origin = Vector2.Zero;
+
+            var pos = (Entity.Transform.Position - (origin * Entity.Transform.Scale) + LocalOffset);
 			var size = new Point((int)(_width * Entity.Transform.Scale.X), (int)(_height * Entity.Transform.Scale.Y));
 			var destRect = new Rectangle((int)pos.X, (int)pos.Y, size.X, size.Y);
 			spriteBatch.Draw(_sprite, destRect, _sprite.SourceRect, Color, Entity.Transform.Rotation,
