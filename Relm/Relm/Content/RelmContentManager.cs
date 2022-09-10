@@ -236,6 +236,11 @@ namespace Relm.Content
 			return effect;
 		}
 
+        public Effect LoadMonoGameEffect(string assetName)
+        {
+            return Load<Effect>(assetName);
+        }
+
 		#endregion
 
 		public void LoadAsync<T>(string assetName, Action<T> onLoaded = null)

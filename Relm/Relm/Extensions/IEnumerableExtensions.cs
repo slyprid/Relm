@@ -5,7 +5,7 @@ namespace Relm.Extensions
 {
     public static class IEnumerableExtensions
     {
-        public static int Count<TSource>(this IEnumerable<TSource> source)
+        public static int CountEx<TSource>(this IEnumerable<TSource> source)
         {
             Assert.IsNotNull(source, "source cannot be null");
 

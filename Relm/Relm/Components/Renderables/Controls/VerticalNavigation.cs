@@ -35,6 +35,9 @@ namespace Relm.Components.Renderables.Controls
         public Color ShadowColor { get; set; } = Color.Black.WithOpacity(0.75f);
         public Color ActiveColor { get; set; } = Color.Cyan;
         public int ActiveIndex { get; set; } = -1;
+        public int LinePadding { get; set; } = 16;
+
+        public bool HasFocus { get; set; }
 
         public override RectangleF Bounds
         {
@@ -68,6 +71,7 @@ namespace Relm.Components.Renderables.Controls
         {
             _font = font;
             _skin = skin;
+            HasFocus = true;
 
             _cursorTransform = new Transform(new Entity("verticalNavigation-cursor"));
         }
@@ -77,6 +81,8 @@ namespace Relm.Components.Renderables.Controls
         
         public void Update()
         {
+            if (!HasFocus) return;
+
             if (_selectedIndex == -1 && _cursorPositions.Count > 0)
             {
                 ChangeSelectedIndex(0);
@@ -121,7 +127,7 @@ namespace Relm.Components.Renderables.Controls
                     var x = (Entity.Transform.Position + _localOffset + textOffset).X;
                     var y = (Entity.Transform.Position + _localOffset + textOffset).Y;
                     _itemBounds.Add(new Rectangle((int)x, (int)y, (int)textSize.X, (int)textSize.Y));
-                    textOffset += new Vector2(0f, textSize.Y);
+                    textOffset += new Vector2(0f, textSize.Y + LinePadding);
                 }
             }
 
@@ -155,12 +161,15 @@ namespace Relm.Components.Renderables.Controls
                 spriteBatch.DrawString(_font, kvp.Value, Entity.Transform.Position + _localOffset + textOffset + ShadowOffset, ShadowColor, Entity.Transform.Rotation, Vector2.Zero, Entity.Transform.Scale, SpriteEffects.None, LayerDepth);
                 spriteBatch.DrawString(_font, kvp.Value, Entity.Transform.Position + _localOffset + textOffset, color, Entity.Transform.Rotation, Vector2.Zero, Entity.Transform.Scale, SpriteEffects.None, LayerDepth);
                 var textSize = _font.MeasureString(kvp.Value);
-                textOffset += new Vector2(0f, textSize.Y);
+                textOffset += new Vector2(0f, textSize.Y + LinePadding);
                 index++;
             }
 
-            var destRect = new Rectangle((int)_cursorPos.X, (int)_cursorPos.Y, 64, 64);
-            spriteBatch.Draw(_skin, destRect, _cursorSrcRect, Color.White);
+            if (HasFocus)
+            {
+                var destRect = new Rectangle((int)_cursorPos.X, (int)_cursorPos.Y, 64, 64);
+                spriteBatch.Draw(_skin, destRect, _cursorSrcRect, Color.White);
+            }
         }
 
         #region Utility Methods / Functions
@@ -202,7 +211,7 @@ namespace Relm.Components.Renderables.Controls
             if (_buttonText.ContainsKey(key)) Assert.Fail("Attempting to add the same navigation item that exists already.");
 
             var textSize = _font.MeasureString(text);
-            var textOffset = _lineSize.Aggregate(Vector2.Zero, (current, size) => current + new Vector2(0f, size.Y));
+            var textOffset = _lineSize.Aggregate(Vector2.Zero, (current, size) => current + new Vector2(0f, size.Y + LinePadding));
             _lineSize.Add(textSize);
             var pos = Entity.Transform.Position + _localOffset + textOffset + new Vector2(-96, 0);
             _cursorPositions.Add(pos);

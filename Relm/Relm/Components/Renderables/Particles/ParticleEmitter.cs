@@ -309,7 +309,7 @@ namespace Relm.Components.Renderables.Particles
 		/// <summary>
 		/// manually emit some particles
 		/// </summary>
-		/// <param name="count">Count.</param>
+		/// <param name="count">CountEx.</param>
 		public void Emit(int count)
 		{
 			var rootPosition = Entity.Transform.Position + _localOffset;
