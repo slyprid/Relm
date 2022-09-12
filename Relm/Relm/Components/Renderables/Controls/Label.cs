@@ -1,4 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Relm.Extensions;
 using Relm.Graphics.Fonts;
@@ -10,10 +13,15 @@ namespace Relm.Components.Renderables.Controls
     public class Label
         : RenderableComponent, IUserInterfaceRenderable
     {
+        private List<string> _lines = new();
+
         public IFont Font { get; set; }
         public string Text { get; set; }
         public Vector2 ShadowOffset { get; set; } = new(2f);
         public Color ShadowColor { get; set; } = Color.Black.WithOpacity(0.75f);
+
+        public int MaxWidth { get; set; } = -1;
+        public int LinePadding { get; set; }
 
         public override RectangleF Bounds
         {
@@ -40,11 +48,56 @@ namespace Relm.Components.Renderables.Controls
             Font = font;
             Text = text;
         }
-
+        
         public override void Render(SpriteBatch spriteBatch, Camera camera)
         {
-            spriteBatch.DrawString(Font, Text, Entity.Transform.Position + _localOffset + ShadowOffset, ShadowColor, Entity.Transform.Rotation, Vector2.Zero, Entity.Transform.Scale, SpriteEffects.None, LayerDepth);
-            spriteBatch.DrawString(Font, Text, Entity.Transform.Position + _localOffset, Color, Entity.Transform.Rotation, Vector2.Zero, Entity.Transform.Scale, SpriteEffects.None, LayerDepth);
+            if (MaxWidth == -1)
+            {
+                RenderText(spriteBatch, Text, Entity.Transform.Position + _localOffset);
+            }
+            else
+            {
+                BreakDownIntoLines();
+
+                var textOffset = new Vector2(0f, 0f);
+                foreach (var line in _lines)
+                {
+                    var position = Entity.Transform.Position + _localOffset + textOffset;
+                    RenderText(spriteBatch, line, position);
+                    var size = Font.MeasureString(line);
+                    textOffset += new Vector2(0f, size.Y + LinePadding);
+                }
+            }
+        }
+
+        private void RenderText(SpriteBatch spriteBatch, string text, Vector2 position)
+        {
+            spriteBatch.DrawString(Font, text, position + ShadowOffset, ShadowColor, Entity.Transform.Rotation, Vector2.Zero, Entity.Transform.Scale, SpriteEffects.None, LayerDepth);
+            spriteBatch.DrawString(Font, text, position, Color, Entity.Transform.Rotation, Vector2.Zero, Entity.Transform.Scale, SpriteEffects.None, LayerDepth);
+        }
+
+        private void BreakDownIntoLines()
+        {
+            _lines.Clear();
+            var size = Font.MeasureString(Text);
+            if (size.X < MaxWidth)
+            {
+                _lines.Add(Text);
+                return;
+            }
+
+            var sb = new StringBuilder();
+            for (var i = 0; i < Text.Length; i++)
+            {
+                sb.Append(Text[i]);
+                size = Font.MeasureString(sb.ToString());
+                if (size.X >= MaxWidth)
+                {
+                    _lines.Add(sb.ToString().Trim());
+                    sb.Clear();
+                }
+            }
+            if(sb.Length > 0) _lines.Add(sb.ToString().Trim());
         }
 
         #region Fluent Functions
@@ -77,6 +130,12 @@ namespace Relm.Components.Renderables.Controls
             var y = (Screen.Height / 2f) - (size.Y / 2);
             SetLocalOffset(_localOffset.X, y);
 
+            return this;
+        }
+
+        public Label SetMaxWidth(int value)
+        {
+            MaxWidth = value;
             return this;
         }
 
