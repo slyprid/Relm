@@ -224,6 +224,7 @@ namespace Relm
 		public static Point RawMousePosition => new Point(_currentMouseState.X, _currentMouseState.Y);
 
 		public static Vector2 MousePosition => ScaledMousePosition;
+        public static RectangleF MouseBounds => new(MousePosition, Vector2.One);
 
 		public static Vector2 ScaledMousePosition => ScaledPosition(new Vector2(_currentMouseState.X, _currentMouseState.Y));
 
