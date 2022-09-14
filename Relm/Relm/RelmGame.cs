@@ -12,6 +12,7 @@ using Relm.Events;
 using Relm.Graphics.Textures;
 using Relm.Graphics.Transitions;
 using Relm.Graphics.Tweening;
+using Relm.Gui;
 using Relm.Scenes;
 using Relm.Systems;
 using Relm.Timers;
@@ -49,6 +50,7 @@ namespace Relm
         public static SamplerState DefaultSamplerState = new() { Filter = TextureFilter.Point };
         public new static GameServiceContainer Services => ((Game)_instance).Services;
         public static RelmGame Instance => _instance;
+        public static Action<Relm.Graphics.SpriteBatch> ForcedDraw;
 		
 		public static Scene Scene
 		{
@@ -169,7 +171,21 @@ namespace Relm
 				return;
 			}
 
-			if (_scene != null)
+            #if DEBUG
+
+			    if (RelmInput.IsKeyPressed(Keys.F12))
+                {
+                    ImGuiManager.ToggleImGui();
+                }
+
+                if (RelmInput.IsKeyPressed(Keys.F2))
+                {
+                    DebugConsole.DebugRender();
+                }
+
+            #endif
+
+            if (_scene != null)
 			{
 				for (var i = _globalManagers.Length - 1; i >= 0; i--)
 				{
@@ -239,6 +255,8 @@ namespace Relm
 			}
 
 			EndDebugDraw();
+
+			ForcedDraw?.Invoke(RelmGraphics.Instance.SpriteBatch);
 		}
 
 		protected override void OnExiting(object sender, EventArgs args)

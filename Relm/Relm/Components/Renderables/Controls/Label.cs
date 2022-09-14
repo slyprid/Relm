@@ -17,6 +17,7 @@ namespace Relm.Components.Renderables.Controls
 
         public IFont Font { get; set; }
         public string Text { get; set; }
+        public string AppendedText { get; set; }
         public Vector2 ShadowOffset { get; set; } = new(2f);
         public Color ShadowColor { get; set; } = Color.Black.WithOpacity(0.75f);
 
@@ -30,7 +31,7 @@ namespace Relm.Components.Renderables.Controls
                 if (_areBoundsDirty)
                 {
                     if (Font == null) return _bounds;
-                    var size = Font.MeasureString(Text);
+                    var size = Font.MeasureString(Text + AppendedText);
                     _bounds.CalculateBounds(Entity.Transform.Position, _localOffset, Vector2.Zero,
                         Entity.Transform.Scale, Entity.Transform.Rotation, size.X,
                         size.Y);
@@ -53,7 +54,7 @@ namespace Relm.Components.Renderables.Controls
         {
             if (MaxWidth == -1)
             {
-                RenderText(spriteBatch, Text, Entity.Transform.Position + _localOffset);
+                RenderText(spriteBatch, Text + AppendedText, Entity.Transform.Position + _localOffset);
             }
             else
             {
@@ -79,7 +80,7 @@ namespace Relm.Components.Renderables.Controls
         private void BreakDownIntoLines()
         {
             _lines.Clear();
-            var size = Font.MeasureString(Text);
+            var size = Font.MeasureString(Text + AppendedText);
             if (size.X < MaxWidth)
             {
                 _lines.Add(Text);
@@ -105,6 +106,13 @@ namespace Relm.Components.Renderables.Controls
         public Label SetText(string text)
         {
             Text = text;
+            _areBoundsDirty = true;
+            return this;
+        }
+
+        public Label AppendText(string appendText)
+        {
+            AppendedText = appendText;
             _areBoundsDirty = true;
             return this;
         }
